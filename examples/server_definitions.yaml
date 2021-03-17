@@ -1,0 +1,24 @@
+---
+# Example server definition file for client_end2end_tester package.
+#
+# For format see ServerDefinitionFile class description.
+
+servers:
+
+  myserver1:
+    description: "my dev system 1"
+    contact_name: "John Doe"
+    access_via: "VPN to dev network"
+    details:
+      host: "10.11.12.13"
+      userid: myuserid
+      password: mypassword
+      stuff:
+        - morestuff
+
+server_groups:
+
+  mygroup1:
+    description: "my dev systems"
+    members:
+      - myserver1
