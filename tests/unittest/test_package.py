@@ -2,18 +2,22 @@
 Test import and versioning of the package.
 """
 
+from __future__ import absolute_import, print_function
+
 
 def test_import():
     """
     Test import of the package.
     """
-    import nocaselist  # noqa: F401 pylint: disable=import-outside-toplevel
-    assert nocaselist
+    # pylint: disable=import-outside-toplevel
+    import client_end2end_tester  # noqa: F401
+    assert client_end2end_tester
 
 
 def test_versioning():
     """
     Test import of the package.
     """
-    import nocaselist  # noqa: F401 pylint: disable=import-outside-toplevel
-    assert nocaselist.__version__
+    # pylint: disable=import-outside-toplevel
+    import client_end2end_tester  # noqa: F401
+    assert client_end2end_tester.__version__

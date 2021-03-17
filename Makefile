@@ -228,8 +228,6 @@ else
   pytest_warning_opts := -W default -W ignore::PendingDeprecationWarning
 endif
 
-
-
 ifeq ($(python_mn_version),py34)
   pytest_cov_opts :=
 else
@@ -247,6 +245,50 @@ dist_included_files := \
     test-requirements.txt \
     setup.py \
     $(package_name)/*.py \
+
+# Issues reported by safety command that are ignored.
+# Package upgrade strategy due to reported safety issues:
+# - For packages that are direct or indirect runtime requirements, upgrade
+#   the package version only if possible w.r.t. the supported environments and
+#   if the issue affects pywbem, and add to the ignore list otherwise.
+# - For packages that are direct or indirect development or test requirements,
+#   upgrade the package version only if possible w.r.t. the supported
+#   environments and add to the ignore list otherwise.
+# Current safety ignore list, with reasons:
+# Runtime dependencies:
+# - 38100: PyYAML on py34 cannot be upgraded; no issue since PyYAML FullLoader is not used
+# - 38834: urllib3 on py34 cannot be upgraded -> remains an issue on py34
+# Development and test dependencies:
+# - 38765: We want to test install with minimum pip versions.
+# - 38892: lxml cannot be upgraded on py34; no issue since HTML Cleaner of lxml is not used
+# - 38224: pylint cannot be upgraded on py27+py34
+# - 37504: twine cannot be upgraded on py34
+# - 37765: psutil cannot be upgraded on PyPy
+# - 38107: bleach cannot be upgraded on py34
+# - 38330: Sphinx cannot be upgraded on py27+py34
+# - 39194: lxml cannot be upgraded on py34; no issue since HTML Cleaner of lxml is not used
+# - 39195: lxml cannot be upgraded on py34; no issue since output file paths do not come from untrusted sources
+# - 39462: The CVE for tornado will be replaced by a CVE for Python, see https://github.com/tornadoweb/tornado/issues/2981
+# - 39611: PyYAML cannot be upgraded on py34+py35; We are not using the FullLoader.
+# - 39621: Pylint cannot be upgraded on py27+py34
+# - 39525: Jinja2 cannot be upgraded on py34
+
+safety_ignore_opts := \
+    -i 38100 \
+    -i 38834 \
+    -i 38765 \
+    -i 38892 \
+    -i 38224 \
+    -i 37504 \
+    -i 37765 \
+    -i 38107 \
+    -i 38330 \
+    -i 39194 \
+    -i 39195 \
+    -i 39462 \
+    -i 39611 \
+    -i 39621 \
+    -i 39525 \
 
 .PHONY: help
 help:
@@ -559,7 +601,7 @@ flake8_$(python_mn_version).done: develop_reqs_$(python_mn_version).done Makefil
 safety_$(python_mn_version).done: develop_reqs_$(python_mn_version).done Makefile minimum-constraints.txt
 	@echo "Makefile: Running pyup.io safety check"
 	-$(call RM_FUNC,$@)
-	-safety check -r minimum-constraints.txt --full-report
+	-safety check -r minimum-constraints.txt --full-report $(safety_ignore_opts)
 	echo "done" >$@
 	@echo "Makefile: Done running pyup.io safety check"
 
@@ -574,5 +616,3 @@ test: $(test_deps)
 	@echo "Makefile: Running unit tests"
 	py.test --color=yes $(pytest_cov_opts) $(pytest_warning_opts) $(pytest_opts) $(test_dir)/unittest -s
 	@echo "Makefile: Done running unit tests"
-
-
