@@ -142,7 +142,8 @@ dependency_links = [req for req in requirements
                     if req and re.match(r'[^:]+://', req)]
 test_requirements = get_requirements('test-requirements.txt')
 
-package_version = get_version(os.path.join('client_end2end_tester', '_version.py'))
+package_version = get_version(
+    os.path.join('client_end2end_tester', '_version.py'))
 
 # Docs on setup():
 # * https://docs.python.org/2.7/distutils/apiref.html?
@@ -177,9 +178,14 @@ setuptools.setup(
     maintainer_email='andreas.r.maier@gmx.de',
     url='https://github.com/andy-maier/client_end2end_tester',
     project_urls={
-        'Bug Tracker': 'https://github.com/andy-maier/client_end2end_tester/issues',
-        'Documentation': 'https://client_end2end_tester.readthedocs.io/en/latest/',
-        'Source Code': 'https://github.com/andy-maier/client_end2end_tester',
+        'Bug Tracker':
+        'https://github.com/andy-maier/client_end2end_tester/issues',
+        'Documentation':
+        'https://client_end2end_tester.readthedocs.io/en/latest/',
+        'Change Log':
+        'https://client_end2end_tester.readthedocs.io/en/latest/changes.html',
+        'Source Code':
+        'https://github.com/andy-maier/client_end2end_tester',
     },
 
     options={'bdist_wheel': {'universal': True}},
