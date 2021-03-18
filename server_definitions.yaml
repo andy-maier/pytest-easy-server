@@ -12,7 +12,18 @@ servers:
       userid: myuserid
       password: mypassword
       stuff:
-        - morestuff
+        - morestuff1
+
+  myserver2:
+    description: "my dev system 2"
+    contact_name: "John Doe"
+    access_via: "intranet"
+    details:
+      host: "9.11.12.13"
+      userid: myuserid
+      password: mypassword
+      stuff:
+        - morestuff2
 
 server_groups:
 
@@ -20,5 +31,6 @@ server_groups:
     description: "my dev systems"
     members:
       - myserver1
+      - myserver2
 
 default: mygroup1
