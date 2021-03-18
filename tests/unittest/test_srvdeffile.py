@@ -8,12 +8,14 @@ import pytest
 from testfixtures import TempDirectory
 import six
 from client_end2end_tester import ServerDefinitionFile, \
-    ServerDefinitionFileError
+    ServerDefinitionFileError, ServerDefinitionFileNotFound
+# White box testing: We test an internal function
+from client_end2end_tester._srvdeffile import _load_validate_default
 
 from ..utils.simplified_test_function import simplified_test_function
 
 
-TESTCASES_SERVER_DEFINITION_FILE_INIT = [
+TESTCASES_SDF_INIT = [
 
     # Testcases for ServerDefinitionFile.__init__()
 
@@ -27,16 +29,15 @@ TESTCASES_SERVER_DEFINITION_FILE_INIT = [
     # * exp_warn_types: Expected warning type(s), or None.
     # * condition: Boolean condition for testcase to run, or 'pdb' for debugger
 
-    # Basic parameter checking
     (
         "Order of positional parameters",
         dict(
             init_args=(
-                'myfile',
+                ServerDefinitionFile.default_filepath,
             ),
             init_kwargs=dict(),
             exp_attrs={
-                'filepath': 'myfile',
+                'filepath': ServerDefinitionFile.default_filepath,
             },
         ),
         None, None, True
@@ -46,16 +47,14 @@ TESTCASES_SERVER_DEFINITION_FILE_INIT = [
         dict(
             init_args=(),
             init_kwargs=dict(
-                filepath='myfile',
+                filepath=ServerDefinitionFile.default_filepath,
             ),
             exp_attrs={
-                'filepath': 'myfile',
+                'filepath': ServerDefinitionFile.default_filepath,
             },
         ),
         None, None, True
     ),
-
-    # Omitted init parameters
     (
         "Omitted optional parameter: filepath",
         dict(
@@ -67,14 +66,26 @@ TESTCASES_SERVER_DEFINITION_FILE_INIT = [
         ),
         None, None, True
     ),
+    (
+        "File not found",
+        dict(
+            init_args=(),
+            init_kwargs=dict(
+                filepath='invalid_file',
+            ),
+            exp_attrs=None,
+        ),
+        (ServerDefinitionFileNotFound, "Cannot open server definition file"),
+        None, True
+    ),
 ]
 
 
 @pytest.mark.parametrize(
     "desc, kwargs, exp_exc_types, exp_warn_types, condition",
-    TESTCASES_SERVER_DEFINITION_FILE_INIT)
+    TESTCASES_SDF_INIT)
 @simplified_test_function
-def test_ServerDefinitionFile_init(testcase, init_args, init_kwargs, exp_attrs):
+def test_SDF_init(testcase, init_args, init_kwargs, exp_attrs):
     """
     Test function for ServerDefinitionFile.__init__()
     """
@@ -84,7 +95,9 @@ def test_ServerDefinitionFile_init(testcase, init_args, init_kwargs, exp_attrs):
 
     # Ensure that exceptions raised in the remainder of this function
     # are not mistaken as expected exceptions
-    assert testcase.exp_exc_types is None
+    assert testcase.exp_exc_types is None, \
+        "Expected exception not raised: {}". \
+        format(testcase.exp_exc_types)
 
     for attr_name in exp_attrs:
         exp_attr_value = exp_attrs[attr_name]
@@ -97,27 +110,29 @@ def test_ServerDefinitionFile_init(testcase, init_args, init_kwargs, exp_attrs):
             format(attr_name, exp_attr_value, act_attr_value)
 
 
-TESTCASES_SERVER_DEFINITION_FILE_DATA = [
+TESTCASES_SDF_LOAD = [
 
-    # Testcases for ServerDefinitionFile.data (load&verify)
+    # Testcases for ServerDefinitionFile._load_validate_default()
 
     # Each list item is a testcase tuple with these items:
     # * desc: Short testcase description.
     # * kwargs: Keyword arguments for the test function:
     #   * sdf_yaml: Content of server definition file.
-    #   * exp_data: Expected ServerDefinitionFile.data attribute.
+    #   * exp_data: Expected result of _load_validate_default()
     # * exp_exc_types: Expected exception type(s), or None.
     # * exp_warn_types: Expected warning type(s), or None.
     # * condition: Boolean condition for testcase to run, or 'pdb' for debugger
 
     # Basic validation
     (
-        "Empty file: Missing required 'servers' element",
+        "Empty file: Missing required elements",
         dict(
             sdf_yaml="",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on top-level element.* is not of type 'object'"),
+        None, True
     ),
     (
         "Invalid YAML syntax: Mixing list and dict",
@@ -127,7 +142,8 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
                      "  bar:\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError, "Invalid YAML syntax"),
+        None, True
     ),
     (
         "Invalid top-level type list",
@@ -136,7 +152,9 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
                      "- server_groups: {}\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on top-level element: .* is not of type 'object'"),
+        None, True
     ),
     (
         "Missing required 'servers' element",
@@ -144,7 +162,10 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
             sdf_yaml="server_groups: {}\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on top-level element: 'servers' is a required "
+         "property"),
+        None, True
     ),
     (
         "Invalid type for 'servers' element: list",
@@ -153,7 +174,9 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
                      "  - foo\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on element 'servers': .* is not of type 'object'"),
+        None, True
     ),
     (
         "Invalid type for 'servers' element: string",
@@ -161,7 +184,9 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
             sdf_yaml="servers: bla\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on element 'servers': .* is not of type 'object'"),
+        None, True
     ),
     (
         "Invalid type for 'server_groups' element: list",
@@ -170,7 +195,10 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
                      "server_groups: []\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on element 'server_groups': .* is not of type "
+         "'object'"),
+        None, True
     ),
     (
         "Invalid type for 'server_groups' element: string",
@@ -179,28 +207,81 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
                      "server_groups: bla\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on element 'server_groups': .* is not of type "
+         "'object'"),
+        None, True
     ),
     (
-        "Invalid type for server group: dict",
+        "Invalid type of server group",
+        dict(
+            sdf_yaml="servers: {}\n"
+                     "server_groups:\n"
+                     "  grp1: invalid\n",
+            exp_data=None,
+        ),
+        (ServerDefinitionFileError,
+         "Validation failed on element 'server_groups.grp1': .* is not of type "
+         "'object'"),
+        None, True
+    ),
+    (
+        "Missing required element 'description' in server group",
         dict(
             sdf_yaml="servers: {}\n"
                      "server_groups:\n"
                      "  grp1:\n"
-                     "    srv1: {}\n",
+                     "    members: []\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on element 'server_groups.grp1': 'description' is "
+         "a required property"),
+        None, True
     ),
     (
-        "Invalid type for server group: string",
+        "Invalid type for element 'description' in server group: list",
         dict(
             sdf_yaml="servers: {}\n"
                      "server_groups:\n"
-                     "  grp1: srv1\n",
+                     "  grp1:\n"
+                     "    description: []\n"
+                     "    members: []\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on element 'server_groups.grp1.description': "
+         ".* is not of type 'string'"),
+        None, True
+    ),
+    (
+        "Missing required element 'members' in server group",
+        dict(
+            sdf_yaml="servers: {}\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: desc1\n",
+            exp_data=None,
+        ),
+        (ServerDefinitionFileError,
+         "Validation failed on element 'server_groups.grp1': 'members' is "
+         "a required property"),
+        None, True
+    ),
+    (
+        "Invalid type for element 'members' in server group: string",
+        dict(
+            sdf_yaml="servers: {}\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: desc1\n"
+                     "    members: invalid\n",
+            exp_data=None,
+        ),
+        (ServerDefinitionFileError,
+         "Validation failed on element 'server_groups.grp1.members': "
+         ".* is not of type 'array'"),
+        None, True
     ),
     (
         "Invalid type for server group member: dict",
@@ -208,21 +289,28 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
             sdf_yaml="servers: {}\n"
                      "server_groups:\n"
                      "  grp1:\n"
-                     "    - srv1: {}\n",
+                     "    description: desc1\n"
+                     "    members:\n"
+                     "      - {}\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on element 'server_groups.grp1.members.0': "
+         ".* is not of type 'string'"),
+        None, True
     ),
     (
-        "Invalid type for server group member: list",
+        "Invalid default null",
         dict(
             sdf_yaml="servers: {}\n"
-                     "server_groups:\n"
-                     "  grp1:\n"
-                     "    - srv1: []\n",
+                     "server_groups: {}\n"
+                     "default: null\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Validation failed on element 'default': "
+         "None is not of type 'string'"),
+        None, True
     ),
 
     # More semantic errors
@@ -232,43 +320,38 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
             sdf_yaml="servers: {}\n"
                      "server_groups:\n"
                      "  grp1:\n"
-                     "    - srv1\n",
+                     "    description: desc1\n"
+                     "    members:\n"
+                     "      - srv1\n",
             exp_data=None,
         ),
-        ServerDefinitionFileError, None, True
+        (ServerDefinitionFileError,
+         "Member 'srv1' of server group 'grp1' not found in servers"),
+        None, False  # TODO: Enable once check is implemented
     ),
 
     # Valid simple server definition files
     (
-        "Valid file with no servers and omitted 'server_groups' item",
+        "Valid file with no servers and server_group+default omitted",
         dict(
             sdf_yaml="servers: {}\n",
             exp_data={
                 'servers': {},
-            },
-        ),
-        None, None, True
-    ),
-    (
-        "Valid file with no servers and no server groups",
-        dict(
-            sdf_yaml="servers: {}\n"
-                     "server_groups: {}\n",
-            exp_data={
-                'servers': {},
                 'server_groups': {},
+                'default': None,
             },
         ),
         None, None, True
     ),
     (
-        "Valid file with one server",
+        "Valid file with one server that is default",
         dict(
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
                      "    details:\n"
-                     "      stuff: 42\n",
+                     "      stuff: 42\n"
+                     "default: srv1\n",
             exp_data={
                 'servers': {
                     'srv1': {
@@ -278,6 +361,42 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
                         },
                     },
                 },
+                'server_groups': {},
+                'default': 'srv1',
+            },
+        ),
+        None, None, True
+    ),
+    (
+        "Valid file with one server and one server group that is default",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "default: grp1\n",
+            exp_data={
+                'servers': {
+                    'srv1': {
+                        'description': 'server1',
+                        'details': {
+                            'stuff': 42,
+                        },
+                    },
+                },
+                'server_groups': {
+                    'grp1': {
+                        'description': 'group1',
+                        'members': ['srv1'],
+                    },
+                },
+                'default': 'grp1',
             },
         ),
         None, None, True
@@ -287,11 +406,145 @@ TESTCASES_SERVER_DEFINITION_FILE_DATA = [
 
 @pytest.mark.parametrize(
     "desc, kwargs, exp_exc_types, exp_warn_types, condition",
-    TESTCASES_SERVER_DEFINITION_FILE_DATA)
+    TESTCASES_SDF_LOAD)
 @simplified_test_function
-def test_ServerDefinitionFile_data(testcase, sdf_yaml, exp_data):
+def test_SDF_load(testcase, sdf_yaml, exp_data):
     """
-    Test function for ServerDefinitionFile.data
+    Test function for ServerDefinitionFile._load_validate_default()
+    """
+
+    with TempDirectory() as tmp_dir:
+
+        # Create the server definition file
+        filename = 'tmp_sdf.yaml'
+        filepath = os.path.join(tmp_dir.path, filename)
+        if isinstance(sdf_yaml, six.text_type):
+            sdf_yaml = sdf_yaml.encode('utf-8')
+        tmp_dir.write(filename, sdf_yaml)
+
+        # The code to be tested
+        act_data = _load_validate_default(filepath)
+
+        # Ensure that exceptions raised in the remainder of this function
+        # are not mistaken as expected exceptions
+        assert testcase.exp_exc_types is None, \
+            "Expected exception not raised: {}". \
+            format(testcase.exp_exc_types)
+
+        assert act_data == exp_data
+
+
+TESTCASES_SDF_GET_SERVER = [
+
+    # Testcases for ServerDefinitionFile.get_server()
+
+    # Each list item is a testcase tuple with these items:
+    # * desc: Short testcase description.
+    # * kwargs: Keyword arguments for the test function:
+    #   * sdf_yaml: Content of server definition file.
+    #   * nick: nickname input parameter for get_server().
+    #   * exp_attrs: Dict with expected attributes of ServerDefinition result
+    #     of get_server(). Keys: attribute names; values: attribute values.
+    # * exp_exc_types: Expected exception type(s), or None.
+    # * exp_warn_types: Expected warning type(s), or None.
+    # * condition: Boolean condition for testcase to run, or 'pdb' for debugger
+
+    (
+        "No servers; non-existing nickname",
+        dict(
+            sdf_yaml="servers: {}\n",
+            nick='srv',
+            exp_attrs=None,
+        ),
+        (KeyError, "Server with nickname 'srv' not found"),
+        None, True
+    ),
+    (
+        "One server; non-existing nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n",
+            nick='srv',
+            exp_attrs=None,
+        ),
+        (KeyError, "Server with nickname 'srv' not found"),
+        None, True
+    ),
+    (
+        "One server group with one server; non-existing nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n",
+            nick='srv',
+            exp_attrs=None,
+        ),
+        (KeyError, "Server with nickname 'srv' not found"),
+        None, True
+    ),
+    (
+        "One server group with one server; existing server nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n",
+            nick='srv1',
+            exp_attrs=dict(
+                nickname='srv1',
+                description='server1',
+                contact_name=None,
+                access_via=None,
+                details={'stuff': 42},
+            ),
+        ),
+        None, None, True
+    ),
+    (
+        "One server group with one server; existing group nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n",
+            nick='grp1',
+            exp_attrs=None,
+        ),
+        (KeyError, "Server with nickname 'grp1' not found"),
+        None, True
+    ),
+]
+
+
+@pytest.mark.parametrize(
+    "desc, kwargs, exp_exc_types, exp_warn_types, condition",
+    TESTCASES_SDF_GET_SERVER)
+@simplified_test_function
+def test_SDF_get_server(testcase, sdf_yaml, nick, exp_attrs):
+    """
+    Test function for ServerDefinitionFile.get_server()
     """
 
     with TempDirectory() as tmp_dir:
@@ -306,10 +559,674 @@ def test_ServerDefinitionFile_data(testcase, sdf_yaml, exp_data):
         sdf = ServerDefinitionFile(filepath)
 
         # The code to be tested
-        act_data = sdf.data
+        act_srv = sdf.get_server(nick)
 
         # Ensure that exceptions raised in the remainder of this function
         # are not mistaken as expected exceptions
-        assert testcase.exp_exc_types is None
+        assert testcase.exp_exc_types is None, \
+            "Expected exception not raised: {}". \
+            format(testcase.exp_exc_types)
 
-        assert act_data == exp_data
+        for name in exp_attrs:
+            assert getattr(act_srv, name) == exp_attrs[name]
+
+
+TESTCASES_SDF_LIST_SERVERS = [
+
+    # Testcases for ServerDefinitionFile.list_servers()
+
+    # Each list item is a testcase tuple with these items:
+    # * desc: Short testcase description.
+    # * kwargs: Keyword arguments for the test function:
+    #   * sdf_yaml: Content of server definition file.
+    #   * nick: nickname input parameter for list_servers().
+    #   * exp_srvs_attrs: List of dicts with expected attributes of
+    #     ServerDefinition objects in the result of list_servers().
+    #     Keys: attr names; values: attr values.
+    # * exp_exc_types: Expected exception type(s), or None.
+    # * exp_warn_types: Expected warning type(s), or None.
+    # * condition: Boolean condition for testcase to run, or 'pdb' for debugger
+
+    (
+        "No servers; non-existing nickname",
+        dict(
+            sdf_yaml="servers: {}\n",
+            nick='srv',
+            exp_srvs_attrs=None,
+        ),
+        (KeyError, "Server or server group with nickname 'srv' not found"),
+        None, True
+    ),
+    (
+        "One server; non-existing nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n",
+            nick='srv',
+            exp_srvs_attrs=None,
+        ),
+        (KeyError, "Server or server group with nickname 'srv' not found"),
+        None, True
+    ),
+    (
+        "One server group with one server; non-existing nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n",
+            nick='srv',
+            exp_srvs_attrs=None,
+        ),
+        (KeyError, "Server or server group with nickname 'srv' not found"),
+        None, True
+    ),
+    (
+        "One server group with one server; existing server nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n",
+            nick='srv1',
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "One server group with one server; existing group nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n",
+            nick='grp1',
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "One server group with two servers; existing group nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "  srv2:\n"
+                     "    description: server2\n"
+                     "    details:\n"
+                     "      stuff: 43\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "      - srv2\n",
+            nick='grp1',
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+                dict(
+                    nickname='srv2',
+                    description='server2',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 43},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "Nested server groups 2 levels deep; existing group nickname",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "  srv2:\n"
+                     "    description: server2\n"
+                     "    details:\n"
+                     "      stuff: 43\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "  grp2:\n"
+                     "    description: group2\n"
+                     "    members:\n"
+                     "      - grp1\n"
+                     "      - srv2\n",
+            nick='grp2',
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+                dict(
+                    nickname='srv2',
+                    description='server2',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 43},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "Nested server groups 2 levels deep; existing group nickname and "
+        "multiple group memberships",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "  srv2:\n"
+                     "    description: server2\n"
+                     "    details:\n"
+                     "      stuff: 43\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "  grp2:\n"
+                     "    description: group2\n"
+                     "    members:\n"
+                     "      - grp1\n"
+                     "      - srv1\n"
+                     "      - srv2\n",
+            nick='grp2',
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+                dict(
+                    nickname='srv2',
+                    description='server2',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 43},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+]
+
+
+@pytest.mark.parametrize(
+    "desc, kwargs, exp_exc_types, exp_warn_types, condition",
+    TESTCASES_SDF_LIST_SERVERS)
+@simplified_test_function
+def test_SDF_list_servers(testcase, sdf_yaml, nick, exp_srvs_attrs):
+    """
+    Test function for ServerDefinitionFile.list_servers()
+    """
+
+    with TempDirectory() as tmp_dir:
+
+        # Create the server definition file
+        filename = 'tmp_sdf.yaml'
+        filepath = os.path.join(tmp_dir.path, filename)
+        if isinstance(sdf_yaml, six.text_type):
+            sdf_yaml = sdf_yaml.encode('utf-8')
+        tmp_dir.write(filename, sdf_yaml)
+
+        sdf = ServerDefinitionFile(filepath)
+
+        # The code to be tested
+        act_sds = sdf.list_servers(nick)
+
+        # Ensure that exceptions raised in the remainder of this function
+        # are not mistaken as expected exceptions
+        assert testcase.exp_exc_types is None, \
+            "Expected exception not raised: {}". \
+            format(testcase.exp_exc_types)
+
+        assert len(exp_srvs_attrs) == len(act_sds)
+
+        sorted_exp_srvs_attrs = sorted(
+            exp_srvs_attrs, key=lambda x: x['nickname'])
+        sorted_act_sds = sorted(act_sds, key=lambda x: x.nickname)
+        for i, exp_attrs in enumerate(sorted_exp_srvs_attrs):
+            act_sd = sorted_act_sds[i]
+            for name in exp_attrs:
+                assert getattr(act_sd, name) == exp_attrs[name]
+
+
+TESTCASES_SDF_LIST_DEFAULT_SERVERS = [
+
+    # Testcases for ServerDefinitionFile.list_default_servers()
+
+    # Each list item is a testcase tuple with these items:
+    # * desc: Short testcase description.
+    # * kwargs: Keyword arguments for the test function:
+    #   * sdf_yaml: Content of server definition file.
+    #   * exp_srvs_attrs: List of dicts with expected attributes of
+    #     ServerDefinition objects in the result of list_servers().
+    #     Keys: attr names; values: attr values.
+    # * exp_exc_types: Expected exception type(s), or None.
+    # * exp_warn_types: Expected warning type(s), or None.
+    # * condition: Boolean condition for testcase to run, or 'pdb' for debugger
+
+    (
+        "No servers, no default",
+        dict(
+            sdf_yaml="servers: {}\n",
+            exp_srvs_attrs=[],
+        ),
+        None, None, True
+    ),
+    (
+        "One server; no default",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n",
+            exp_srvs_attrs=[],
+        ),
+        None, None, True
+    ),
+    (
+        "One server; with default",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "default: srv1\n",
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "One server group with one server; server is default",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "default: srv1\n",
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "One server group with one server; group is default",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "default: grp1\n",
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+]
+
+
+@pytest.mark.parametrize(
+    "desc, kwargs, exp_exc_types, exp_warn_types, condition",
+    TESTCASES_SDF_LIST_DEFAULT_SERVERS)
+@simplified_test_function
+def test_SDF_list_default_servers(testcase, sdf_yaml, exp_srvs_attrs):
+    """
+    Test function for ServerDefinitionFile.list_default_servers()
+    """
+
+    with TempDirectory() as tmp_dir:
+
+        # Create the server definition file
+        filename = 'tmp_sdf.yaml'
+        filepath = os.path.join(tmp_dir.path, filename)
+        if isinstance(sdf_yaml, six.text_type):
+            sdf_yaml = sdf_yaml.encode('utf-8')
+        tmp_dir.write(filename, sdf_yaml)
+
+        sdf = ServerDefinitionFile(filepath)
+
+        # The code to be tested
+        act_sds = sdf.list_default_servers()
+
+        # Ensure that exceptions raised in the remainder of this function
+        # are not mistaken as expected exceptions
+        assert testcase.exp_exc_types is None, \
+            "Expected exception not raised: {}". \
+            format(testcase.exp_exc_types)
+
+        assert len(exp_srvs_attrs) == len(act_sds)
+
+        sorted_exp_srvs_attrs = sorted(
+            exp_srvs_attrs, key=lambda x: x['nickname'])
+        sorted_act_sds = sorted(act_sds, key=lambda x: x.nickname)
+        for i, exp_attrs in enumerate(sorted_exp_srvs_attrs):
+            act_sd = sorted_act_sds[i]
+            for name in exp_attrs:
+                assert getattr(act_sd, name) == exp_attrs[name]
+
+
+TESTCASES_SDF_LIST_ALL_SERVERS = [
+
+    # Testcases for ServerDefinitionFile.list_all_servers()
+
+    # Each list item is a testcase tuple with these items:
+    # * desc: Short testcase description.
+    # * kwargs: Keyword arguments for the test function:
+    #   * sdf_yaml: Content of server definition file.
+    #   * exp_srvs_attrs: List of dicts with expected attributes of
+    #     ServerDefinition objects in the result of list_servers().
+    #     Keys: attr names; values: attr values.
+    # * exp_exc_types: Expected exception type(s), or None.
+    # * exp_warn_types: Expected warning type(s), or None.
+    # * condition: Boolean condition for testcase to run, or 'pdb' for debugger
+
+    (
+        "No servers",
+        dict(
+            sdf_yaml="servers: {}\n",
+            exp_srvs_attrs=[],
+        ),
+        None, None, True
+    ),
+    (
+        "One server",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n",
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "One server group with one server",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n",
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "One server group with two servers",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "  srv2:\n"
+                     "    description: server2\n"
+                     "    details:\n"
+                     "      stuff: 43\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "      - srv2\n",
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+                dict(
+                    nickname='srv2',
+                    description='server2',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 43},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "Nested server groups 2 levels deep with two servers total",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "  srv2:\n"
+                     "    description: server2\n"
+                     "    details:\n"
+                     "      stuff: 43\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "  grp2:\n"
+                     "    description: group2\n"
+                     "    members:\n"
+                     "      - grp1\n"
+                     "      - srv2\n",
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+                dict(
+                    nickname='srv2',
+                    description='server2',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 43},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+    (
+        "Nested server groups 2 levels deep with two servers total and "
+        "multiple group memberships",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "  srv2:\n"
+                     "    description: server2\n"
+                     "    details:\n"
+                     "      stuff: 43\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: group1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "  grp2:\n"
+                     "    description: group2\n"
+                     "    members:\n"
+                     "      - grp1\n"
+                     "      - srv1\n"
+                     "      - srv2\n",
+            exp_srvs_attrs=[
+                dict(
+                    nickname='srv1',
+                    description='server1',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 42},
+                ),
+                dict(
+                    nickname='srv2',
+                    description='server2',
+                    contact_name=None,
+                    access_via=None,
+                    details={'stuff': 43},
+                ),
+            ],
+        ),
+        None, None, True
+    ),
+]
+
+
+@pytest.mark.parametrize(
+    "desc, kwargs, exp_exc_types, exp_warn_types, condition",
+    TESTCASES_SDF_LIST_ALL_SERVERS)
+@simplified_test_function
+def test_SDF_list_all_servers(testcase, sdf_yaml, exp_srvs_attrs):
+    """
+    Test function for ServerDefinitionFile.list_all_servers()
+    """
+
+    with TempDirectory() as tmp_dir:
+
+        # Create the server definition file
+        filename = 'tmp_sdf.yaml'
+        filepath = os.path.join(tmp_dir.path, filename)
+        if isinstance(sdf_yaml, six.text_type):
+            sdf_yaml = sdf_yaml.encode('utf-8')
+        tmp_dir.write(filename, sdf_yaml)
+
+        sdf = ServerDefinitionFile(filepath)
+
+        # The code to be tested
+        act_sds = sdf.list_all_servers()
+
+        # Ensure that exceptions raised in the remainder of this function
+        # are not mistaken as expected exceptions
+        assert testcase.exp_exc_types is None, \
+            "Expected exception not raised: {}". \
+            format(testcase.exp_exc_types)
+
+        assert len(exp_srvs_attrs) == len(act_sds)
+
+        sorted_exp_srvs_attrs = sorted(
+            exp_srvs_attrs, key=lambda x: x['nickname'])
+        sorted_act_sds = sorted(act_sds, key=lambda x: x.nickname)
+        for i, exp_attrs in enumerate(sorted_exp_srvs_attrs):
+            act_sd = sorted_act_sds[i]
+            for name in exp_attrs:
+                assert getattr(act_sd, name) == exp_attrs[name]
