@@ -31,10 +31,8 @@ TESTSERVERFILE = os.getenv('TESTSERVERFILE',
                            ServerDefinitionFile.default_filepath)
 
 SDF = ServerDefinitionFile(TESTSERVERFILE)
-if TESTSERVER == 'default':
-    SD_LIST = SDF.list_default_servers()
-else:
-    SD_LIST = SDF.list_servers(TESTSERVER)
+SD_LIST = SDF.list_default_servers() if TESTSERVER == 'default' else \
+    SDF.list_servers(TESTSERVER)
 
 
 def fixtureid_server_definition(fixture_value):
