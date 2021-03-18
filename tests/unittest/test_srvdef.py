@@ -167,7 +167,9 @@ def test_ServerDefinition_init(testcase, init_args, init_kwargs, exp_attrs):
 
     # Ensure that exceptions raised in the remainder of this function
     # are not mistaken as expected exceptions
-    assert testcase.exp_exc_types is None
+    assert testcase.exp_exc_types is None, \
+        "Expected exception not raised: {}". \
+        format(testcase.exp_exc_types)
 
     for attr_name in exp_attrs:
         exp_attr_value = exp_attrs[attr_name]
@@ -225,7 +227,9 @@ def test_ServerDefinition_repr(testcase, init_kwargs):
 
     # Ensure that exceptions raised in the remainder of this function
     # are not mistaken as expected exceptions
-    assert testcase.exp_exc_types is None
+    assert testcase.exp_exc_types is None, \
+        "Expected exception not raised: {}". \
+        format(testcase.exp_exc_types)
 
     assert "ServerDefinition(" in repr_str
     assert "nickname=" in repr_str
