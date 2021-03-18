@@ -242,7 +242,6 @@ dist_included_files := \
     README.rst \
     INSTALL.md \
     requirements.txt \
-    test-requirements.txt \
     setup.py \
     $(package_name)/*.py \
 
@@ -251,7 +250,7 @@ dist_included_files := \
 # - For packages that are direct or indirect runtime requirements, upgrade
 #   the package version only if possible w.r.t. the supported environments and
 #   if the issue affects pywbem, and add to the ignore list otherwise.
-# - For packages that are direct or indirect development or test requirements,
+# - For packages that are direct or indirect development requirements,
 #   upgrade the package version only if possible w.r.t. the supported
 #   environments and add to the ignore list otherwise.
 # Current safety ignore list, with reasons:
@@ -395,7 +394,7 @@ install_reqs_$(python_mn_version).done: Makefile install_basic_$(python_mn_versi
 	echo "done" >$@
 	@echo "Makefile: Done installing Python installation prerequisites"
 
-develop_reqs_$(python_mn_version).done: install_basic_$(python_mn_version).done dev-requirements.txt test-requirements.txt
+develop_reqs_$(python_mn_version).done: install_basic_$(python_mn_version).done dev-requirements.txt
 	@echo "Makefile: Installing development requirements (with PACKAGE_LEVEL=$(PACKAGE_LEVEL))"
 	-$(call RM_FUNC,$@)
 	$(PIP_CMD_MOD) $(pip_opts) install $(pip_level_opts) -r dev-requirements.txt

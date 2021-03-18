@@ -152,7 +152,6 @@ install_requires = [req for req in requirements
                     if req and not re.match(r'[^:]+://', req)]
 dependency_links = [req for req in requirements
                     if req and re.match(r'[^:]+://', req)]
-test_requirements = get_requirements('test-requirements.txt')
 
 package_version = get_version(
     os.path.join('client_end2end_tester', '_version.py'))
@@ -174,9 +173,6 @@ setuptools.setup(
     ],
     install_requires=install_requires,
     dependency_links=dependency_links,
-    extras_require={
-        "test": test_requirements,
-    },
     cmdclass={
         'test': test,
     },

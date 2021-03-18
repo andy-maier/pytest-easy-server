@@ -26,6 +26,13 @@ PyYAML>=5.3.1; python_version > '3.4'
 yamlloader>=0.5.5
 jsonschema>=2.6.0
 
+# pytest
+# pytest 5.0.0 has removed support for Python < 3.5
+# pytest 4.3.1 solves an issue on Python 3 with minimum package levels
+pytest>=4.3.1,<5.0.0; python_version < '3.5'
+pytest>=4.3.1; python_version >= '3.5' and python_version <= '3.6'
+pytest>=4.4.0; python_version >= '3.7'
+
 
 # Indirect dependencies are not specified in this file, except when needed:
 
@@ -37,3 +44,8 @@ jsonschema>=2.6.0
 pyrsistent>=0.14.0,<0.16.0; python_version == '2.7'
 pyrsistent>=0.14.0,<0.15.0; python_version == '3.4'
 pyrsistent>=0.14.0; python_version >= '3.5'
+
+# pluggy (used by pytest)
+# Pluggy 0.12.0 has a bug causing pytest plugins to fail loading on py38
+pluggy>=0.7.1; python_version >= '2.7' and python_version <= '3.6'
+pluggy>=0.13.0; python_version >= '3.7'
