@@ -4,12 +4,14 @@ simplified_test_function - Pytest extension for simplifying test functions.
 
 from __future__ import absolute_import
 
+import re
 import functools
 from collections import namedtuple
 try:
     from inspect import Signature, Parameter
 except ImportError:  # py2
     from funcsigs import Signature, Parameter
+import six
 import pytest
 
 __all__ = ['simplified_test_function']
@@ -55,8 +57,12 @@ def simplified_test_function(test_func):
 
     * kwargs (dict): Keyword arguments for the test function.
 
-    * exp_exc_types (Exception or list of Exception): Expected exception types,
-      or `None` if no exceptions are expected.
+    * exp_exc_types: Expected exceptions, as one of the following:
+        - exception type: This exception is expected.
+        - tuple of exception types: Any of these exceptions is expected.
+        - tuple of one exception type, one string: This exception is
+          expected and its str() representation must match this regex pattern.
+        - None: No exception is expected.
 
     * exp_warn_types (Warning or list of Warning): Expected warning types,
       or `None` if no warnings are expected.
@@ -127,16 +133,37 @@ def simplified_test_function(test_func):
         testcase = testcase_tuple(desc, kwargs, exp_exc_types, exp_warn_types,
                                   condition)
 
+        # Process the exp_exc_types parameter and pull out the message pattern
+        # from the list.
+        exp_exc_pattern = None  # Expected exception message regexp pattern
+        if isinstance(exp_exc_types, (list, tuple)):
+            if len(exp_exc_types) == 2 and \
+                    issubclass(exp_exc_types[0], Exception) and \
+                    isinstance(exp_exc_types[1], six.string_types):
+                exp_exc_pattern = exp_exc_types[1]
+                exp_exc_types = exp_exc_types[0]
+
         if exp_warn_types:
             with pytest.warns(exp_warn_types) as rec_warnings:
                 if exp_exc_types:
-                    with pytest.raises(exp_exc_types):
+                    with pytest.raises(exp_exc_types) as exc_info:
                         if condition == 'pdb':
                             pdb.set_trace()
 
                         test_func(testcase, **kwargs)  # expecting an exception
 
-                    ret = None  # Debugging hint
+                    ret = None  # Test function has returned (debugging hint)
+
+                    # Verify the exception message pattern, if specified
+                    if exp_exc_pattern:
+                        exc_message = str(exc_info.value)
+                        m = re.search(exp_exc_pattern, exc_message)
+                        assert m, \
+                            "Unexpected exception message:\n" \
+                            "  Expected pattern: {exp}\n" \
+                            "  Actual message: {act}\n". \
+                            format(act=exc_message, exp=exp_exc_pattern)
+
                     # In combination with exceptions, we do not verify warnings
                     # (they could have been issued before or after the
                     # exception).
@@ -146,25 +173,37 @@ def simplified_test_function(test_func):
 
                     test_func(testcase, **kwargs)  # not expecting an exception
 
-                    ret = None  # Debugging hint
+                    ret = None  # Test function has returned (debugging hint)
+
                     assert len(rec_warnings) >= 1
         else:
             with pytest.warns(None) as rec_warnings:
                 if exp_exc_types:
-                    with pytest.raises(exp_exc_types):
+                    with pytest.raises(exp_exc_types) as exc_info:
                         if condition == 'pdb':
                             pdb.set_trace()
 
                         test_func(testcase, **kwargs)  # expecting an exception
 
-                    ret = None  # Debugging hint
+                    ret = None  # Test function has returned (debugging hint)
+
+                    # Verify the exception message pattern, if specified
+                    if exp_exc_pattern:
+                        exc_message = str(exc_info.value)
+                        m = re.search(exp_exc_pattern, exc_message)
+                        assert m, \
+                            "Unexpected exception message:\n" \
+                            "  Expected pattern: {exp}\n" \
+                            "  Actual message: {act}\n". \
+                            format(act=exc_message, exp=exp_exc_pattern)
+
                 else:
                     if condition == 'pdb':
                         pdb.set_trace()
 
                     test_func(testcase, **kwargs)  # not expecting an exception
 
-                    ret = None  # Debugging hint
+                    ret = None  # Test function has returned (debugging hint)
 
                     # Verify that no warnings have occurred
                     if exp_warn_types is None and rec_warnings:
