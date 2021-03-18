@@ -159,7 +159,7 @@ class ServerDefinitionFile(object):
         default: GRP1           # Default server or server group.
     """
 
-    default_filepath = 'examples/server_definitions.yaml'
+    default_filepath = 'server_definitions.yaml'
 
     def __init__(self, filepath=None):
         if filepath is None:

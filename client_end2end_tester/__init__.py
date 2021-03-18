@@ -21,3 +21,4 @@ from __future__ import absolute_import, print_function
 from ._version import __version__  # noqa: F401
 from ._srvdef import *  # noqa: F403,F401
 from ._srvdeffile import *  # noqa: F403,F401
+from ._pytest_fixtures import *  # noqa: F403,F401
