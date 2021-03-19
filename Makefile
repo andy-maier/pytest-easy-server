@@ -300,10 +300,7 @@ help:
 	@echo "  TESTCASES - When non-empty, 'test' target runs only the specified test cases. The"
 	@echo "      value is used for the -k option of pytest (see 'pytest --help')."
 	@echo "      Optional, defaults to running all tests."
-	@echo "  TESTOPTS - Optional: Additional options for pytest (see 'pytest --help')."
-	@echo "  TEST_INSTALLED - When non-empty, run any tests using the installed version of $(package_name)"
-	@echo "      and assume all Python and OS-level prerequisites are already installed."
-	@echo "      When set to 'DEBUG', print location from where the $(package_name) package is loaded."
+	@echo "  TESTOPTS - Optional: Additional options for pytests (see 'pytest --help')."
 	@echo "  PACKAGE_LEVEL - Package level to be used for installing dependent Python"
 	@echo "      packages in 'install' and 'develop' targets:"
 	@echo "        latest - Latest package versions available on Pypi"
@@ -370,11 +367,12 @@ install_basic_$(python_pymn_version).done: Makefile pip_upgrade_$(python_pymn_ve
 	@echo "Makefile: Done installing/upgrading basic Python packages"
 
 install_reqs_$(python_pymn_version).done: Makefile install_basic_$(python_pymn_version).done requirements.txt
-	@echo "Makefile: Installing Python installation prerequisites (with PACKAGE_LEVEL=$(PACKAGE_LEVEL))"
+	@echo "Makefile: Installing package and its installation prerequisites (with PACKAGE_LEVEL=$(PACKAGE_LEVEL))"
 	-$(call RM_FUNC,$@)
 	$(PIP_CMD_MOD) $(pip_opts) install $(pip_level_opts) -r requirements.txt
+	$(PIP_CMD_MOD) $(pip_opts) install -e .
 	echo "done" >$@
-	@echo "Makefile: Done installing Python installation prerequisites"
+	@echo "Makefile: Done installing package and its installation prerequisites"
 
 develop_reqs_$(python_pymn_version).done: install_basic_$(python_pymn_version).done dev-requirements.txt
 	@echo "Makefile: Installing development requirements (with PACKAGE_LEVEL=$(PACKAGE_LEVEL))"
@@ -385,20 +383,6 @@ develop_reqs_$(python_pymn_version).done: install_basic_$(python_pymn_version).d
 
 .PHONY: install
 install: Makefile install_reqs_$(python_pymn_version).done setup.py
-ifdef TEST_INSTALLED
-	@echo "Makefile: Skipping installation of package $(package_name) as standalone because TEST_INSTALLED is set"
-	@echo "Makefile: Checking whether package $(package_name) is actually installed:"
-	$(PIP_CMD) $(pip_opts) show $(package_name)
-else
-ifeq ($(shell $(PIP_CMD) $(pip_opts) list --exclude-editable --format freeze | grep "$(package_name)=="),)
-# if package is not installed as standalone
-	@echo "Makefile: Installing package $(package_name) as standalone (with PACKAGE_LEVEL=$(PACKAGE_LEVEL))"
-	-$(PIP_CMD_MOD) $(pip_opts) uninstall -y $(package_name)
-	-$(call RMDIR_FUNC,$(package_name).egg-info)
-	$(PIP_CMD_MOD) $(pip_opts) install .
-	@echo "Makefile: Done installing package $(package_name) as standalone"
-endif
-endif
 	@echo "Makefile: Verifying installation of package $(package_name)"
 	$(PYTHON_CMD) -c "import $(package_name)"
 	@echo "Makefile: Done verifying installation of package $(package_name)"
@@ -406,23 +390,6 @@ endif
 
 .PHONY: develop
 develop: Makefile install_reqs_$(python_pymn_version).done develop_reqs_$(python_pymn_version).done setup.py
-ifdef TEST_INSTALLED
-	@echo "Makefile: Skipping installation of package $(package_name) as editable because TEST_INSTALLED is set"
-	@echo "Makefile: Checking whether package $(package_name) is actually installed:"
-	$(PIP_CMD) $(pip_opts) show $(package_name)
-else
-ifeq ($(shell $(PIP_CMD) $(pip_opts) list -e --format freeze | grep "$(package_name)=="),)
-# if package is not installed as editable
-	@echo "Makefile: Installing package $(package_name) as editable (with PACKAGE_LEVEL=$(PACKAGE_LEVEL))"
-	-$(PIP_CMD_MOD) $(pip_opts) uninstall -y $(package_name)
-	-$(call RMDIR_FUNC,$(package_name).egg-info)
-	$(PIP_CMD_MOD) $(pip_opts) install -e .
-	@echo "Makefile: Done installing package $(package_name) as editable"
-endif
-endif
-	@echo "Makefile: Verifying installation of package $(package_name)"
-	$(PYTHON_CMD) -c "import $(package_name)"
-	@echo "Makefile: Done verifying installation of package $(package_name)"
 	@echo "Makefile: Target $@ done."
 
 .PHONY: build
@@ -586,14 +553,8 @@ safety_$(python_pymn_version).done: develop_reqs_$(python_pymn_version).done Mak
 	echo "done" >$@
 	@echo "Makefile: Done running pyup.io safety check"
 
-ifdef TEST_INSTALLED
-  test_deps =
-else
-  test_deps = develop
-endif
-
 .PHONY: test
-test: $(test_deps)
+test: develop
 ifeq ($(python_mn_version),3.4)
 	@echo "Makefile: Running unit tests (without coverage)"
 	pytest --color=yes $(pytest_warning_opts) $(pytest_opts) $(test_dir)/unittest -s
