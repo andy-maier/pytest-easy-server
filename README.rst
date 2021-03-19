@@ -160,7 +160,7 @@ Installation
 .. _`Documentation`:
 
 Documentation
-------------
+-------------
 
 * `Documentation on RTD`_
 
