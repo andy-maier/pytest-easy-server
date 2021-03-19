@@ -141,19 +141,6 @@ There are multiple types of tests:
    Options for pytest can be passed using the ``--pytest-options`` option.
 
 
-To run the unit tests in all supported Python environments, the
-Tox tool can be used. It creates the necessary virtual Python environments and
-executes `make test` (i.e. the unit tests) in each of them.
-
-For running Tox, it does not matter which Python environment is currently
-active, as long as the Python `tox` package is installed in it:
-
-.. code-block:: bash
-
-    $ tox                              # Run tests on all supported Python versions
-    $ tox -e py27                      # Run tests on Python 2.7
-
-
 .. _`Contributing`:
 
 Contributing
