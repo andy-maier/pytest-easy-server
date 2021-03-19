@@ -17,15 +17,10 @@ Change log
 ==========
 
 
-Version 0.5.0.dev1
-------------------
+Version 0.5.0
+-------------
 
-Released: not yet
+Released: 2021-03-19
 
 Initial release.
 
-**Known issues:**
-
-* See `list of open issues`_.
-
-.. _`list of open issues`: https://github.com/andy-maier/pytest-tars/issues
