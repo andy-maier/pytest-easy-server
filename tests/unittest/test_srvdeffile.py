@@ -327,7 +327,7 @@ TESTCASES_SDF_LOAD = [
 
     # More semantic errors
     (
-        "Server group member not defined in servers",
+        "Server group member nickname not found",
         dict(
             sdf_yaml="servers: {}\n"
                      "server_groups:\n"
@@ -338,8 +338,28 @@ TESTCASES_SDF_LOAD = [
             exp_data=None,
         ),
         (ServerDefinitionFileFormatError,
-         "Member 'srv1' of server group 'grp1' not found in servers"),
-        None, False  # TODO: Enable once check is implemented
+         "Nickname 'srv1' in server group 'grp1' not found"),
+        None, True
+    ),
+    (
+        "Default nickname not found",
+        dict(
+            sdf_yaml="servers:\n"
+                     "  srv1:\n"
+                     "    description: server1\n"
+                     "    details:\n"
+                     "      stuff: 42\n"
+                     "server_groups:\n"
+                     "  grp1:\n"
+                     "    description: desc1\n"
+                     "    members:\n"
+                     "      - srv1\n"
+                     "default: srv\n",
+            exp_data=None,
+        ),
+        (ServerDefinitionFileFormatError,
+         "Default nickname 'srv' not found"),
+        None, True
     ),
 
     # Valid simple server definition files

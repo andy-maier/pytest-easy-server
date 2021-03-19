@@ -307,9 +307,30 @@ def _load_validate_default(filepath):
     if 'default' not in data:
         data['default'] = None
 
-    # Additional semantic validation
+    # Check dependencies in the file
 
-    # TODO: Check that default exists
-    # TODO: Check that server group members exist
+    server_nicks = list(data['servers'].keys())
+    group_nicks = list(data['server_groups'].keys())
+    all_nicks = server_nicks + group_nicks
+    default_nick = data['default']
+
+    if default_nick and default_nick not in all_nicks:
+        new_exc = ServerDefinitionFileFormatError(
+            "Default nickname '{n}' not found in servers or groups in "
+            "server definition file {fn}".
+            format(n=default_nick, fn=filepath))
+        new_exc.__cause__ = None  # pylint: disable=invalid-name
+        raise new_exc  # ServerDefinitionFileFormatError
+
+    for group_nick in group_nicks:
+        sg_item = data['server_groups'][group_nick]
+        for member_nick in sg_item['members']:
+            if member_nick not in all_nicks:
+                new_exc = ServerDefinitionFileFormatError(
+                    "Nickname '{n}' in server group '{g}' not found in "
+                    "servers or groups in server definition file {fn}".
+                    format(n=member_nick, g=group_nick, fn=filepath))
+                new_exc.__cause__ = None  # pylint: disable=invalid-name
+                raise new_exc  # ServerDefinitionFileFormatError
 
     return data
