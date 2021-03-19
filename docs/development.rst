@@ -1,3 +1,15 @@
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. you may not use this file except in compliance with the License.
+.. You may obtain a copy of the License at
+..
+..    http://www.apache.org/licenses/LICENSE-2.0
+..
+.. Unless required by applicable law or agreed to in writing, software
+.. distributed under the License is distributed on an "AS IS" BASIS,
+.. WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+.. See the License for the specific language governing permissions and
+.. limitations under the License.
+
 
 .. _`Development`:
 
@@ -88,7 +100,6 @@ The top-level document to open with a web browser will be
 Testing
 -------
 
-
 All of the following `make` commands run the tests in the currently active
 Python environment.
 Depending on how the `client_end2end_tester` package is installed in
@@ -141,95 +152,6 @@ active, as long as the Python `tox` package is installed in it:
 
     $ tox                              # Run tests on all supported Python versions
     $ tox -e py27                      # Run tests on Python 2.7
-
-
-.. _`Testing from the source archives on Pypi or GitHub`:
-
-Testing from the source archives on Pypi or GitHub
---------------------------------------------------
-
-The wheel distribution archives on Pypi (e.g. ``*.whl``) contain only the
-files needed to run this package, but not the files needed to test it.
-
-The source distribution archives on Pypi and GitHub (e.g. ``*.tar.gz``)
-contain all files that are needed to run and to test this package. This allows
-testing the package without having to check out the entire repository, and is
-convenient for testing e.g. when packaging into OS-level packages.
-Nevertheless, the test files are not installed when installing these source
-distribution archives.
-
-The following commands download the source distribution archive on Pypi for a
-particular version of the package into the current directory and unpack it:
-
-.. code-block:: bash
-
-    $ pip download --no-deps --no-binary :all: client_end2end_tester==1.0.0
-    $ tar -xf client_end2end_tester-1.0.0.tar.gz
-    $ cd client_end2end_tester-1.0.0
-    $ ls -1
-    -rw-r--r--   1 johndoe  staff    468 Jun 29 22:31 INSTALL.md
-    -rw-r--r--   1 johndoe  staff  26436 May 26 06:45 LICENSE.txt
-    -rw-r--r--   1 johndoe  staff    367 Jul  3 07:54 MANIFEST.in
-    -rw-r--r--   1 johndoe  staff   3451 Jul  3 07:55 PKG-INFO
-    -rw-r--r--   1 johndoe  staff   7665 Jul  2 23:20 README.rst
-    drwxr-xr-x  29 johndoe  staff    928 Jul  3 07:55 client_end2end_tester
-    drwxr-xr-x   8 johndoe  staff    256 Jul  3 07:55 client_end2end_tester.egg-info
-    -rw-r--r--   1 johndoe  staff   1067 Jun 29 22:31 requirements.txt
-    -rw-r--r--   1 johndoe  staff     38 Jul  3 07:55 setup.cfg
-    -rwxr-xr-x   1 johndoe  staff   7555 Jul  3 07:24 setup.py
-    -rw-r--r--   1 johndoe  staff   2337 Jul  2 23:20 test-requirements.txt
-    drwxr-xr-x  15 johndoe  staff    480 Jul  3 07:55 tests
-
-This package, its dependent packages for running it, and its dependent packages
-for testing it can be installed with the package extra named "test":
-
-.. code-block:: bash
-
-    $ pip install .[test]
-
-When testing in Linux distributions that include this package as an OS-level
-package, the corresponding OS-level packages would instead be installed for
-these dependent Python packages. The ``test-requirements.txt`` file shows which
-dependent Python packages are needed for testing this package.
-
-Finally, the tests can be run using the ``setup.py`` script:
-
-.. code-block:: bash
-
-    $ ./setup.py test
-
-These commands are listed in the help of the ``setup.py`` script:
-
-.. code-block:: bash
-
-    $ ./setup.py --help-commands
-
-    . . .
-
-    Extra commands:
-      . . .
-      test              Run unit tests using pytest
-      . . .
-
-The additional options supported by these commands are shown in their help:
-
-.. code-block:: bash
-
-    $ ./setup.py test --help
-
-    . . .
-
-    Options for 'test' command:
-      --pytest-options  additional options for pytest, as one argument
-
-    . . .
-
-Note: The ``test`` command of ``setup.py`` is not the deprecated built-in
-command (see `<https://github.com/pypa/setuptools/issues/1684>`_), but has been
-implemented in ``setup.py`` in such a way that it only runs the tests but
-does not install anything upfront.
-Therefore, this approach can be used for testing in Linux distributions that
-include this package as an OS-level package.
 
 
 .. _`Contributing`:

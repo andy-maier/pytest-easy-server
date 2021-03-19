@@ -21,7 +21,22 @@ __all__ = ['ServerDefinition']
 
 class ServerDefinition(object):
     """
-    Encapsulation of a server definition (e.g. from a server definition file).
+    Encapsulation of a server definition from a server definition file.
+
+    Example for a server definition in a server definition file:
+
+    .. code-block:: yaml
+
+        myserver1:                        # nickname of the server
+          description: "my dev system 1"
+          contact_name: "John Doe"
+          access_via: "VPN to dev network"
+          details:                        # user-defined part
+            host: "10.11.12.13"
+            userid: myuserid
+            password: mypassword
+            stuff:
+              - morestuff1
     """
 
     def __init__(self, nickname, server_dict):
@@ -43,37 +58,50 @@ class ServerDefinition(object):
     @property
     def nickname(self):
         """
-        Nickname of the server.
+        :term:`unicode string`: Nickname of the server.
+
+        This is the key of the server object in the server definition file.
         """
         return self._nickname
 
     @property
     def description(self):
         """
-        Short description of the server.
+        :term:`unicode string`: Short description of the server.
+
+        This is the value of the ``description`` property of the server object
+        in the server definition file.
         """
         return self._description
 
     @property
     def contact_name(self):
         """
-        Name of technical contact for the server.
+        :term:`unicode string`: Name of technical contact for the server.
+
+        This is the value of the ``contact_name`` property of the server object
+        in the server definition file.
         """
         return self._contact_name
 
     @property
     def access_via(self):
         """
-        Short reminder on the network/firewall/proxy/vpn used to access the
-        server.
+        :term:`unicode string`: Short reminder on the network/firewall/proxy/vpn
+        used to access the server.
+
+        This is the value of the ``access_via`` property of the server object
+        in the server definition file.
         """
         return self._access_via
 
     @property
     def details(self):
         """
-        Details of the server, such as IP address.
+        dict: Details of the server, such as IP address.
 
-        This object can have an arbitrary user-defined structure.
+        This is the value of the ``details`` property of the server object
+        in the server definition file. This value can have an arbitrary
+        user-defined structure.
         """
         return self._details
