@@ -11,29 +11,41 @@
 .. limitations under the License.
 
 
-.. _`Change log`:
+.. _`Usage`:
 
-Change log
-==========
+Usage
+=====
+
+This section describes the usage of the client_end2end_tester package.
 
 
-client_end2end_tester 0.1.0.dev1
+.. _`Using the server_definition fixture`:
+
+Using the server_definition fixture
+-----------------------------------
+
+**TODO: Write section**
+
+
+.. _`Format of server definition file`:
+
+Format of server definition file
 --------------------------------
 
-Released: not yet
+**TODO: Write section**
 
-**Incompatible changes:**
 
-**Deprecations:**
+.. _`Protecting secrets`:
 
-**Bug fixes:**
+Protecting secrets
+------------------
 
-**Enhancements:**
+**TODO: Write section**
 
-**Cleanup:**
 
-**Known issues:**
+.. _`Derived pytest fixtures`:
 
-* See `list of open issues`_.
+Derived pytest fixtures
+-----------------------
 
-.. _`list of open issues`: https://github.com/andy-maier/client_end2end_tester/issues
+**TODO: Write section**

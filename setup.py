@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -176,7 +177,7 @@ setuptools.setup(
     cmdclass={
         'test': test,
     },
-    description="Python testing for clients against real servers",
+    description="Testing Python client libraries against real servers",
     long_description=read_file('README.rst'),
     long_description_content_type='text/x-rst',
     license="Apache Software License 2.0",

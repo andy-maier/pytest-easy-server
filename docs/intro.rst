@@ -1,3 +1,15 @@
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. you may not use this file except in compliance with the License.
+.. You may obtain a copy of the License at
+..
+..    http://www.apache.org/licenses/LICENSE-2.0
+..
+.. Unless required by applicable law or agreed to in writing, software
+.. distributed under the License is distributed on an "AS IS" BASIS,
+.. WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+.. See the License for the specific language governing permissions and
+.. limitations under the License.
+
 
 .. _`Introduction`:
 
@@ -8,26 +20,107 @@ Introduction
    :depth: 2
 
 
-.. _`Functionality`:
+.. _`Overview`:
 
-Functionality
--------------
+Overview
+--------
 
-TBD
+The client_end2end_tester package provides support for defining information
+about servers in a *server definition file* and using that information in
+pytest fixtures, so that the pytest testcase is run against all the servers
+that are specified.
 
+The server definition file is in YAML format and allows defining servers,
+grouping them into server groups, and defining a default server or group.
 
-.. _`Installation`:
+The information that can be defined for a server has a standard part and
+a completely flexible user-defined part, as shown in this example of
+a server definition file. Section :ref:`Format of server definition file`
+explains the format in more detail.
 
-Installation
-------------
+Example server definition file:
 
-TBD
+.. code-block:: yaml
+
+    servers:
+
+      myserver1:                   # nickname of the server
+        description: "my dev system 1"
+        contact_name: "John Doe"
+        access_via: "VPN to dev network"
+        details:                   # user-defined part, completely flexible
+          host: "10.11.12.13"
+          userid: myuserid
+          password: mypassword
+          stuff:
+            - morestuff1
+
+    server_groups:
+
+      mygroup1:                    # nickname of the server group
+        description: "my dev systems"
+        members:
+          - myserver1
+
+    default: mygroup1    # nickname of default server or group
+
+If you want to put the server definition file into a repository, you do not
+want to have any passwords or other secrets in there, and in that case you
+can define the user-defined part such that it either encrypts these secrets,
+or references some vault containing them. Section :ref:`Protecting secrets`
+explains that in more detail.
+
+The pytest fixture :func:`~client_end2end_tester.server_definition` can be used
+in your tests as follows (assuming the server definition file has the
+user-defined structure shown above):
+
+.. code-block:: python
+
+    from client_end2end_tester import server_definition
+
+    def test_sample1(server_definition):
+        """
+        Example pytest test function that tests something.
+
+        Parameters:
+          server_definition (ServerDefinition): Server to be used for the test
+        """
+        server_host = server_definition.details['host']
+        server_userid = server_definition.details['userid']
+        server_password = server_definition.details['password']
+        # log on to the host and perform some test
+
+The ``server_definition`` parameter of the fixture is a
+:class:`~client_end2end_tester.ServerDefinition` object that encapsulates the
+server definition that is to be used for the test. Pytest will invoke the test
+function repeatedly for all servers that are to be used for testing.
+
+You can also build your own pytest fixtures on top of this one that provide for
+example an open session with the server so that your test functions can
+use the open session directly. That basically moves repeated boiler plate
+code from your test functions into that fixture. Section
+:ref:`Derived pytest fixtures` explains that in more detail.
+
+Last but not least, the server definition file to be used and the server
+or server group to be used for testing can be controlled with two environment
+variables:
+
+.. code-block:: shell
+
+    # Server definition file to be used.
+    # If not specified, defaults to 'server_definition_file.yaml' in the
+    # current directory.
+    export TESTSERVERFILE=server_definition_file.yaml
+
+    # Nickname of the server or server group to be used.
+    # If not specified, defaults to the default server or group in the file.
+    export TESTSERVER=mygroup1
 
 
 .. _`Supported environments`:
 
 Supported environments
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
 client_end2end_tester is supported in these environments:
 
@@ -37,10 +130,10 @@ client_end2end_tester is supported in these environments:
 * Python: 2.7, 3.4, and higher
 
 
-.. _`Installing`:
+.. _`Installation`:
 
-Installing
-^^^^^^^^^^
+Installation
+------------
 
 * Prerequisites:
 
@@ -58,152 +151,3 @@ Installing
   .. code-block:: bash
 
       $ pip install client_end2end_tester
-
-
-.. _`Installing a different version`:
-
-Installing a different version
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The examples in the previous sections install the latest version of
-client_end2end_tester that is released on `PyPI`_.
-This section describes how different versions of client_end2end_tester
-can be installed.
-
-* To install an older released version of client_end2end_tester,
-  Pip supports specifying a version requirement. The following example installs
-  client_end2end_tester version 0.1.0
-  from PyPI:
-
-  .. code-block:: bash
-
-      $ pip install client_end2end_tester==0.1.0
-
-* If you need to get a certain new functionality or a new fix that is
-  not yet part of a version released to PyPI, Pip supports installation from a
-  Git repository. The following example installs client_end2end_tester
-  from the current code level in the master branch of the
-  `client_end2end_tester repository`_:
-
-  .. code-block:: bash
-
-      $ pip install git+https://github.com/andy-maier/client_end2end_tester.git@master#egg=client_end2end_tester
-
-.. _client_end2end_tester repository: https://github.com/andy-maier/client_end2end_tester
-
-.. _PyPI: https://pypi.python.org/pypi
-
-
-.. _`Verifying the installation`:
-
-Verifying the installation
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-You can verify that client_end2end_tester is installed correctly by
-importing the package into Python (using the Python environment you installed
-it to):
-
-.. code-block:: bash
-
-    $ python -c "import client_end2end_tester; print('ok')"
-    ok
-
-In case of trouble with the installation, see the :ref:`Troubleshooting`
-section.
-
-
-.. _`Package version`:
-
-Package version
----------------
-
-The version of the client_end2end_tester package can be accessed by
-programs using the ``client_end2end_tester.__version__`` variable:
-
-.. autodata:: client_end2end_tester._version.__version__
-
-Note: For tooling reasons, the variable is shown as
-``client_end2end_tester._version.__version__``, but it should be used as
-``client_end2end_tester.__version__``.
-
-
-.. _`Compatibility and deprecation policy`:
-
-Compatibility and deprecation policy
-------------------------------------
-
-The client_end2end_tester project uses the rules of
-`Semantic Versioning 2.0.0`_ for compatibility between versions, and for
-deprecations. The public interface that is subject to the semantic versioning
-rules and specificically to its compatibility rules are the APIs and commands
-described in this documentation.
-
-.. _Semantic Versioning 2.0.0: https://semver.org/spec/v2.0.0.html
-
-The semantic versioning rules require backwards compatibility for new minor
-versions (the 'N' in version 'M.N.P') and for new patch versions (the 'P' in
-version 'M.N.P').
-
-Thus, a user of an API or command of the client_end2end_tester project
-can safely upgrade to a new minor or patch version of the
-client_end2end_tester package without encountering compatibility
-issues for their code using the APIs or for their scripts using the commands.
-
-In the rare case that exceptions from this rule are needed, they will be
-documented in the :ref:`Change log`.
-
-Occasionally functionality needs to be retired, because it is flawed and a
-better but incompatible replacement has emerged. In the
-client_end2end_tester project, such changes are done by deprecating
-existing functionality, without removing it immediately.
-
-The deprecated functionality is still supported at least throughout new minor
-or patch releases within the same major release. Eventually, a new major
-release may break compatibility by removing deprecated functionality.
-
-Any changes at the APIs or commands that do introduce
-incompatibilities as defined above, are described in the :ref:`Change log`.
-
-Deprecation of functionality at the APIs or commands is
-communicated to the users in multiple ways:
-
-* It is described in the documentation of the API or command
-
-* It is mentioned in the change log.
-
-* It is raised at runtime by issuing Python warnings of type
-  ``DeprecationWarning`` (see the Python :mod:`py:warnings` module).
-
-Since Python 2.7, ``DeprecationWarning`` messages are suppressed by default.
-They can be shown for example in any of these ways:
-
-* By specifying the Python command line option: ``-W default``
-* By invoking Python with the environment variable: ``PYTHONWARNINGS=default``
-
-It is recommended that users of the client_end2end_tester project
-run their test code with ``DeprecationWarning`` messages being shown, so they
-become aware of any use of deprecated functionality.
-
-Here is a summary of the deprecation and compatibility policy used by
-the client_end2end_tester project, by version type:
-
-* New patch version (M.N.P -> M.N.P+1): No new deprecations; no new
-  functionality; backwards compatible.
-* New minor release (M.N.P -> M.N+1.0): New deprecations may be added;
-  functionality may be extended; backwards compatible.
-* New major release (M.N.P -> M+1.0.0): Deprecated functionality may get
-  removed; functionality may be extended or changed; backwards compatibility
-  may be broken.
-
-
-.. _'Python namespaces`:
-
-Python namespaces
------------------
-
-TBD - describe the python namespaces to clarify what is for external use
-and what is internal.
-
-This documentation describes only the external APIs of the
-client_end2end_tester project, and omits any internal symbols and
-any sub-modules.

@@ -1,22 +1,23 @@
+.. Licensed under the Apache License, Version 2.0 (the "License");
+.. you may not use this file except in compliance with the License.
+.. You may obtain a copy of the License at
+..
+..    http://www.apache.org/licenses/LICENSE-2.0
+..
+.. Unless required by applicable law or agreed to in writing, software
+.. distributed under the License is distributed on an "AS IS" BASIS,
+.. WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+.. See the License for the specific language governing permissions and
+.. limitations under the License.
+
 
 .. _`Appendix`:
 
 Appendix
 ========
 
-This section contains information that is referenced from other sections,
-and that does not really need to be read in sequence.
 
-
-.. _`Troubleshooting`:
-
-Troubleshooting
----------------
-
-Here are some trouble shooting hints for ...
-
-
-.. _'Glossary`:
+.. _`Glossary`:
 
 Glossary
 --------
@@ -69,8 +70,8 @@ References
 
 .. glossary::
 
-   XYZ
-      `XYZ, Version 2.8 <https://xyz.org>`_
+   Pytest Fixtures
+      `Pytest Fixtures <https://docs.pytest.org/en/stable/fixture.html>`_
 
    Python Glossary
       * `Python 2.7 Glossary <https://docs.python.org/2.7/glossary.html>`_

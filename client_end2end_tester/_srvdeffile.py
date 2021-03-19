@@ -123,6 +123,8 @@ class ServerDefinitionFileNotFound(Exception):
     """
     Exception indicating that a server definition file was not found or cannot
     be accessed due to a permission error.
+
+    Derived from :exc:`py:Exception`.
     """
     pass
 
@@ -131,6 +133,8 @@ class ServerDefinitionFileError(Exception):
     """
     Exception indicating that an existing server definition file has some
     issue with the format of its file content.
+
+    Derived from :exc:`py:Exception`.
     """
     pass
 
@@ -141,6 +145,8 @@ class ServerDefinitionFile(object):
 
     This file defines servers for end2end tests of clients and has the following
     format:
+
+    .. code-block:: yaml
 
         servers:                # Server definitions.
           SRV1:                 # Nickname of the server.
@@ -174,7 +180,7 @@ class ServerDefinitionFile(object):
     @property
     def filepath(self):
         """
-        string: File path of the server definition file.
+        :term:`unicode string`: File path of the server definition file.
         """
         return self._filepath
 
@@ -183,14 +189,14 @@ class ServerDefinitionFile(object):
         Get server definition for a given server nickname.
 
         Parameters:
-          nickname (string): Server nickname.
+          nickname (:term:`unicode string`): Server nickname.
 
         Returns:
-          class:`ServerDefinition`: Server definition with the specified
-          nickname.
+          :class:`~client_end2end_tester.ServerDefinition`:
+             Server definition with the specified nickname.
 
         Raises:
-          KeyError: Nickname not found
+          :exc:`py:KeyError`: Nickname not found
         """
         try:
             server_dict = self._servers[nickname]
@@ -208,13 +214,14 @@ class ServerDefinitionFile(object):
         List the server definitions for a given server or server group nickname.
 
         Parameters:
-          nickname (string): Server or server group nickname.
+          nickname (:term:`unicode string`): Server or server group nickname.
 
         Returns:
-          list of class:`ServerDefinition`: List of server definitions.
+          list of :class:`~client_end2end_tester.ServerDefinition`:
+          List of server definitions.
 
         Raises:
-          KeyError: Nickname not found
+          :exc:`py:KeyError`: Nickname not found
         """
         if nickname in self._servers:
             return [self.get_server(nickname)]
@@ -244,7 +251,8 @@ class ServerDefinitionFile(object):
         an empty list.
 
         Returns:
-          list of class:`ServerDefinition`: List of server definitions.
+          list of :class:`~client_end2end_tester.ServerDefinition`:
+          List of server definitions.
         """
         if self._default is None:
             return []
@@ -255,7 +263,8 @@ class ServerDefinitionFile(object):
         List all server definitions.
 
         Returns:
-          list of class:`ServerDefinition`: List of server definitions.
+          list of :class:`~client_end2end_tester.ServerDefinition`:
+          List of server definitions.
         """
         return [self.get_server(nickname) for nickname in self._servers]
 
