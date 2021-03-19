@@ -170,11 +170,11 @@ setuptools.setup(
     ],
     include_package_data=True,  # Includes MANIFEST.in files into sdist (only)
     scripts=[],
-    entry_points={
-        'pytest11': [
-            'client_end2end_tester = client_end2end_tester.plugin',
-        ],
-    },
+    # entry_points={
+    #     'pytest11': [
+    #         'client_end2end_tester = client_end2end_tester.plugin',
+    #     ],
+    # },
     install_requires=install_requires,
     dependency_links=dependency_links,
     cmdclass={
