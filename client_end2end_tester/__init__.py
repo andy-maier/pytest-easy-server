@@ -11,7 +11,7 @@
 # limitations under the License.
 
 """
-client_end2end_tester - Python testing for clients against real servers
+client_end2end_tester - Pytest plugin for testing against real servers
 """
 
 # There are submodules, but users shouldn't need to know about them.
@@ -19,6 +19,7 @@ client_end2end_tester - Python testing for clients against real servers
 
 from __future__ import absolute_import, print_function
 from ._version import __version__  # noqa: F401
+from ._exceptions import *  # noqa: F403,F401
 from ._srvdef import *  # noqa: F403,F401
 from ._srvdeffile import *  # noqa: F403,F401
-from ._pytest_fixtures import *  # noqa: F403,F401
+from ._srvdef_fixture import *  # noqa: F403,F401

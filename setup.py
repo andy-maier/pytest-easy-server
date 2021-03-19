@@ -169,15 +169,18 @@ setuptools.setup(
         'client_end2end_tester',
     ],
     include_package_data=True,  # Includes MANIFEST.in files into sdist (only)
-    scripts=[
-        # add any scripts
-    ],
+    scripts=[],
+    entry_points={
+        'pytest11': [
+            'client_end2end_tester = client_end2end_tester.plugin',
+        ],
+    },
     install_requires=install_requires,
     dependency_links=dependency_links,
     cmdclass={
         'test': test,
     },
-    description="Testing Python client libraries against real servers",
+    description="Pytest plugin for testing against real servers",
     long_description=read_file('README.rst'),
     long_description_content_type='text/x-rst',
     license="Apache Software License 2.0",

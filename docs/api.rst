@@ -24,7 +24,7 @@ This section describes the API of the client_end2end_tester package.
 server_definition fixture
 -------------------------
 
-.. # automodule:: client_end2end_tester._pytest_fixtures
+.. # automodule:: client_end2end_tester._srvdef_fixture
 
 .. autofunction:: client_end2end_tester.server_definition
 
@@ -73,11 +73,15 @@ ServerDefinitionFile class
 Exception classes
 -----------------
 
+.. autoclass:: client_end2end_tester.ServerDefinitionFileException
+    :members:
+    :special-members: __str__
+
 .. autoclass:: client_end2end_tester.ServerDefinitionFileNotFound
     :members:
     :special-members: __str__
 
-.. autoclass:: client_end2end_tester.ServerDefinitionFileError
+.. autoclass:: client_end2end_tester.ServerDefinitionFileFormatError
     :members:
     :special-members: __str__
 

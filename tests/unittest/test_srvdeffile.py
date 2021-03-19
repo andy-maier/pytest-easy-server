@@ -20,7 +20,7 @@ import pytest
 from testfixtures import TempDirectory
 import six
 from client_end2end_tester import ServerDefinitionFile, \
-    ServerDefinitionFileError, ServerDefinitionFileNotFound
+    ServerDefinitionFileFormatError, ServerDefinitionFileNotFound
 # White box testing: We test an internal function
 from client_end2end_tester._srvdeffile import _load_validate_default
 
@@ -142,7 +142,7 @@ TESTCASES_SDF_LOAD = [
             sdf_yaml="",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on top-level element.* is not of type 'object'"),
         None, True
     ),
@@ -154,7 +154,7 @@ TESTCASES_SDF_LOAD = [
                      "  bar:\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError, "Invalid YAML syntax"),
+        (ServerDefinitionFileFormatError, "Invalid YAML syntax"),
         None, True
     ),
     (
@@ -164,7 +164,7 @@ TESTCASES_SDF_LOAD = [
                      "- server_groups: {}\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on top-level element: .* is not of type 'object'"),
         None, True
     ),
@@ -174,7 +174,7 @@ TESTCASES_SDF_LOAD = [
             sdf_yaml="server_groups: {}\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on top-level element: 'servers' is a required "
          "property"),
         None, True
@@ -186,7 +186,7 @@ TESTCASES_SDF_LOAD = [
                      "  - foo\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'servers': .* is not of type 'object'"),
         None, True
     ),
@@ -196,7 +196,7 @@ TESTCASES_SDF_LOAD = [
             sdf_yaml="servers: bla\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'servers': .* is not of type 'object'"),
         None, True
     ),
@@ -207,7 +207,7 @@ TESTCASES_SDF_LOAD = [
                      "server_groups: []\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'server_groups': .* is not of type "
          "'object'"),
         None, True
@@ -219,7 +219,7 @@ TESTCASES_SDF_LOAD = [
                      "server_groups: bla\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'server_groups': .* is not of type "
          "'object'"),
         None, True
@@ -232,7 +232,7 @@ TESTCASES_SDF_LOAD = [
                      "  grp1: invalid\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'server_groups.grp1': .* is not of type "
          "'object'"),
         None, True
@@ -246,7 +246,7 @@ TESTCASES_SDF_LOAD = [
                      "    members: []\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'server_groups.grp1': 'description' is "
          "a required property"),
         None, True
@@ -261,7 +261,7 @@ TESTCASES_SDF_LOAD = [
                      "    members: []\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'server_groups.grp1.description': "
          ".* is not of type 'string'"),
         None, True
@@ -275,7 +275,7 @@ TESTCASES_SDF_LOAD = [
                      "    description: desc1\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'server_groups.grp1': 'members' is "
          "a required property"),
         None, True
@@ -290,7 +290,7 @@ TESTCASES_SDF_LOAD = [
                      "    members: invalid\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'server_groups.grp1.members': "
          ".* is not of type 'array'"),
         None, True
@@ -306,7 +306,7 @@ TESTCASES_SDF_LOAD = [
                      "      - {}\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'server_groups.grp1.members.0': "
          ".* is not of type 'string'"),
         None, True
@@ -319,7 +319,7 @@ TESTCASES_SDF_LOAD = [
                      "default: null\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Validation failed on element 'default': "
          "None is not of type 'string'"),
         None, True
@@ -337,7 +337,7 @@ TESTCASES_SDF_LOAD = [
                      "      - srv1\n",
             exp_data=None,
         ),
-        (ServerDefinitionFileError,
+        (ServerDefinitionFileFormatError,
          "Member 'srv1' of server group 'grp1' not found in servers"),
         None, False  # TODO: Enable once check is implemented
     ),

@@ -113,7 +113,7 @@ project = u'client_end2end_tester'
 author = u"Andreas Maier"
 
 # The short description of the package.
-_short_description = u"Testing Python client libraries against real servers"
+_short_description = u"Pytest plugin for testing against real servers"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

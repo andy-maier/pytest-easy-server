@@ -11,8 +11,8 @@
 .. limitations under the License.
 
 
-client_end2end_tester - Testing Python client libraries against real servers
-****************************************************************************
+client_end2end_tester - Pytest plugin for testing against real servers
+**********************************************************************
 
 The client_end2end_tester package provides support for defining information
 about servers in a *server definition file* and using that information in
