@@ -33,7 +33,7 @@ grouping them into server groups, and defining a default server or group.
 
 The information that can be defined for a server has a standard part and
 a completely flexible user-defined part, as shown in this example of
-a server definition file. Section :ref:`Format of server definition file`
+a server definition file. Section `Format of server definition file`_
 explains the format in more detail.
 
 Example server definition file:
@@ -65,10 +65,10 @@ Example server definition file:
 If you want to put the server definition file into a repository, you do not
 want to have any passwords or other secrets in there, and in that case you
 can define the user-defined part such that it either encrypts these secrets,
-or references some vault containing them. Section :ref:`Protecting secrets`
+or references some vault containing them. Section `Protecting secrets`_
 explains that in more detail.
 
-The pytest fixture :func:`~client_end2end_tester.server_definition` can be used
+The pytest fixture `server_definition`_ can be used
 in your tests as follows (assuming the server definition file has the
 user-defined structure shown above):
 
@@ -89,7 +89,7 @@ user-defined structure shown above):
         # log on to the host and perform some test
 
 The ``server_definition`` parameter of the fixture is a
-:class:`~client_end2end_tester.ServerDefinition` object that encapsulates the
+`ServerDefinition`_ object that encapsulates the
 server definition that is to be used for the test. Pytest will invoke the test
 function repeatedly for all servers that are to be used for testing.
 
@@ -97,7 +97,7 @@ You can also build your own pytest fixtures on top of this one that provide for
 example an open session with the server so that your test functions can
 use the open session directly. That basically moves repeated boiler plate
 code from your test functions into that fixture. Section
-:ref:`Derived pytest fixtures` explains that in more detail.
+`Derived pytest fixtures`_ explains that in more detail.
 
 Last but not least, the server definition file to be used and the server
 or server group to be used for testing can be controlled with two environment
@@ -150,8 +150,27 @@ Installation
 
       $ pip install client_end2end_tester
 
+
+.. _`Documentation`:
+
+Documentation
+------------
+
+* `Documentation`_
+
+
 License
 -------
 
 The client_end2end_tester project is provided under the
 `Apache Software License 2.0 <https://raw.githubusercontent.com/andy-maier/client_end2end_tester/master/LICENSE>`_.
+
+
+.. # Links to documentation:
+
+.. _`Format of server definition file`: https://client-end2end-tester.readthedocs.io/en/latest/usage.html#format-of-server-definition-file
+.. _`Protecting secrets`: https://client-end2end-tester.readthedocs.io/en/latest/usage.html#protecting-secrets
+.. _`Derived pytest fixtures`: https://client-end2end-tester.readthedocs.io/en/latest/usage.html#derived-pytest-fixtures
+.. _`server_definition`: https://client-end2end-tester.readthedocs.io/en/latest/api.html#server-definition-fixture
+.. _`ServerDefinition`: https://client-end2end-tester.readthedocs.io/en/latest/api.html#serverdefinition-class
+.. _`Documentation`: https://client-end2end-tester.readthedocs.io/en/latest/
