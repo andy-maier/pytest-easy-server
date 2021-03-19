@@ -153,7 +153,7 @@ Installation
 
   .. clode-block:: text
 
-      plugins: pytest-tars-0.5.0
+      plugins: tars-0.5.0
 
 
 .. _`Documentation`:
