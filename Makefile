@@ -415,7 +415,7 @@ all: develop build builddoc check pylint test
 .PHONY: clobber
 clobber: clean
 	@echo "Makefile: Removing everything for a fresh start"
-	-$(call RM_FUNC,*.done $(dist_files) $(dist_dir)/$(package_name)-$(package_version)*.egg $(package_name)/*cover)
+	-$(call RM_FUNC,*.done MANIFEST.in $(dist_files) $(dist_dir)/$(package_name)-$(package_version)*.egg $(package_name)/*cover)
 	-$(call RMDIR_FUNC,$(doc_build_dir) .tox $(coverage_html_dir) $(package_name).egg-info)
 	@echo "Makefile: Done removing everything for a fresh start"
 	@echo "Makefile: Target $@ done."
@@ -428,7 +428,7 @@ clean:
 	-$(call RM_R_FUNC,*~)
 	-$(call RM_R_FUNC,.*~)
 	-$(call RM_FUNC,MANIFEST parser.out .coverage $(package_name)/parser.out)
-	-$(call RMDIR_FUNC,build .cache)
+	-$(call RMDIR_FUNC,build .cache .pytest_cache)
 	@echo "Makefile: Done removing temporary build products"
 	@echo "Makefile: Target $@ done."
 
