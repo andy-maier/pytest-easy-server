@@ -21,4 +21,4 @@ Version of the client_end2end_tester package.
 #:
 #: * "M.N.P.dev1": Development level 1 of a not yet released version M.N.P
 #: * "M.N.P": A released version M.N.P
-__version__ = '0.1.0.dev1'
+__version__ = '0.5.0.dev1'

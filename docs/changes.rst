@@ -17,20 +17,12 @@ Change log
 ==========
 
 
-client_end2end_tester 0.1.0.dev1
+client_end2end_tester 0.5.0.dev1
 --------------------------------
 
 Released: not yet
 
-**Incompatible changes:**
-
-**Deprecations:**
-
-**Bug fixes:**
-
-**Enhancements:**
-
-**Cleanup:**
+Initial release.
 
 **Known issues:**
 
