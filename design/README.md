@@ -1,5 +1,5 @@
-Design information for client_end2end_tester project
-==============================================================
+Design information for pytest-tars-plugin project
+=================================================
 
 This directory contains loosely organized files in markdown, text or RST format
 containing design information on the project.

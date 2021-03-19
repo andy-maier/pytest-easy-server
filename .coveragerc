@@ -1,4 +1,4 @@
-# "coverage" config file for client_end2end_tester project.
+# "coverage" config file for pytest-tars-plugin project.
 #
 # For documentation, see:
 # https://coverage.readthedocs.org/en/latest/config.html

@@ -1,12 +1,12 @@
-Installation of client_end2end_tester project
-=======================================================
+Installation of pytest-tars-plugin project
+==========================================
 
 To install the latest released version of the
-client_end2end_tester project into your active Python environment:
+pytest-tars-plugin project into your active Python environment:
 
-      $ pip install client_end2end_tester
+      $ pip install pytest-tars-plugin
 
 This will also install any prerequisite Python packages.
 
 For more details and alternative ways to install, see
-[Installation](https://client_end2end_tester.readthedocs.io/en/stable/intro.html#installation).
+[Installation](https://pytest-tars-plugin.readthedocs.io/en/stable/intro.html#installation).

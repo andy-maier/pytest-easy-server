@@ -16,7 +16,7 @@
 Usage
 =====
 
-This section describes the usage of the client_end2end_tester package.
+This section describes the usage of the pytest-tars-plugin package.
 
 
 .. _`Using the server_definition fixture`:

@@ -28,4 +28,4 @@ Initial release.
 
 * See `list of open issues`_.
 
-.. _`list of open issues`: https://github.com/andy-maier/client_end2end_tester/issues
+.. _`list of open issues`: https://github.com/andy-maier/pytest-tars-plugin/issues

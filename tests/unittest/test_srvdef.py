@@ -16,7 +16,7 @@ Test the _srvdef.py module.
 
 from __future__ import absolute_import, print_function
 import pytest
-from client_end2end_tester import ServerDefinition
+from pytest_tars_plugin import ServerDefinition
 
 from ..utils.simplified_test_function import simplified_test_function
 
