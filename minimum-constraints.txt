@@ -118,7 +118,6 @@ virtualenv==20.0.0; python_version >= '3.8'  # requires six<2,>=1.12.0
 # Coverage reporting (no imports, invoked via coveralls script):
 # We exclude Python 3.4 from coverage testing and reporting.
 coverage==5.0; python_version == '2.7' or python_version >= '3.5'
-pytest-cov==2.7.0; python_version == '2.7' or python_version >= '3.5'
 # Links are not allowed in constraint files - minimum ensured by dev-requirements.txt:
 # git+https://github.com/andy-maier/coveralls-python.git@andy/add-py27#egg=coveralls; python_version == '2.7'
 coveralls==2.1.2; python_version >= '3.5'

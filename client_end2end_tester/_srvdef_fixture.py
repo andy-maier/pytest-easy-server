@@ -22,24 +22,7 @@ from ._srvdef import ServerDefinition
 __all__ = ['server_definition']
 
 
-def fixtureid_server_definition(fixture_value):
-    """
-    Return a fixture ID to be used by pytest for fixture `server_definition()`.
-
-    Parameters:
-
-      fixture_value (:class:`~client_end2end_tester.ServerDefinition`):
-        The server definition the test runs against.
-    """
-    sd = fixture_value
-    assert isinstance(sd, ServerDefinition)
-    return "server_definition={0}".format(sd.nickname)
-
-
-@pytest.fixture(
-    scope="module",
-    # ids=fixtureid_server_definition,  # Handled in plugin.py
-)
+@pytest.fixture(scope="module")
 def server_definition(request):
     """
     Pytest fixture representing the set of server definitions for all servers

@@ -19,10 +19,11 @@ virtualenv>=16.1.0; python_version >= '3.5' and python_version < '3.8'
 virtualenv>=20.0.0; python_version >= '3.8'
 
 # Coverage reporting (no imports, invoked via coveralls script):
+# We run the coverage command instead of using the pytest-cov plugin because the
+# latter interferes with our own plugin.
 # We exclude Python 3.4 from coverage testing and reporting.
 # coverage 5.0 has removed support for py34
 coverage>=5.0; python_version == '2.7' or python_version >= '3.5'
-pytest-cov>=2.7.0; python_version == '2.7' or python_version >= '3.5'
 # coveralls 2.0 has removed support for Python 2.7 and 3.4
 git+https://github.com/andy-maier/coveralls-python.git@andy/add-py27#egg=coveralls; python_version == '2.7'
 # TODO: Remove coveralls pinning to <3.0.0 once fixed (TheKevJames/coveralls-python#252)

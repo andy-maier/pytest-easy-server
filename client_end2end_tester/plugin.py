@@ -19,13 +19,8 @@ import os
 import pytest
 
 from ._exceptions import ServerDefinitionFileException
+from ._srvdef import ServerDefinition
 from ._srvdeffile import ServerDefinitionFile
-from ._srvdef_fixture import fixtureid_server_definition
-
-# We import our module in a deferred manner, because importing it globally
-# causes the coverage to go down. Apparently the pytest coverage plugin does
-# not honor any module global code as being covered when the module is already
-# loaded by pytest.
 
 
 def pytest_addoption(parser):
@@ -62,13 +57,20 @@ Default: default server or server group specified in the file.
 """)
 
 
-# TODO: Figure out how to get coverage correct again.
-#       Enabling @pytest.hookimpl below, causes:
-# ..site-packages/pluggy/manager.py:84: in <lambda>
-#     self._inner_hookexec = lambda hook, methods, kwargs: hook.multicall(
-# E   TypeError: 'NoneType' object is not an iterator
+def fixtureid_server_definition(fixture_value):
+    """
+    Return a fixture ID to be used by pytest for fixture `server_definition()`.
 
-# @pytest.hookimpl(hookwrapper=True)
+    Parameters:
+
+      fixture_value (:class:`~client_end2end_tester.ServerDefinition`):
+        The server definition the test runs against.
+    """
+    sd = fixture_value
+    assert isinstance(sd, ServerDefinition)
+    return "server_definition={0}".format(sd.nickname)
+
+
 def pytest_generate_tests(metafunc):
     """
     Pytest plugin function to generate the tests for multiple servers in the
