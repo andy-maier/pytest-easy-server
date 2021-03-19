@@ -1,0 +1,5 @@
+# Example Ansible vault file for approach 2
+
+passwords:
+  myserver1: mypass1
+  myserver2: mypass2

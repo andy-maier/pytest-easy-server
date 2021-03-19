@@ -1,0 +1,13 @@
+# Example server definition file for approach 2
+
+servers:
+  myserver1:
+    description: "my dev system 1"
+    details:
+      host: "10.11.12.13"
+      userid: myuserid
+  myserver2:
+    description: "my dev system 2"
+    details:
+      host: "10.11.12.14"
+      userid: myuserid
