@@ -153,6 +153,6 @@ Installation
   When pytest runs, it will automatically find the plugin and will show
   its version, e.g.:
 
-  .. clode-block:: text
+  .. code-block:: text
 
       plugins: tars-0.5.0
