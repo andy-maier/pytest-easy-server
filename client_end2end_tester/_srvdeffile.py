@@ -18,10 +18,11 @@ from __future__ import absolute_import, print_function
 import yaml
 import jsonschema
 
+from ._exceptions import ServerDefinitionFileNotFound, \
+    ServerDefinitionFileFormatError
 from ._srvdef import ServerDefinition
 
-__all__ = ['ServerDefinitionFileNotFound', 'ServerDefinitionFileError',
-           'ServerDefinitionFile']
+__all__ = ['ServerDefinitionFile']
 
 
 # JSON schema describing the structure of the server definition files
@@ -117,26 +118,6 @@ SERVER_DEFINITION_FILE_SCHEMA = {
         },
     },
 }
-
-
-class ServerDefinitionFileNotFound(Exception):
-    """
-    Exception indicating that a server definition file was not found or cannot
-    be accessed due to a permission error.
-
-    Derived from :exc:`py:Exception`.
-    """
-    pass
-
-
-class ServerDefinitionFileError(Exception):
-    """
-    Exception indicating that an existing server definition file has some
-    issue with the format of its file content.
-
-    Derived from :exc:`py:Exception`.
-    """
-    pass
 
 
 class ServerDefinitionFile(object):
@@ -279,7 +260,7 @@ def _load_validate_default(filepath):
 
     Raises:
       ServerDefinitionFileNotFound: File not found, incl. permission errors
-      ServerDefinitionFileError: Invalid file content
+      ServerDefinitionFileFormatError: Invalid file content
       RuntimeError: Internal errors
     """
 
@@ -294,11 +275,11 @@ def _load_validate_default(filepath):
         new_exc.__cause__ = None  # pylint: disable=invalid-name
         raise new_exc  # ServerDefinitionFileNotFound
     except yaml.YAMLError as exc:
-        new_exc = ServerDefinitionFileError(
+        new_exc = ServerDefinitionFileFormatError(
             "Invalid YAML syntax in server definition file {fn}: {exc}".
             format(fn=filepath, exc=exc))
         new_exc.__cause__ = None  # pylint: disable=invalid-name
-        raise new_exc  # ServerDefinitionFileError
+        raise new_exc  # ServerDefinitionFileFormatError
 
     # Schema validation of file content
     try:
@@ -311,12 +292,12 @@ def _load_validate_default(filepath):
         else:
             elem_str = 'top-level element'
 
-        new_exc = ServerDefinitionFileError(
+        new_exc = ServerDefinitionFileFormatError(
             "Invalid format in server definition file {fn}: Validation "
             "failed on {elem}: {exc}".
             format(fn=filepath, elem=elem_str, exc=exc))
         new_exc.__cause__ = None
-        raise new_exc  # ServerDefinitionFileError
+        raise new_exc  # ServerDefinitionFileFormatError
 
     # Establish defaults for optional top-level elements
 

@@ -11,17 +11,22 @@
 # limitations under the License.
 
 """
-Test the _pytest_fixtures.py module.
+Test the _srvdef_fixture.py module.
 """
 
 from __future__ import absolute_import, print_function
+import pytest
 from client_end2end_tester import ServerDefinition
 # pylint: disable=unused-import
 from client_end2end_tester import server_definition  # noqa: F401
 
 
+@pytest.mark.parametrize(
+    "num",
+    [1, 2]
+)
 # pylint: disable=redefined-outer-name
-def test_ptf_sample1(server_definition):
+def test_fixture_sample(server_definition, num):
     """
     Test using the server_definition fixture.
 
@@ -35,3 +40,5 @@ def test_ptf_sample1(server_definition):
     exp_nicks = ['myserver1', 'myserver2']
 
     assert server_definition.nickname in exp_nicks
+
+    assert num in (1, 2)

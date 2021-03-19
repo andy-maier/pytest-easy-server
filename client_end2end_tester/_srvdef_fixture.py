@@ -11,28 +11,15 @@
 # limitations under the License.
 
 """
-Pytest fixtures for server definitions.
+Pytest fixture server_definition.
 """
 
 from __future__ import absolute_import, print_function
-import os
 import pytest
 
 from ._srvdef import ServerDefinition
-from ._srvdeffile import ServerDefinitionFile
 
 __all__ = ['server_definition']
-
-# Pick up server/group nickname from environment
-TESTSERVER = os.getenv('TESTSERVER', 'default')
-
-# Pick up server definition file from environment
-TESTSERVERFILE = os.getenv('TESTSERVERFILE',
-                           ServerDefinitionFile.default_filepath)
-
-SDF = ServerDefinitionFile(TESTSERVERFILE)
-SD_LIST = SDF.list_default_servers() if TESTSERVER == 'default' else \
-    SDF.list_servers(TESTSERVER)
 
 
 def fixtureid_server_definition(fixture_value):
@@ -50,9 +37,8 @@ def fixtureid_server_definition(fixture_value):
 
 
 @pytest.fixture(
-    params=SD_LIST,
-    scope='module',
-    ids=fixtureid_server_definition
+    scope="module",
+    # ids=fixtureid_server_definition,  # Handled in plugin.py
 )
 def server_definition(request):
     """
@@ -63,4 +49,6 @@ def server_definition(request):
       :class:`~client_end2end_tester.ServerDefinition`:
       Server definition for each server to test against.
     """
-    return request.param
+    sd = request.param
+    assert isinstance(sd, ServerDefinition)
+    return sd
