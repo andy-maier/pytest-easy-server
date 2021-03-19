@@ -137,6 +137,7 @@ project_name := pytest-tars
 
 # Name of this Python package
 package_name := pytest_tars
+package_name_tar := pytest-tars
 
 # Directory for coverage html output. Not used right now. If used, must be in
 # sync with the one in .coveragerc.
@@ -159,7 +160,7 @@ dist_dir := dist
 # Distribution archives
 # These variables are set with "=" for the same reason as package_version.
 bdist_file = $(dist_dir)/$(package_name)-$(package_version)-py2.py3-none-any.whl
-sdist_file = $(dist_dir)/$(package_name)-$(package_version).tar.gz
+sdist_file = $(dist_dir)/$(package_name_tar)-$(package_version).tar.gz
 
 dist_files = $(bdist_file) $(sdist_file)
 
