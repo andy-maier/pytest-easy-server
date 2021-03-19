@@ -28,7 +28,7 @@ from client_end2end_tester import server_definition  # noqa: F401
 # pylint: disable=redefined-outer-name
 def test_fixture_sample(server_definition, num):
     """
-    Test using the server_definition fixture.
+    Sample test using the server_definition fixture.
 
     Parameters:
       server_definition (ServerDefinition): A server definition
