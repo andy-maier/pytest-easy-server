@@ -25,10 +25,11 @@ Introduction
 Overview
 --------
 
-The pytest-tars package is a pytest plugin that provides support for
-defining information about servers in a *server definition file* and using that
-information via a pytest fixture in pytest test functions, so that the test
-functions are called for all the servers that are specified.
+The pytest-tars package ("tars" = testing against real servers)
+is a `pytest`_ plugin that provides support for defining information about
+servers in a *server definition file* and using that information via a pytest
+fixture in pytest test functions, so that the test functions are called for
+some or all of the servers that are specified.
 
 The server definition file is in YAML format and allows defining servers,
 grouping them into server groups, and defining a default server or group.
@@ -62,7 +63,7 @@ Example server definition file:
         members:
           - myserver1
 
-    default: mygroup1    # nickname of default server or group
+    default: mygroup1              # nickname of default server or group
 
 If you want to put the server definition file into a repository, you do not
 want to have any passwords or other secrets in there, and in that case you
@@ -156,3 +157,8 @@ Installation
   .. code-block:: text
 
       plugins: tars-0.5.0
+
+
+.. # Links to documentation:
+
+.. _`pytest`: https://docs.pytest.org/en/stable/
