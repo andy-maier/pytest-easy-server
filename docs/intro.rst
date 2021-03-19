@@ -108,7 +108,7 @@ options when invoking pytest:
 .. code-block:: text
 
     --cet-file=FILE       Use the specified server definition file.
-                          Default: server_definitions.yaml in current directory.
+                          Default: tars.yaml in current directory.
 
     --cet-server=NICKNAME
                           Use the server or server group with this nickname to test against.
