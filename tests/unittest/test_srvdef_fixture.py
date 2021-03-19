@@ -16,9 +16,9 @@ Test the _srvdef_fixture.py module.
 
 from __future__ import absolute_import, print_function
 import pytest
-from pytest_tars_plugin import ServerDefinition
+from pytest_tars import ServerDefinition
 # pylint: disable=unused-import
-from pytest_tars_plugin import server_definition  # noqa: F401
+from pytest_tars import server_definition  # noqa: F401
 
 
 @pytest.mark.parametrize(

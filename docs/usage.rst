@@ -16,7 +16,7 @@
 Usage
 =====
 
-This section describes the usage of the pytest-tars-plugin package.
+This section describes the usage of the pytest-tars package.
 
 
 .. _`Using the server_definition fixture`:

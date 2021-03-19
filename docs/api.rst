@@ -16,7 +16,7 @@
 API Reference
 =============
 
-This section describes the API of the pytest-tars-plugin package.
+This section describes the API of the pytest-tars package.
 
 
 .. _`server_definition fixture`:
@@ -24,9 +24,9 @@ This section describes the API of the pytest-tars-plugin package.
 server_definition fixture
 -------------------------
 
-.. # automodule:: pytest_tars_plugin._srvdef_fixture
+.. # automodule:: pytest_tars._srvdef_fixture
 
-.. autofunction:: pytest_tars_plugin.server_definition
+.. autofunction:: pytest_tars.server_definition
 
 
 .. _`ServerDefinition class`:
@@ -34,9 +34,9 @@ server_definition fixture
 ServerDefinition class
 ----------------------
 
-.. # automodule:: pytest_tars_plugin._srvdef
+.. # automodule:: pytest_tars._srvdef
 
-.. autoclass:: pytest_tars_plugin.ServerDefinition
+.. autoclass:: pytest_tars.ServerDefinition
     :members:
     :special-members: __str__
 
@@ -48,21 +48,21 @@ ServerDefinition class
 ServerDefinitionFile class
 --------------------------
 
-.. # automodule:: pytest_tars_plugin._srvdeffile
+.. # automodule:: pytest_tars._srvdeffile
 
-.. autoclass:: pytest_tars_plugin.ServerDefinitionFile
+.. autoclass:: pytest_tars.ServerDefinitionFile
     :members:
     :special-members: __str__
 
     .. rubric:: Methods
 
-    .. autoautosummary:: pytest_tars_plugin.ServerDefinitionFile
+    .. autoautosummary:: pytest_tars.ServerDefinitionFile
         :methods:
         :nosignatures:
 
     .. rubric:: Attributes
 
-    .. autoautosummary:: pytest_tars_plugin.ServerDefinitionFile
+    .. autoautosummary:: pytest_tars.ServerDefinitionFile
         :attributes:
 
     .. rubric:: Details
@@ -73,15 +73,15 @@ ServerDefinitionFile class
 Exception classes
 -----------------
 
-.. autoclass:: pytest_tars_plugin.ServerDefinitionFileException
+.. autoclass:: pytest_tars.ServerDefinitionFileException
     :members:
     :special-members: __str__
 
-.. autoclass:: pytest_tars_plugin.ServerDefinitionFileNotFound
+.. autoclass:: pytest_tars.ServerDefinitionFileNotFound
     :members:
     :special-members: __str__
 
-.. autoclass:: pytest_tars_plugin.ServerDefinitionFileFormatError
+.. autoclass:: pytest_tars.ServerDefinitionFileFormatError
     :members:
     :special-members: __str__
 
@@ -92,9 +92,9 @@ Package version
 ---------------
 
 The package version can be accessed by programs using the
-``pytest_tars_plugin.__version__`` variable [#]_:
+``pytest_tars.__version__`` variable [#]_:
 
-.. autodata:: pytest_tars_plugin._version.__version__
+.. autodata:: pytest_tars._version.__version__
 
 This documentation may have been built from a development level of the
 package. You can recognize a development version of this package by the
@@ -105,5 +105,5 @@ released after 0.1.1. Version 1.1.2 is an `assumed` next version, because the
 `actually released` next version might be 0.2.0 or even 1.0.0.
 
 .. [#] For tooling reasons, that variable is shown as
-   ``pytest_tars_plugin._version.__version__`` in this documentation, but
-   it should be accessed as ``pytest_tars_plugin.__version__``.
+   ``pytest_tars._version.__version__`` in this documentation, but
+   it should be accessed as ``pytest_tars.__version__``.

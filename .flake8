@@ -1,4 +1,4 @@
-# Flake8 config file for pytest-tars-plugin project.
+# Flake8 config file for pytest-tars project.
 
 [flake8]
 max_line_length = 80

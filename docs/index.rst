@@ -11,10 +11,10 @@
 .. limitations under the License.
 
 
-pytest-tars-plugin - Pytest plugin for testing against real servers
-**********************************************************************
+pytest-tars - Pytest plugin for testing against real servers
+************************************************************
 
-The pytest-tars-plugin package provides support for defining information
+The pytest-tars package provides support for defining information
 about servers in a *server definition file* and using that information in
 pytest fixtures, so that the pytest testcase is run against all the servers
 that are specified.

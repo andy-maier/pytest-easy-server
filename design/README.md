@@ -1,5 +1,5 @@
-Design information for pytest-tars-plugin project
-=================================================
+Design information for pytest-tars project
+==========================================
 
 This directory contains loosely organized files in markdown, text or RST format
 containing design information on the project.

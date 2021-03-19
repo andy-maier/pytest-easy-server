@@ -30,8 +30,8 @@ def pytest_addoption(parser):
     group.addoption() supports the same arguments as argparse.add_argument().
     """
 
-    group = parser.getgroup('pytest-tars-plugin')
-    group.description = "pytest-tars-plugin - " \
+    group = parser.getgroup('pytest-tars')
+    group.description = "pytest-tars - " \
         "Pytest plugin for testing against real servers"
 
     group.addoption(
@@ -63,7 +63,7 @@ def fixtureid_server_definition(fixture_value):
 
     Parameters:
 
-      fixture_value (:class:`~pytest_tars_plugin.ServerDefinition`):
+      fixture_value (:class:`~pytest_tars.ServerDefinition`):
         The server definition the test runs against.
     """
     sd = fixture_value
@@ -84,7 +84,7 @@ def pytest_generate_tests(metafunc):
         cet_server = config.getvalue('cet_server')
 
         if config.getvalue('verbose'):
-            print("\npytest-tars-plugin: Loading server definition file: {}".
+            print("\npytest-tars: Loading server definition file: {}".
                   format(cet_file))
 
         # The following construct places the pytest.exit() call outside of the
