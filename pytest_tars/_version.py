@@ -11,7 +11,7 @@
 # limitations under the License.
 
 """
-Version of the pytest-tars-plugin package.
+Version of the pytest-tars package.
 """
 
 #: The full version of this package including any development levels, as a

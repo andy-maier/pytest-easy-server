@@ -11,7 +11,7 @@
 # limitations under the License.
 
 """
-pytest-tars-plugin - Pytest plugin for testing against real servers
+pytest-tars - Pytest plugin for testing against real servers
 """
 
 # There are submodules, but users shouldn't need to know about them.

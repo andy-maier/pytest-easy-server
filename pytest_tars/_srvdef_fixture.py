@@ -29,7 +29,7 @@ def server_definition(request):
     to test against.
 
     Returns:
-      :class:`~pytest_tars_plugin.ServerDefinition`:
+      :class:`~pytest_tars.ServerDefinition`:
       Server definition for each server to test against.
     """
     sd = request.param

@@ -19,10 +19,10 @@ import os
 import pytest
 from testfixtures import TempDirectory
 import six
-from pytest_tars_plugin import ServerDefinitionFile, \
+from pytest_tars import ServerDefinitionFile, \
     ServerDefinitionFileFormatError, ServerDefinitionFileNotFound
 # White box testing: We test an internal function
-from pytest_tars_plugin._srvdeffile import _load_validate_default
+from pytest_tars._srvdeffile import _load_validate_default
 
 from ..utils.simplified_test_function import simplified_test_function
 

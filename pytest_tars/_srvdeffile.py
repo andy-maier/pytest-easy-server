@@ -173,7 +173,7 @@ class ServerDefinitionFile(object):
           nickname (:term:`unicode string`): Server nickname.
 
         Returns:
-          :class:`~pytest_tars_plugin.ServerDefinition`:
+          :class:`~pytest_tars.ServerDefinition`:
              Server definition with the specified nickname.
 
         Raises:
@@ -198,7 +198,7 @@ class ServerDefinitionFile(object):
           nickname (:term:`unicode string`): Server or server group nickname.
 
         Returns:
-          list of :class:`~pytest_tars_plugin.ServerDefinition`:
+          list of :class:`~pytest_tars.ServerDefinition`:
           List of server definitions.
 
         Raises:
@@ -232,7 +232,7 @@ class ServerDefinitionFile(object):
         an empty list.
 
         Returns:
-          list of :class:`~pytest_tars_plugin.ServerDefinition`:
+          list of :class:`~pytest_tars.ServerDefinition`:
           List of server definitions.
         """
         if self._default is None:
@@ -244,7 +244,7 @@ class ServerDefinitionFile(object):
         List all server definitions.
 
         Returns:
-          list of :class:`~pytest_tars_plugin.ServerDefinition`:
+          list of :class:`~pytest_tars.ServerDefinition`:
           List of server definitions.
         """
         return [self.get_server(nickname) for nickname in self._servers]

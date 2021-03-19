@@ -1,5 +1,5 @@
 ---
-# Example server definition file for pytest-tars-plugin package.
+# Example server definition file for pytest-tars package.
 
 servers:
 

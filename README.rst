@@ -1,20 +1,20 @@
-pytest-tars-plugin - Pytest plugin for testing against real servers
-===================================================================
+pytest-tars - Pytest plugin for testing against real servers
+============================================================
 
-.. image:: https://badge.fury.io/py/pytest-tars-plugin.svg
-    :target: https://pypi.python.org/pypi/pytest-tars-plugin/
+.. image:: https://badge.fury.io/py/pytest-tars.svg
+    :target: https://pypi.python.org/pypi/pytest-tars/
     :alt: Version on Pypi
 
-.. image:: https://github.com/andy-maier/pytest-tars-plugin/workflows/test/badge.svg?branch=master
-    :target: https://github.com/andy-maier/pytest-tars-plugin/actions/
+.. image:: https://github.com/andy-maier/pytest-tars/workflows/test/badge.svg?branch=master
+    :target: https://github.com/andy-maier/pytest-tars/actions/
     :alt: Actions status
 
-.. image:: https://readthedocs.org/projects/pytest-tars-plugin/badge/?version=latest
-    :target: https://readthedocs.org/projects/pytest-tars-plugin/builds/
+.. image:: https://readthedocs.org/projects/pytest-tars/badge/?version=latest
+    :target: https://readthedocs.org/projects/pytest-tars/builds/
     :alt: Docs build status (master)
 
-.. image:: https://coveralls.io/repos/github/andy-maier/pytest-tars-plugin/badge.svg?branch=master
-    :target: https://coveralls.io/github/andy-maier/pytest-tars-plugin?branch=master
+.. image:: https://coveralls.io/repos/github/andy-maier/pytest-tars/badge.svg?branch=master
+    :target: https://coveralls.io/github/andy-maier/pytest-tars?branch=master
     :alt: Test coverage (master)
 
 
@@ -23,7 +23,7 @@ pytest-tars-plugin - Pytest plugin for testing against real servers
 Overview
 --------
 
-The pytest-tars-plugin package is a pytest plugin that provides support for
+The pytest-tars package is a pytest plugin that provides support for
 defining information about servers in a *server definition file* and using that
 information via a pytest fixture in pytest test functions, so that the test
 functions are called for all the servers that are specified.
@@ -74,7 +74,7 @@ user-defined structure shown above):
 
 .. code-block:: python
 
-    from pytest_tars_plugin import server_definition
+    from pytest_tars import server_definition
 
     def test_sample(server_definition):
         """
@@ -118,7 +118,7 @@ options when invoking pytest:
 Supported environments
 ----------------------
 
-pytest-tars-plugin is supported in these environments:
+pytest-tars is supported in these environments:
 
 * Operating Systems: Linux, Windows (native, and with UNIX-like environments),
   macOS/OS-X
@@ -141,12 +141,19 @@ Installation
     - wheel
     - pip
 
-* Install the pytest-tars-plugin package and its prerequisite
+* Install the pytest-tars package and its prerequisite
   Python packages into the active Python environment:
 
   .. code-block:: bash
 
-      $ pip install pytest-tars-plugin
+      $ pip install pytest-tars
+
+  When pytest runs, it will automatically find the plugin and will show
+  its version, e.g.:
+
+  .. clode-block:: text
+
+      plugins: pytest-tars-0.5.0
 
 
 .. _`Documentation`:
@@ -160,15 +167,15 @@ Documentation
 License
 -------
 
-The pytest-tars-plugin project is provided under the
-`Apache Software License 2.0 <https://raw.githubusercontent.com/andy-maier/pytest-tars-plugin/master/LICENSE>`_.
+The pytest-tars project is provided under the
+`Apache Software License 2.0 <https://raw.githubusercontent.com/andy-maier/pytest-tars/master/LICENSE>`_.
 
 
 .. # Links to documentation:
 
-.. _`Format of server definition file`: https://client-end2end-tester.readthedocs.io/en/latest/usage.html#format-of-server-definition-file
-.. _`Protecting secrets`: https://client-end2end-tester.readthedocs.io/en/latest/usage.html#protecting-secrets
-.. _`Derived pytest fixtures`: https://client-end2end-tester.readthedocs.io/en/latest/usage.html#derived-pytest-fixtures
-.. _`server_definition`: https://client-end2end-tester.readthedocs.io/en/latest/api.html#server-definition-fixture
-.. _`ServerDefinition`: https://client-end2end-tester.readthedocs.io/en/latest/api.html#serverdefinition-class
-.. _`Documentation on RTD`: https://client-end2end-tester.readthedocs.io/en/latest/
+.. _`Format of server definition file`: https://pytest-tars.readthedocs.io/en/latest/usage.html#format-of-server-definition-file
+.. _`Protecting secrets`: https://pytest-tars.readthedocs.io/en/latest/usage.html#protecting-secrets
+.. _`Derived pytest fixtures`: https://pytest-tars.readthedocs.io/en/latest/usage.html#derived-pytest-fixtures
+.. _`server_definition`: https://pytest-tars.readthedocs.io/en/latest/api.html#server-definition-fixture
+.. _`ServerDefinition`: https://pytest-tars.readthedocs.io/en/latest/api.html#serverdefinition-class
+.. _`Documentation on RTD`: https://pytest-tars.readthedocs.io/en/latest/
