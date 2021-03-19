@@ -11,7 +11,7 @@
 # limitations under the License.
 
 """
-Sphinx config file for client_end2end_tester project.
+Sphinx config file for pytest-tars-plugin project.
 
 This file is execfile()d with the current directory set to its
 containing dir.
@@ -108,7 +108,7 @@ else:
     master_doc = 'docs/index'
 
 # General information about the project.
-project = u'client_end2end_tester'
+project = u'pytest-tars-plugin'
 #copyright = u''
 author = u"Andreas Maier"
 
@@ -121,7 +121,7 @@ _short_description = u"Pytest plugin for testing against real servers"
 
 # The short X.Y version.
 # Note: We use the full version in both cases (e.g. 'M.N.U' or 'M.N.U.dev0').
-version = get_version(os.path.join('..', 'client_end2end_tester', '_version.py'))
+version = get_version(os.path.join('..', 'pytest_tars_plugin', '_version.py'))
 
 # The full version, including alpha/beta/rc tags.
 release = version
@@ -325,7 +325,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'client_end2end_tester_doc'
+htmlhelp_basename = 'pytest-tars-plugin_doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -347,7 +347,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'client_end2end_tester.tex', _short_description, author, 'manual'),
+    (master_doc, 'pytest-tars-plugin.tex', _short_description, author, 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -376,7 +376,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'client_end2end_tester', _short_description, [author], 1)
+    (master_doc, 'pytest-tars-plugin', _short_description, [author], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -389,8 +389,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'client_end2end_tester', _short_description,
-     author, 'client_end2end_tester', _short_description,
+    (master_doc, 'pytest-tars-plugin', _short_description,
+     author, 'pytest-tars-plugin', _short_description,
      'Miscellaneous'),
 ]
 
@@ -667,7 +667,7 @@ class AutoAutoSummary(Autosummary):
                         continue
                     def_class = self._get_def_class(class_obj, method)
                     def_module_name = def_class.__module__
-                    if def_module_name.startswith('client_end2end_tester'):
+                    if def_module_name.startswith('pytest_tars_plugin'):
                         def_module_name = def_module_name.split('.')[0]
                     content_str = "~%s.%s.%s" % (
                         def_module_name,
@@ -683,7 +683,7 @@ class AutoAutoSummary(Autosummary):
                         continue
                     def_class = self._get_def_class(class_obj, attrib)
                     def_module_name = def_class.__module__
-                    if def_module_name.startswith('client_end2end_tester'):
+                    if def_module_name.startswith('pytest_tars_plugin'):
                         def_module_name = def_module_name.split('.')[0]
                     content_str = "~%s.%s.%s" % (
                         def_module_name,

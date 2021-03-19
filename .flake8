@@ -1,4 +1,4 @@
-# Flake8 config file for client_end2end_tester project.
+# Flake8 config file for pytest-tars-plugin project.
 
 [flake8]
 max_line_length = 80

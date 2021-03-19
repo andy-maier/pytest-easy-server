@@ -6,6 +6,6 @@
 
 ### Execution environment
 
-* client_end2end_tester version:
+* pytest-tars-plugin version:
 * Python version:
 * Operating System (type+version):

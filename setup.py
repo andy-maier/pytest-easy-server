@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Python setup script for the client_end2end_tester project.
+Python setup script for the pytest-tars-plugin project.
 """
 
 import sys
@@ -143,7 +143,7 @@ class test(PytestCommand):
     """
     Setup.py command for executing unit and function tests.
     """
-    description = "client_end2end_tester: Run unit tests using pytest"
+    description = "pytest-tars-plugin: Run unit tests using pytest"
     my_test_dirs = ['tests/unittest']
 
 
@@ -155,7 +155,7 @@ dependency_links = [req for req in requirements
                     if req and re.match(r'[^:]+://', req)]
 
 package_version = get_version(
-    os.path.join('client_end2end_tester', '_version.py'))
+    os.path.join('pytest_tars_plugin', '_version.py'))
 
 # Docs on setup():
 # * https://docs.python.org/2.7/distutils/apiref.html?
@@ -163,16 +163,16 @@ package_version = get_version(
 # * https://setuptools.readthedocs.io/en/latest/setuptools.html#
 #   new-and-changed-setup-keywords
 setuptools.setup(
-    name='client_end2end_tester',
+    name='pytest-tars-plugin',
     version=package_version,
     packages=[
-        'client_end2end_tester',
+        'pytest_tars_plugin',
     ],
     include_package_data=True,  # Includes MANIFEST.in files into sdist (only)
     scripts=[],
     entry_points={
         'pytest11': [
-            'client_end2end_tester = client_end2end_tester.plugin',
+            'pytest_tars_plugin = pytest_tars_plugin.plugin',
         ],
     },
     install_requires=install_requires,
@@ -188,23 +188,23 @@ setuptools.setup(
     author_email='andreas.r.maier@gmx.de',
     maintainer="Andreas Maier",
     maintainer_email='andreas.r.maier@gmx.de',
-    url='https://github.com/andy-maier/client_end2end_tester',
+    url='https://github.com/andy-maier/pytest-tars-plugin',
     project_urls={
         'Bug Tracker':
-        'https://github.com/andy-maier/client_end2end_tester/issues',
+        'https://github.com/andy-maier/pytest-tars-plugin/issues',
         'Documentation':
-        'https://client_end2end_tester.readthedocs.io/en/latest/',
+        'https://pytest-tars-plugin.readthedocs.io/en/latest/',
         'Change Log':
-        'https://client_end2end_tester.readthedocs.io/en/latest/changes.html',
+        'https://pytest-tars-plugin.readthedocs.io/en/latest/changes.html',
         'Source Code':
-        'https://github.com/andy-maier/client_end2end_tester',
+        'https://github.com/andy-maier/pytest-tars-plugin',
     },
 
     options={'bdist_wheel': {'universal': True}},
     zip_safe=True,  # This package can safely be installed from a zip file
     platforms='any',
 
-    # Keep these Python versions in sync with client_end2end_tester/__init__.py
+    # Keep these Python versions in sync with pytest_tars_plugin/__init__.py
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

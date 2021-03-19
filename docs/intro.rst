@@ -25,7 +25,7 @@ Introduction
 Overview
 --------
 
-The client_end2end_tester package is a pytest plugin that provides support for
+The pytest-tars-plugin package is a pytest plugin that provides support for
 defining information about servers in a *server definition file* and using that
 information via a pytest fixture in pytest test functions, so that the test
 functions are called for all the servers that are specified.
@@ -70,13 +70,13 @@ can define the user-defined part such that it either encrypts these secrets,
 or references some vault containing them. Section :ref:`Protecting secrets`
 explains that in more detail.
 
-The pytest fixture :func:`~client_end2end_tester.server_definition` is used
+The pytest fixture :func:`~pytest_tars_plugin.server_definition` is used
 in your tests as follows (assuming the server definition file has the
 user-defined structure shown above):
 
 .. code-block:: python
 
-    from client_end2end_tester import server_definition
+    from pytest_tars_plugin import server_definition
 
     def test_sample(server_definition):
         """
@@ -91,7 +91,7 @@ user-defined structure shown above):
         # log on to the host and perform some test
 
 The ``server_definition`` parameter of the test function is a
-:class:`~client_end2end_tester.ServerDefinition` object that encapsulates the
+:class:`~pytest_tars_plugin.ServerDefinition` object that encapsulates the
 server definition that is to be used for the test. Pytest will invoke the test
 function repeatedly for all servers that are to be used for testing.
 
@@ -120,7 +120,7 @@ options when invoking pytest:
 Supported environments
 ----------------------
 
-client_end2end_tester is supported in these environments:
+pytest-tars-plugin is supported in these environments:
 
 * Operating Systems: Linux, Windows (native, and with UNIX-like environments),
   macOS/OS-X
@@ -143,9 +143,9 @@ Installation
     - wheel
     - pip
 
-* Install the client_end2end_tester package and its prerequisite
+* Install the pytest-tars-plugin package and its prerequisite
   Python packages into the active Python environment:
 
   .. code-block:: bash
 
-      $ pip install client_end2end_tester
+      $ pip install pytest-tars-plugin

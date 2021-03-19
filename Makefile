@@ -1,4 +1,4 @@
-# Makefile for the client_end2end_tester project.
+# Makefile for the pytest-tars-plugin project.
 #
 # Supported OS platforms for this Makefile:
 #     Linux (any distro)
@@ -133,10 +133,10 @@ else
 endif
 
 # Name of this project
-project_name := client_end2end_tester
+project_name := pytest-tars-plugin
 
 # Name of this Python package
-package_name := client_end2end_tester
+package_name := pytest_tars_plugin
 
 # Directory for coverage html output. Not used right now. If used, must be in
 # sync with the one in .coveragerc.

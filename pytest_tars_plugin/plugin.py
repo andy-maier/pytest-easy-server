@@ -11,7 +11,7 @@
 # limitations under the License.
 
 """
-Pytest plugin for client_end2end_tester.
+Pytest plugin.
 """
 
 from __future__ import absolute_import, print_function
@@ -30,8 +30,8 @@ def pytest_addoption(parser):
     group.addoption() supports the same arguments as argparse.add_argument().
     """
 
-    group = parser.getgroup('client_end2end_tester')
-    group.description = "client_end2end_tester - " \
+    group = parser.getgroup('pytest-tars-plugin')
+    group.description = "pytest-tars-plugin - " \
         "Pytest plugin for testing against real servers"
 
     group.addoption(
@@ -63,7 +63,7 @@ def fixtureid_server_definition(fixture_value):
 
     Parameters:
 
-      fixture_value (:class:`~client_end2end_tester.ServerDefinition`):
+      fixture_value (:class:`~pytest_tars_plugin.ServerDefinition`):
         The server definition the test runs against.
     """
     sd = fixture_value
@@ -84,7 +84,7 @@ def pytest_generate_tests(metafunc):
         cet_server = config.getvalue('cet_server')
 
         if config.getvalue('verbose'):
-            print("\nclient_end2end_tester: Loading server definition file: {}".
+            print("\npytest-tars-plugin: Loading server definition file: {}".
                   format(cet_file))
 
         # The following construct places the pytest.exit() call outside of the

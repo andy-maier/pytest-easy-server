@@ -16,7 +16,7 @@
 API Reference
 =============
 
-This section describes the API of the client_end2end_tester package.
+This section describes the API of the pytest-tars-plugin package.
 
 
 .. _`server_definition fixture`:
@@ -24,9 +24,9 @@ This section describes the API of the client_end2end_tester package.
 server_definition fixture
 -------------------------
 
-.. # automodule:: client_end2end_tester._srvdef_fixture
+.. # automodule:: pytest_tars_plugin._srvdef_fixture
 
-.. autofunction:: client_end2end_tester.server_definition
+.. autofunction:: pytest_tars_plugin.server_definition
 
 
 .. _`ServerDefinition class`:
@@ -34,9 +34,9 @@ server_definition fixture
 ServerDefinition class
 ----------------------
 
-.. # automodule:: client_end2end_tester._srvdef
+.. # automodule:: pytest_tars_plugin._srvdef
 
-.. autoclass:: client_end2end_tester.ServerDefinition
+.. autoclass:: pytest_tars_plugin.ServerDefinition
     :members:
     :special-members: __str__
 
@@ -48,21 +48,21 @@ ServerDefinition class
 ServerDefinitionFile class
 --------------------------
 
-.. # automodule:: client_end2end_tester._srvdeffile
+.. # automodule:: pytest_tars_plugin._srvdeffile
 
-.. autoclass:: client_end2end_tester.ServerDefinitionFile
+.. autoclass:: pytest_tars_plugin.ServerDefinitionFile
     :members:
     :special-members: __str__
 
     .. rubric:: Methods
 
-    .. autoautosummary:: client_end2end_tester.ServerDefinitionFile
+    .. autoautosummary:: pytest_tars_plugin.ServerDefinitionFile
         :methods:
         :nosignatures:
 
     .. rubric:: Attributes
 
-    .. autoautosummary:: client_end2end_tester.ServerDefinitionFile
+    .. autoautosummary:: pytest_tars_plugin.ServerDefinitionFile
         :attributes:
 
     .. rubric:: Details
@@ -73,15 +73,15 @@ ServerDefinitionFile class
 Exception classes
 -----------------
 
-.. autoclass:: client_end2end_tester.ServerDefinitionFileException
+.. autoclass:: pytest_tars_plugin.ServerDefinitionFileException
     :members:
     :special-members: __str__
 
-.. autoclass:: client_end2end_tester.ServerDefinitionFileNotFound
+.. autoclass:: pytest_tars_plugin.ServerDefinitionFileNotFound
     :members:
     :special-members: __str__
 
-.. autoclass:: client_end2end_tester.ServerDefinitionFileFormatError
+.. autoclass:: pytest_tars_plugin.ServerDefinitionFileFormatError
     :members:
     :special-members: __str__
 
@@ -92,9 +92,9 @@ Package version
 ---------------
 
 The package version can be accessed by programs using the
-``client_end2end_tester.__version__`` variable [#]_:
+``pytest_tars_plugin.__version__`` variable [#]_:
 
-.. autodata:: client_end2end_tester._version.__version__
+.. autodata:: pytest_tars_plugin._version.__version__
 
 This documentation may have been built from a development level of the
 package. You can recognize a development version of this package by the
@@ -105,5 +105,5 @@ released after 0.1.1. Version 1.1.2 is an `assumed` next version, because the
 `actually released` next version might be 0.2.0 or even 1.0.0.
 
 .. [#] For tooling reasons, that variable is shown as
-   ``client_end2end_tester._version.__version__`` in this documentation, but
-   it should be accessed as ``client_end2end_tester.__version__``.
+   ``pytest_tars_plugin._version.__version__`` in this documentation, but
+   it should be accessed as ``pytest_tars_plugin.__version__``.

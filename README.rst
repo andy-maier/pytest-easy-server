@@ -1,20 +1,20 @@
-client_end2end_tester - Pytest plugin for testing against real servers
-======================================================================
+pytest-tars-plugin - Pytest plugin for testing against real servers
+===================================================================
 
-.. image:: https://badge.fury.io/py/client_end2end_tester.svg
-    :target: https://pypi.python.org/pypi/client_end2end_tester/
+.. image:: https://badge.fury.io/py/pytest-tars-plugin.svg
+    :target: https://pypi.python.org/pypi/pytest-tars-plugin/
     :alt: Version on Pypi
 
-.. image:: https://github.com/andy-maier/client_end2end_tester/workflows/test/badge.svg?branch=master
-    :target: https://github.com/andy-maier/client_end2end_tester/actions/
+.. image:: https://github.com/andy-maier/pytest-tars-plugin/workflows/test/badge.svg?branch=master
+    :target: https://github.com/andy-maier/pytest-tars-plugin/actions/
     :alt: Actions status
 
-.. image:: https://readthedocs.org/projects/client_end2end_tester/badge/?version=latest
-    :target: https://readthedocs.org/projects/client_end2end_tester/builds/
+.. image:: https://readthedocs.org/projects/pytest-tars-plugin/badge/?version=latest
+    :target: https://readthedocs.org/projects/pytest-tars-plugin/builds/
     :alt: Docs build status (master)
 
-.. image:: https://coveralls.io/repos/github/andy-maier/client_end2end_tester/badge.svg?branch=master
-    :target: https://coveralls.io/github/andy-maier/client_end2end_tester?branch=master
+.. image:: https://coveralls.io/repos/github/andy-maier/pytest-tars-plugin/badge.svg?branch=master
+    :target: https://coveralls.io/github/andy-maier/pytest-tars-plugin?branch=master
     :alt: Test coverage (master)
 
 
@@ -23,7 +23,7 @@ client_end2end_tester - Pytest plugin for testing against real servers
 Overview
 --------
 
-The client_end2end_tester package is a pytest plugin that provides support for
+The pytest-tars-plugin package is a pytest plugin that provides support for
 defining information about servers in a *server definition file* and using that
 information via a pytest fixture in pytest test functions, so that the test
 functions are called for all the servers that are specified.
@@ -74,7 +74,7 @@ user-defined structure shown above):
 
 .. code-block:: python
 
-    from client_end2end_tester import server_definition
+    from pytest_tars_plugin import server_definition
 
     def test_sample(server_definition):
         """
@@ -118,7 +118,7 @@ options when invoking pytest:
 Supported environments
 ----------------------
 
-client_end2end_tester is supported in these environments:
+pytest-tars-plugin is supported in these environments:
 
 * Operating Systems: Linux, Windows (native, and with UNIX-like environments),
   macOS/OS-X
@@ -141,12 +141,12 @@ Installation
     - wheel
     - pip
 
-* Install the client_end2end_tester package and its prerequisite
+* Install the pytest-tars-plugin package and its prerequisite
   Python packages into the active Python environment:
 
   .. code-block:: bash
 
-      $ pip install client_end2end_tester
+      $ pip install pytest-tars-plugin
 
 
 .. _`Documentation`:
@@ -160,8 +160,8 @@ Documentation
 License
 -------
 
-The client_end2end_tester project is provided under the
-`Apache Software License 2.0 <https://raw.githubusercontent.com/andy-maier/client_end2end_tester/master/LICENSE>`_.
+The pytest-tars-plugin project is provided under the
+`Apache Software License 2.0 <https://raw.githubusercontent.com/andy-maier/pytest-tars-plugin/master/LICENSE>`_.
 
 
 .. # Links to documentation:
