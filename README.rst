@@ -156,7 +156,7 @@ Installation
 Documentation
 ------------
 
-* `Documentation`_
+* `Documentation on RTD`_
 
 
 License
@@ -173,4 +173,4 @@ The client_end2end_tester project is provided under the
 .. _`Derived pytest fixtures`: https://client-end2end-tester.readthedocs.io/en/latest/usage.html#derived-pytest-fixtures
 .. _`server_definition`: https://client-end2end-tester.readthedocs.io/en/latest/api.html#server-definition-fixture
 .. _`ServerDefinition`: https://client-end2end-tester.readthedocs.io/en/latest/api.html#serverdefinition-class
-.. _`Documentation`: https://client-end2end-tester.readthedocs.io/en/latest/
+.. _`Documentation on RTD`: https://client-end2end-tester.readthedocs.io/en/latest/
