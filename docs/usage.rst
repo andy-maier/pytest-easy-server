@@ -119,7 +119,7 @@ In the example above, ``myserver1``, ``myserver2``, and ``mygroup1`` are
 nicknames of the respective server or server group definitions. These nicknames
 are used when servers or groups are put into a server group in that file, or
 when they are specified as a default in that file, or when they are used in the
-``--cet-server`` command line option of pytest.
+``--tars-server`` command line option of pytest.
 
 These nicknames are case sensitive and their allowable character set are
 alphenumeric characters and the underscore character.
@@ -127,7 +127,7 @@ alphenumeric characters and the underscore character.
 If tests are to be run against multiple servers in a single pytest invocation,
 a corresponding server group needs to be defined in the file, and the server
 group's nickname is specified to be used for testing (via default or the
-``--cet-server`` option).
+``--tars-server`` option).
 
 The value of the ``servers`` top-level property is an object (=dictionary) that
 has one property for each server that is defined. The property name is the
@@ -153,7 +153,7 @@ nickname, and the property value is an object with the following properties:
   are the members of the group (required).
 
 The value of the ``default`` top-level property is a string that is the
-nickname of the default server or group to be used if the ``--cet-server``
+nickname of the default server or group to be used if the ``--tars-server``
 command line option of pytest is not specified.
 
 Servers may be put into multiple server groups.
@@ -183,10 +183,10 @@ defaults:
 
 .. code-block:: text
 
-    --cet-file=FILE       Use the specified server definition file.
+    --tars-file=FILE      Use the specified server definition file.
                           Default: tars.yaml in current directory.
 
-    --cet-server=NICKNAME
+    --tars-server=NICKNAME
                           Use the server or server group with this nickname to test against.
                           Default: default server or server group specified in the file.
 

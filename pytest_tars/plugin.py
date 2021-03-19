@@ -35,8 +35,8 @@ def pytest_addoption(parser):
         "Pytest plugin for testing against real servers"
 
     group.addoption(
-        '--cet-file',
-        dest='cet_file',
+        '--tars-file',
+        dest='tars_file',
         metavar="FILE",
         action='store',
         default=ServerDefinitionFile.default_filepath,
@@ -46,8 +46,8 @@ Default: {fp} in current directory.
 """.format(fp=ServerDefinitionFile.default_filepath))
 
     group.addoption(
-        '--cet-server',
-        dest='cet_server',
+        '--tars-server',
+        dest='tars_server',
         metavar="NICKNAME",
         action='store',
         default=None,
@@ -80,19 +80,19 @@ def pytest_generate_tests(metafunc):
     if 'server_definition' in metafunc.fixturenames:
 
         config = metafunc.config
-        cet_file = os.path.abspath(config.getvalue('cet_file'))
-        cet_server = config.getvalue('cet_server')
+        tars_file = os.path.abspath(config.getvalue('tars_file'))
+        tars_server = config.getvalue('tars_server')
 
         if config.getvalue('verbose'):
             print("\npytest-tars: Loading server definition file: {}".
-                  format(cet_file))
+                  format(tars_file))
 
         # The following construct places the pytest.exit() call outside of the
         # exception handling which avoids the well-known exception traceback
         # "During handling of the above exception, ...".
         exit_message = None
         try:
-            sdf = ServerDefinitionFile(cet_file)
+            sdf = ServerDefinitionFile(tars_file)
         except ServerDefinitionFileException as exc:
             exit_message = str(exc)
         if exit_message:
@@ -100,8 +100,8 @@ def pytest_generate_tests(metafunc):
 
         exit_message = None
         try:
-            sd_list = sdf.list_default_servers() if cet_server is None else \
-                sdf.list_servers(cet_server)
+            sd_list = sdf.list_default_servers() if tars_server is None else \
+                sdf.list_servers(tars_server)
         except KeyError as exc:
             exit_message = str(exc)
         if exit_message:
