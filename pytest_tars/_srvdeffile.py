@@ -46,7 +46,7 @@ SERVER_DEFINITION_FILE_SCHEMA = {
                     "description": "Nickname of the server",
                     "required": [
                         "description",
-                        "details",
+                        "user_defined",
                     ],
                     "additionalProperties": False,
                     "properties": {
@@ -66,7 +66,7 @@ SERVER_DEFINITION_FILE_SCHEMA = {
                                 "network/firewall/proxy/vpn used to access the "
                                 "server",
                         },
-                        "details": {
+                        "user_defined": {
                             "type": "object",
                             "description":
                                 "Details of the server, such as IP address. "
@@ -135,7 +135,8 @@ class ServerDefinitionFile(object):
             contact_name: TEXT  # Name of technical contact for the server.
             access_via: TEXT    # Short reminder on the network/firewall/proxy/
                                 # vpn used to access the server.
-            details:            # Details of the server, such as IP address.
+            user_defined:       # User-defined part of the server definition,
+                                # such as IP address.
 
         server_groups:          # Server groups.
           GRP1:                 # Nickname of server group.

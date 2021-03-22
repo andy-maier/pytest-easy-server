@@ -45,7 +45,7 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                     'description': 'my description',
                     'contact_name': 'my contact',
                     'access_via': 'my vpn',
-                    'details': {'stuff': 42},
+                    'user_defined': {'stuff': 42},
                 },
             ),
             init_kwargs=dict(),
@@ -54,7 +54,7 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                 'description': 'my description',
                 'contact_name': 'my contact',
                 'access_via': 'my vpn',
-                'details': {'stuff': 42},
+                'user_defined': {'stuff': 42},
             },
         ),
         None, None, True
@@ -69,7 +69,7 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                     'description': 'my description',
                     'contact_name': 'my contact',
                     'access_via': 'my vpn',
-                    'details': {'stuff': 42},
+                    'user_defined': {'stuff': 42},
                 },
             ),
             exp_attrs={
@@ -77,7 +77,7 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                 'description': 'my description',
                 'contact_name': 'my contact',
                 'access_via': 'my vpn',
-                'details': {'stuff': 42},
+                'user_defined': {'stuff': 42},
             },
         ),
         None, None, True
@@ -93,7 +93,7 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                 server_dict={
                     'contact_name': 'my contact',
                     'access_via': 'my vpn',
-                    'details': {'stuff': 42},
+                    'user_defined': {'stuff': 42},
                 },
             ),
             exp_attrs=None,
@@ -109,7 +109,7 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                 server_dict={
                     'description': 'my description',
                     'access_via': 'my vpn',
-                    'details': {'stuff': 42},
+                    'user_defined': {'stuff': 42},
                 },
 
             ),
@@ -118,7 +118,7 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                 'description': 'my description',
                 'contact_name': None,
                 'access_via': 'my vpn',
-                'details': {'stuff': 42},
+                'user_defined': {'stuff': 42},
             },
         ),
         None, None, True
@@ -132,7 +132,7 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                 server_dict={
                     'description': 'my description',
                     'contact_name': 'my contact',
-                    'details': {'stuff': 42},
+                    'user_defined': {'stuff': 42},
                 },
 
             ),
@@ -141,13 +141,13 @@ TESTCASES_SERVER_DEFINITION_INIT = [
                 'description': 'my description',
                 'contact_name': 'my contact',
                 'access_via': None,
-                'details': {'stuff': 42},
+                'user_defined': {'stuff': 42},
             },
         ),
         None, None, True
     ),
     (
-        "Omitted required parameter: details",
+        "Omitted required parameter: user_defined",
         dict(
             init_args=(),
             init_kwargs=dict(
@@ -215,7 +215,7 @@ TESTCASES_SERVER_DEFINITION_REPR = [
                     'description': 'my description',
                     'contact_name': 'my contact',
                     'access_via': 'my vpn',
-                    'details': {'stuff': 42},
+                    'user_defined': {'stuff': 42},
                 },
             ),
         ),
@@ -248,4 +248,4 @@ def test_ServerDefinition_repr(testcase, init_kwargs):
     assert "description=" in repr_str
     assert "contact_name=" in repr_str
     assert "access_via=" in repr_str
-    assert "details=" in repr_str
+    assert "user_defined=" in repr_str

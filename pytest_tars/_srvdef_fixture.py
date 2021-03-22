@@ -28,6 +28,24 @@ def server_definition(request):
     Pytest fixture representing the set of server definitions for all servers
     to test against.
 
+    The fixture resolves to a :class:`~pytest_tars.ServerDefinition` object
+    representing a single server definition. Pytest invokes testcases using
+    this fixture for all servers to test against.
+
+    The servers to test against can be controlled with pytest command line
+    options:
+
+    .. code-block:: text
+
+        --tars-file=FILE      Use the specified server definition file.
+                              Default: tars.yaml in current directory.
+
+        --tars-server=NICKNAME
+                              Use the server or server group with this nickname
+                              to test against.
+                              Default: default server or server group specified
+                              in the file.
+
     Returns:
       :class:`~pytest_tars.ServerDefinition`:
       Server definition for each server to test against.

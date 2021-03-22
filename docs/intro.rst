@@ -16,20 +16,18 @@
 Introduction
 ============
 
-.. contents:: Chapter Contents
-   :depth: 2
-
 
 .. _`Overview`:
 
 Overview
 --------
 
-The pytest-tars package ("tars" = testing against real servers)
-is a `pytest`_ plugin that provides support for defining information about
-servers in a *server definition file* and using that information via a pytest
-fixture in pytest test functions, so that the test functions are called for
-some or all of the servers that are specified.
+The pytest-tars package ("tars" = testing against real servers) is a `Pytest`_
+plugin that provides support for defining information about how to access
+servers (including a flexible user-defined part) in a *server definition file*
+and a `Pytest fixture`_ named :func:`~pytest_tars.server_definition` so that a
+Pytest testcase using that fixture can test against a server or group of servers
+defined in that file.
 
 The server definition file is in YAML format and allows defining servers,
 grouping them into server groups, and defining a default server or group.
@@ -45,35 +43,35 @@ Example server definition file:
 
     servers:
 
-      myserver1:                   # nickname of the server
-        description: "my dev system 1"
-        contact_name: "John Doe"
-        access_via: "VPN to dev network"
-        details:                   # user-defined part, completely flexible
+      myserver1:                          # nickname of the server
+        description: "my dev system 1"    # short description of server
+        contact_name: "John Doe"          # optional: Contact for the server
+        access_via: "VPN to dev network"  # optional: Any special network access needed
+        user_defined:                     # user-defined part, completely flexible
           host: "10.11.12.13"
-          userid: myuserid
+          username: myusername
           password: mypassword
           stuff:
             - morestuff1
 
     server_groups:
 
-      mygroup1:                    # nickname of the server group
-        description: "my dev systems"
-        members:
+      mygroup1:                           # nickname of the server group
+        description: "my dev systems"     # short description of server group
+        members:                          # group members, using the nicknames
           - myserver1
 
-    default: mygroup1              # nickname of default server or group
+    default: mygroup1                     # default server or group, using the nickname
 
-If you want to put the server definition file into a repository, you do not
-want to have any passwords or other secrets in there, and in that case you
-can define the user-defined part such that it either encrypts these secrets,
-or references some vault containing them. Section :ref:`Protecting secrets`
-explains that in more detail.
+If the server definition file is stored in a repository, it should not contain
+any passwords or other secrets in clear text. To achieve that, you can for
+example have encrypted versions of the secrets in the user-defined section, or
+move the secrets to a vault. Section :ref:`Protecting secrets` explains that in
+more detail.
 
-The pytest fixture :func:`~pytest_tars.server_definition` is used
-in your tests as follows (assuming the server definition file has the
-user-defined structure shown above):
+The `Pytest fixture`_ :func:`~pytest_tars.server_definition` is used in your
+tests as follows (assuming the server definition file defines user-defined
+properties ``host``, ``username``, and ``password``):
 
 .. code-block:: python
 
@@ -81,30 +79,32 @@ user-defined structure shown above):
 
     def test_sample(server_definition):
         """
-        Example pytest test function that tests something.
+        Example Pytest test function that tests something.
 
         Parameters:
           server_definition (ServerDefinition): Server to be used for the test
         """
-        server_host = server_definition.details['host']
-        server_userid = server_definition.details['userid']
-        server_password = server_definition.details['password']
+        server_host = server_definition.user_defined['host']
+        server_username = server_definition.user_defined['username']
+        server_password = server_definition.user_defined['password']
         # log on to the host and perform some test
 
-The ``server_definition`` parameter of the test function is a
-:class:`~pytest_tars.ServerDefinition` object that encapsulates the
-server definition that is to be used for the test. Pytest will invoke the test
-function repeatedly for all servers that are to be used for testing.
+The ``server_definition`` parameter of the test function is the use of the
+Pytest fixture. This fixture parameter resolves to a
+:class:`~pytest_tars.ServerDefinition` object that represents a server
+definition from the file for test of a single server.  Pytest will invoke the
+test function for all servers that are to be tested.
 
-You can also build your own pytest fixtures on top of this one that provide for
-example an open session with the server so that your test functions can
-use the open session directly. That basically moves repeated boiler plate
-code from your test functions into that fixture. Section
-:ref:`Derived pytest fixtures` explains that in more detail.
+You can also build your own Pytest fixtures on top of the
+:func:`~pytest_tars.server_definition` fixture. An example for that is a
+fixture representing an open session with the server so that your test functions
+can use the open session directly instead of having to create it every time.
+That moves repeated boiler plate code from your test functions into your
+fixture. Section :ref:`Derived Pytest fixtures` explains that in more detail.
 
-Last but not least, the server definition file to be used and the server
-or server group to be used for testing can be controlled with command line
-options when invoking pytest:
+The server definition file to be used and the server or server group to be used
+for testing can be controlled with command line options when invoking the
+pytest command:
 
 .. code-block:: text
 
@@ -151,14 +151,14 @@ Installation
 
       $ pip install pytest-tars
 
-  When pytest runs, it will automatically find the plugin and will show
+  When Pytest runs, it will automatically find the plugin and will show
   its version, e.g.:
 
   .. code-block:: text
 
       plugins: tars-0.5.0
 
-
 .. # Links to documentation:
 
-.. _`pytest`: https://docs.pytest.org/en/stable/
+.. _`Pytest`: https://docs.pytest.org/en/stable/
+.. _`Pytest fixture`: https://docs.pytest.org/en/stable/fixture.html

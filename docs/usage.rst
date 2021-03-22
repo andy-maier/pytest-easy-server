@@ -24,8 +24,8 @@ This section describes the usage of the pytest-tars package.
 Using the server_definition fixture
 -----------------------------------
 
-The main purpose of the pytest-tars package is to provide the pytest fixture
-:func:`~pytest_tars.server_definition` for use in your pytest testcases.
+The main purpose of the pytest-tars package is to provide the Pytest fixture
+:func:`~pytest_tars.server_definition` for use in your Pytest testcases.
 
 That fixture is used in your tests as follows:
 
@@ -35,20 +35,21 @@ That fixture is used in your tests as follows:
 
     def test_sample(server_definition):
         """
-        Example pytest test function that tests something.
+        Example Pytest test function that tests something.
 
         Parameters:
           server_definition (ServerDefinition): Server to be used for the test
         """
-        server_host = server_definition.details['host']
-        server_userid = server_definition.details['userid']
-        server_password = server_definition.details['password']
+        server_host = server_definition.user_defined['host']
+        server_username = server_definition.user_defined['username']
+        server_password = server_definition.user_defined['password']
         # log on to the host and perform some test
 
-The ``server_definition`` parameter of the test function is a
-:class:`~pytest_tars.ServerDefinition` object that encapsulates the
-server definition that is to be used for the test. Pytest will invoke the test
-function repeatedly for all servers that are to be used for testing.
+The ``server_definition`` parameter of the test function is the use of the
+Pytest fixture. This fixture parameter resolves to a
+:class:`~pytest_tars.ServerDefinition` object that represents a server
+definition from the file for test of a single server.  Pytest will invoke the
+test function for all servers that are to be tested.
 
 This test function relies on certain elements in the user-defined part of
 the server definition in your server definition file, such as the hostname
@@ -64,13 +65,13 @@ above would be:
 .. code-block:: yaml
 
     servers:
-      myserver1:                   # nickname of the server
+      myserver1:                          # nickname of the server
         description: "my dev system 1"
         contact_name: "John Doe"
         access_via: "VPN to dev network"
-        details:                   # user-defined part, completely flexible
+        user_defined:                     # user-defined part, completely flexible
           host: "10.11.12.13"
-          userid: myuserid
+          username: myusername
           password: mypassword
 
 
@@ -85,41 +86,41 @@ The server definition file is in YAML format. Here is a working example:
 
     servers:
 
-      myserver1:                      # nickname of the server
+      myserver1:                          # nickname of the server
         description: "my dev system 1"
         contact_name: "John Doe"
         access_via: "VPN to dev network"
-        details:                      # user-defined part, completely flexible
+        user_defined:                     # user-defined part, completely flexible
           host: "10.11.12.13"
-          userid: myuserid
+          username: myusername
           password: mypassword
           stuff:
             - morestuff1
 
-      myserver2:                      # nickname of the server
+      myserver2:                          # nickname of the server
         description: "my dev system 2"
         contact_name: "John Doe"
         access_via: "Company Intranet"
-        details:                      # user-defined part, completely flexible
+        user_defined:                     # user-defined part, completely flexible
           host: "9.10.11.12"
-          userid: myuserid
+          username: myusername
           password: mypassword
 
     server_groups:
 
-      mygroup1:                       # nickname of the server group
+      mygroup1:                           # nickname of the server group
         description: "my dev systems"
-        members:                      # list of server or group nicknames
+        members:                          # list of server or group nicknames
           - myserver1
           - myserver2
 
-    default: mygroup1                 # nickname of default server or group
+    default: mygroup1                     # nickname of default server or group
 
 In the example above, ``myserver1``, ``myserver2``, and ``mygroup1`` are
 nicknames of the respective server or server group definitions. These nicknames
 are used when servers or groups are put into a server group in that file, or
 when they are specified as a default in that file, or when they are used in the
-``--tars-server`` command line option of pytest.
+``--tars-server`` command line option of the pytest command.
 
 These nicknames are case sensitive and their allowable character set are
 alphenumeric characters and the underscore character.
@@ -141,7 +142,7 @@ fixture:
   defaults to `None`).
 * ``access_via`` (string): Short reminder on the network/firewall/proxy/vpn
   used to access the server (optional, defaults to `None`).
-* ``details`` (object): Details of the server, such as IP address. This object
+* ``user_defined`` (object): Details of the server, such as IP address. This object
   can have an arbitrary user-defined structure (required).
 
 The value of the ``server_groups`` top-level property is an object that has one
@@ -156,10 +157,11 @@ The value of the ``default`` top-level property is a string that is the
 nickname of the default server or group to be used if the ``--tars-server``
 command line option of pytest is not specified.
 
-Servers may be put into multiple server groups.
+Server groups may be nested. That is, server groups may be put into other server
+groups at arbitrary nesting depth. There must not be any cycle (i.e. the
+resulting graph of server groups must be a tree).
 
-Server groups may be put into server groups at arbitrary nesting depth, as long
-as there is no infinite recursion anywhere.
+A particular server or server group may be put into more than one server group.
 
 When specifying a server group to be used for testing, the resulting set of
 servers that is actually passed to the :func:`~pytest_tars.server_definition`
@@ -196,19 +198,20 @@ defaults:
 Protecting secrets
 ------------------
 
-When the server definition file is placed in a repository, any server secrets
-such as passwords, private keys, etc. should not be in that file in clear text
-form. There are multiple ways how this can be done:
+If the server definition file is stored in a repository, it should not contain
+any passwords or other secrets in clear text. There are multiple ways how this
+can be achieved:
 
 * Approach 1: Encrypt the server secrets and keep their encrypted form in the
-  user-defined part of the server definition in the file.
-  This requires a key for decrypting the server secrets that is put as a
-  secret into the CI/CD system you use to run the tests, using its facilities
-  for storing such secrets.
+  user-defined part of the server definition in the file. This requires a key
+  for decrypting the server secrets. Use the secret management facilities of
+  the CI/CD system that runs the tests for storing the decryption key.
 
 * Approach 2: Put the server secrets into a vault, and protect the vault
-  with a CI/CD secret. The vault may be a file in your repository (such as
-  an Ansible vault), or a vault service (such as Hashicorp Vault).
+  with a CI/CD secret. The vault may be an encrypted file in your repository
+  (such as an Ansible vault), or a vault service (such as Hashicorp Vault).
+  Use the secret management facilities of the CI/CD system that runs the tests
+  for storing the access data for the vault.
 
 Example
 ^^^^^^^
@@ -225,21 +228,21 @@ You can find the files shown in this example in the
 directory of the repository.
 
 * Create a server definition file named ``tars.yaml`` that specifies the
-  servers with host and userid (but no password) in the user-defined part:
+  servers with host and username (but no password) in the user-defined part:
 
   .. code-block:: yaml
 
       servers:
         myserver1:
           description: "my dev system 1"
-          details:
+          user_defined:
             host: "10.11.12.13"
-            userid: myuserid1
+            username: myusername1
         myserver2:
           description: "my dev system 2"
-          details:
+          user_defined:
             host: "10.11.12.14"
-            userid: myuserid2
+            username: myusername2
 
 * Create an Ansible vault file named ``vault.yaml`` that specifies the passwords
   for each server, using the server nicknames as keys:
@@ -284,7 +287,7 @@ directory of the repository.
               vault_dict = yaml.safe_load(fp)
           return vault_dict['passwords'][nickname]
 
-* In each of your test functions, access the server host, userid and password
+* In each of your test functions, access the server host, username and password
   as follows:
 
   .. code-block:: python
@@ -293,15 +296,15 @@ directory of the repository.
       from .utils import get_password
 
       def test_sample(server_definition):
-          server_host = server_definition.details['host']
-          server_userid = server_definition.details['userid']
+          server_host = server_definition.user_defined['host']
+          server_username = server_definition.user_defined['username']
           server_password = get_password(server_definition.nickname)
           # log on to the host and perform some test
 
 
-.. _`Derived pytest fixtures`:
+.. _`Derived Pytest fixtures`:
 
-Derived pytest fixtures
+Derived Pytest fixtures
 -----------------------
 
 If using the server definition in your test functions includes the same boiler
@@ -325,8 +328,8 @@ In a file ``session_fixture.py``:
         testing against a server.
         """
         session = MySession(
-            host = server_definition.details['host']
-            userid = server_definition.details['userid']
+            host = server_definition.user_defined['host']
+            username = server_definition.user_defined['username']
             password = get_password(server_definition.nickname)
         )
         yield session
