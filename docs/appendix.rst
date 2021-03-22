@@ -70,9 +70,12 @@ References
 
 .. glossary::
 
-   Pytest Fixtures
+    Pytest
+      `Pytest <https://docs.pytest.org/en/stable/>`_
+
+    Pytest fixtures
       `Pytest Fixtures <https://docs.pytest.org/en/stable/fixture.html>`_
 
-   Python Glossary
+    Python glossary
       * `Python 2.7 Glossary <https://docs.python.org/2.7/glossary.html>`_
       * `Python 3.4 Glossary <https://docs.python.org/3.4/glossary.html>`_

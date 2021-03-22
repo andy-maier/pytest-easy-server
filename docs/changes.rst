@@ -24,11 +24,16 @@ Released: not yet
 
 **Incompatible changes:**
 
+* Renamed 'details' property in server definition file to 'user_defined'
+  (issue #35)
+
 **Deprecations:**
 
 **Bug fixes:**
 
 **Enhancements:**
+
+* Docs: Improved clarity of documentation (issues #33, #35)
 
 **Cleanup:**
 
@@ -45,4 +50,3 @@ Version 0.5.0
 Released: 2021-03-19
 
 Initial release.
-

@@ -7,9 +7,9 @@ servers:
     description: "my dev system 1"
     contact_name: "John Doe"
     access_via: "VPN to dev network"
-    details:
+    user_defined:
       host: "10.11.12.13"
-      userid: myuserid
+      username: myusername
       password: mypassword
       stuff:
         - morestuff1
@@ -18,9 +18,9 @@ servers:
     description: "my dev system 2"
     contact_name: "John Doe"
     access_via: "intranet"
-    details:
+    user_defined:
       host: "9.11.12.13"
-      userid: myuserid
+      username: myusername
       password: mypassword
       stuff:
         - morestuff2

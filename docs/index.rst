@@ -14,10 +14,12 @@
 pytest-tars - Pytest plugin for testing against real servers
 ************************************************************
 
-The pytest-tars package provides support for defining information
-about servers in a *server definition file* and using that information in
-pytest fixtures, so that the pytest testcase is run against all the servers
-that are specified.
+The pytest-tars package ("tars" = testing against real servers) is a `Pytest`_
+plugin that provides support for defining information about how to access
+servers (including a flexible user-defined part) in a *server definition file*
+and a `Pytest fixture`_ named :func:`~pytest_tars.server_definition` so that a
+Pytest testcase using that fixture can test against a server or group of servers
+defined in that file.
 
 .. toctree::
    :maxdepth: 2
@@ -29,3 +31,8 @@ that are specified.
    development.rst
    appendix.rst
    changes.rst
+
+.. # Links to documentation:
+
+.. _`Pytest`: https://docs.pytest.org/en/stable/
+.. _`Pytest fixture`: https://docs.pytest.org/en/stable/fixture.html

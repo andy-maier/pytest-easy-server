@@ -347,7 +347,7 @@ TESTCASES_SDF_LOAD = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -381,14 +381,14 @@ TESTCASES_SDF_LOAD = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "default: srv1\n",
             exp_data={
                 'servers': {
                     'srv1': {
                         'description': 'server1',
-                        'details': {
+                        'user_defined': {
                             'stuff': 42,
                         },
                     },
@@ -405,7 +405,7 @@ TESTCASES_SDF_LOAD = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -417,7 +417,7 @@ TESTCASES_SDF_LOAD = [
                 'servers': {
                     'srv1': {
                         'description': 'server1',
-                        'details': {
+                        'user_defined': {
                             'stuff': 42,
                         },
                     },
@@ -497,7 +497,7 @@ TESTCASES_SDF_GET_SERVER = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n",
             nick='srv',
             exp_attrs=None,
@@ -511,7 +511,7 @@ TESTCASES_SDF_GET_SERVER = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -530,7 +530,7 @@ TESTCASES_SDF_GET_SERVER = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -543,7 +543,7 @@ TESTCASES_SDF_GET_SERVER = [
                 description='server1',
                 contact_name=None,
                 access_via=None,
-                details={'stuff': 42},
+                user_defined={'stuff': 42},
             ),
         ),
         None, None, True
@@ -554,7 +554,7 @@ TESTCASES_SDF_GET_SERVER = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -635,7 +635,7 @@ TESTCASES_SDF_LIST_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n",
             nick='srv',
             exp_srvs_attrs=None,
@@ -649,7 +649,7 @@ TESTCASES_SDF_LIST_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -668,7 +668,7 @@ TESTCASES_SDF_LIST_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -682,7 +682,7 @@ TESTCASES_SDF_LIST_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
             ],
         ),
@@ -694,7 +694,7 @@ TESTCASES_SDF_LIST_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -708,7 +708,7 @@ TESTCASES_SDF_LIST_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
             ],
         ),
@@ -720,11 +720,11 @@ TESTCASES_SDF_LIST_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "  srv2:\n"
                      "    description: server2\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 43\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -739,14 +739,14 @@ TESTCASES_SDF_LIST_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
                 dict(
                     nickname='srv2',
                     description='server2',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 43},
+                    user_defined={'stuff': 43},
                 ),
             ],
         ),
@@ -758,11 +758,11 @@ TESTCASES_SDF_LIST_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "  srv2:\n"
                      "    description: server2\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 43\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -781,14 +781,14 @@ TESTCASES_SDF_LIST_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
                 dict(
                     nickname='srv2',
                     description='server2',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 43},
+                    user_defined={'stuff': 43},
                 ),
             ],
         ),
@@ -801,11 +801,11 @@ TESTCASES_SDF_LIST_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "  srv2:\n"
                      "    description: server2\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 43\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -825,14 +825,14 @@ TESTCASES_SDF_LIST_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
                 dict(
                     nickname='srv2',
                     description='server2',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 43},
+                    user_defined={'stuff': 43},
                 ),
             ],
         ),
@@ -910,7 +910,7 @@ TESTCASES_SDF_LIST_DEFAULT_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n",
             exp_srvs_attrs=[],
         ),
@@ -922,7 +922,7 @@ TESTCASES_SDF_LIST_DEFAULT_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "default: srv1\n",
             exp_srvs_attrs=[
@@ -931,7 +931,7 @@ TESTCASES_SDF_LIST_DEFAULT_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
             ],
         ),
@@ -943,7 +943,7 @@ TESTCASES_SDF_LIST_DEFAULT_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -957,7 +957,7 @@ TESTCASES_SDF_LIST_DEFAULT_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
             ],
         ),
@@ -969,7 +969,7 @@ TESTCASES_SDF_LIST_DEFAULT_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -983,7 +983,7 @@ TESTCASES_SDF_LIST_DEFAULT_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
             ],
         ),
@@ -1061,7 +1061,7 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n",
             exp_srvs_attrs=[
                 dict(
@@ -1069,7 +1069,7 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
             ],
         ),
@@ -1081,7 +1081,7 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -1094,7 +1094,7 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
             ],
         ),
@@ -1106,11 +1106,11 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "  srv2:\n"
                      "    description: server2\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 43\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -1124,14 +1124,14 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
                 dict(
                     nickname='srv2',
                     description='server2',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 43},
+                    user_defined={'stuff': 43},
                 ),
             ],
         ),
@@ -1143,11 +1143,11 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "  srv2:\n"
                      "    description: server2\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 43\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -1165,14 +1165,14 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
                 dict(
                     nickname='srv2',
                     description='server2',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 43},
+                    user_defined={'stuff': 43},
                 ),
             ],
         ),
@@ -1185,11 +1185,11 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
             sdf_yaml="servers:\n"
                      "  srv1:\n"
                      "    description: server1\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 42\n"
                      "  srv2:\n"
                      "    description: server2\n"
-                     "    details:\n"
+                     "    user_defined:\n"
                      "      stuff: 43\n"
                      "server_groups:\n"
                      "  grp1:\n"
@@ -1208,14 +1208,14 @@ TESTCASES_SDF_LIST_ALL_SERVERS = [
                     description='server1',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 42},
+                    user_defined={'stuff': 42},
                 ),
                 dict(
                     nickname='srv2',
                     description='server2',
                     contact_name=None,
                     access_via=None,
-                    details={'stuff': 43},
+                    user_defined={'stuff': 43},
                 ),
             ],
         ),
