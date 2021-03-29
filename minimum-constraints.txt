@@ -137,7 +137,9 @@ coveralls==2.1.2; python_version >= '3.5'
 # Safety CI by pyup.io
 safety==1.8.7; python_version <= '3.4'
 safety==1.9.0; python_version >= '3.5'
-dparse==0.4.1
+dparse==0.4.1; python_version == '2.7'
+dparse==0.4.1; python_version == '3.4'
+dparse==0.5.1; python_version >= '3.5'
 
 # Sphinx (no imports, invoked via sphinx-build script):
 Sphinx==1.7.6
