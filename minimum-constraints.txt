@@ -179,6 +179,15 @@ pip-check-reqs==2.0.4
 
 # Indirect dependencies with special constraints:
 
+cryptography==3.3; python_version == '2.7'
+cryptography==2.8; python_version == '3.4'
+cryptography==3.2.1; python_version == '3.5'
+cryptography==3.4.7; python_version >= '3.6'
+
+Click==7.1.1; python_version == '2.7'
+Click==7.0; python_version == '3.4'
+Click==7.1.1; python_version >= '3.5'
+
 # packaging (used by pytest)
 packaging==17.0
 
@@ -215,7 +224,6 @@ bleach==3.1.2; python_version == '3.4'
 bleach==3.3.0; python_version >= '3.5'
 certifi==2019.9.11
 chardet==3.0.3
-Click==7.0
 distlib==0.3.0; python_version >= '3.4'
 docopt==0.6.2
 docutils==0.13.1
@@ -233,7 +241,7 @@ importlib-metadata==0.12; python_version <= '3.7'
 iniconfig==1.1.1
 isort==4.2.15
 Jinja2==2.8
-keyring==17.0.0; python_version >= '3.4'
+keyring==18.0.0
 lazy-object-proxy==1.4.2
 MarkupSafe==0.23
 ordereddict==1.1
