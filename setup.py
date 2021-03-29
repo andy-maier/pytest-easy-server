@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Python setup script for the pytest-tars project.
+Python setup script for the pytest-easy-server project.
 """
 
 import sys
@@ -143,7 +143,7 @@ class test(PytestCommand):
     """
     Setup.py command for executing unit and function tests.
     """
-    description = "pytest-tars: Run unit tests using pytest"
+    description = "pytest-easy-server: Run unit tests using pytest"
     my_test_dirs = ['tests/unittest']
 
 
@@ -155,7 +155,7 @@ dependency_links = [req for req in requirements
                     if req and re.match(r'[^:]+://', req)]
 
 package_version = get_version(
-    os.path.join('pytest_tars', '_version.py'))
+    os.path.join('pytest_easy_server', '_version.py'))
 
 # Docs on setup():
 # * https://docs.python.org/2.7/distutils/apiref.html?
@@ -163,16 +163,16 @@ package_version = get_version(
 # * https://setuptools.readthedocs.io/en/latest/setuptools.html#
 #   new-and-changed-setup-keywords
 setuptools.setup(
-    name='pytest-tars',
+    name='pytest-easy-server',
     version=package_version,
     packages=[
-        'pytest_tars',
+        'pytest_easy_server',
     ],
     include_package_data=True,  # Includes MANIFEST.in files into sdist (only)
     scripts=[],
     entry_points={
         'pytest11': [
-            'pytest_tars = pytest_tars.plugin',
+            'pytest_easy_server = pytest_easy_server.plugin',
         ],
     },
     install_requires=install_requires,
@@ -188,23 +188,24 @@ setuptools.setup(
     author_email='andreas.r.maier@gmx.de',
     maintainer="Andreas Maier",
     maintainer_email='andreas.r.maier@gmx.de',
-    url='https://github.com/andy-maier/pytest-tars',
+    url='https://github.com/andy-maier/pytest-easy-server',
     project_urls={
-        'Bug Tracker': 'https://github.com/andy-maier/pytest-tars/issues',
-        'Documentation': 'https://pytest-tars.readthedocs.io/en/latest/',
+        'Bug Tracker':
+        'https://github.com/andy-maier/pytest-easy-server/issues',
+        'Documentation':
+        'https://pytest-easy-server.readthedocs.io/en/latest/',
         'Change Log':
-        'https://pytest-tars.readthedocs.io/en/latest/changes.html',
-        'Source Code': 'https://github.com/andy-maier/pytest-tars',
+        'https://pytest-easy-server.readthedocs.io/en/latest/changes.html',
     },
 
     options={'bdist_wheel': {'universal': True}},
     zip_safe=True,  # This package can safely be installed from a zip file
     platforms='any',
 
-    # Keep these Python versions in sync with pytest_tars/__init__.py
+    # Keep these Python versions in sync with pytest_easy_server/__init__.py
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
@@ -217,6 +218,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
 )

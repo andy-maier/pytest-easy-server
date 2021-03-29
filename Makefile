@@ -1,4 +1,4 @@
-# Makefile for the pytest-tars project.
+# Makefile for the pytest-easy-server project.
 #
 # Supported OS platforms for this Makefile:
 #     Linux (any distro)
@@ -133,11 +133,11 @@ else
 endif
 
 # Name of this project
-project_name := pytest-tars
+project_name := pytest-easy-server
 
 # Name of this Python package
-package_name := pytest_tars
-package_name_tar := pytest-tars
+package_name := pytest_easy_server
+package_name_tar := pytest-easy-server
 
 # Directory for coverage html output. Not used right now. If used, must be in
 # sync with the one in .coveragerc.

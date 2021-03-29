@@ -16,7 +16,7 @@
 API Reference
 =============
 
-This section describes the API of the pytest-tars package.
+This section describes the API of the pytest-easy-server package.
 
 
 .. _`server_definition fixture`:
@@ -24,66 +24,7 @@ This section describes the API of the pytest-tars package.
 server_definition fixture
 -------------------------
 
-.. # automodule:: pytest_tars._srvdef_fixture
-
-.. autofunction:: pytest_tars.server_definition
-
-
-.. _`ServerDefinition class`:
-
-ServerDefinition class
-----------------------
-
-.. # automodule:: pytest_tars._srvdef
-
-.. autoclass:: pytest_tars.ServerDefinition
-    :members:
-    :special-members: __str__
-
-    .. rubric:: Details
-
-
-.. _`ServerDefinitionFile class`:
-
-ServerDefinitionFile class
---------------------------
-
-.. # automodule:: pytest_tars._srvdeffile
-
-.. autoclass:: pytest_tars.ServerDefinitionFile
-    :members:
-    :special-members: __str__
-
-    .. rubric:: Methods
-
-    .. autoautosummary:: pytest_tars.ServerDefinitionFile
-        :methods:
-        :nosignatures:
-
-    .. rubric:: Attributes
-
-    .. autoautosummary:: pytest_tars.ServerDefinitionFile
-        :attributes:
-
-    .. rubric:: Details
-
-
-.. _`Exception classes`:
-
-Exception classes
------------------
-
-.. autoclass:: pytest_tars.ServerDefinitionFileException
-    :members:
-    :special-members: __str__
-
-.. autoclass:: pytest_tars.ServerDefinitionFileNotFound
-    :members:
-    :special-members: __str__
-
-.. autoclass:: pytest_tars.ServerDefinitionFileFormatError
-    :members:
-    :special-members: __str__
+.. autofunction:: pytest_easy_server.server_definition
 
 
 .. _`Package version`:
@@ -92,9 +33,9 @@ Package version
 ---------------
 
 The package version can be accessed by programs using the
-``pytest_tars.__version__`` variable [#]_:
+``pytest_easy_server.__version__`` variable [#]_:
 
-.. autodata:: pytest_tars._version.__version__
+.. autodata:: pytest_easy_server._version.__version__
 
 This documentation may have been built from a development level of the
 package. You can recognize a development version of this package by the
@@ -105,5 +46,5 @@ released after 0.1.1. Version 1.1.2 is an `assumed` next version, because the
 `actually released` next version might be 0.2.0 or even 1.0.0.
 
 .. [#] For tooling reasons, that variable is shown as
-   ``pytest_tars._version.__version__`` in this documentation, but
-   it should be accessed as ``pytest_tars.__version__``.
+   ``pytest_easy_server._version.__version__`` in this documentation, but
+   it should be accessed as ``pytest_easy_server.__version__``.

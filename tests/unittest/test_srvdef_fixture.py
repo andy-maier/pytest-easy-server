@@ -16,9 +16,10 @@ Test the _srvdef_fixture.py module.
 
 from __future__ import absolute_import, print_function
 import pytest
-from pytest_tars import ServerDefinition
+import easy_server
+
 # pylint: disable=unused-import
-from pytest_tars import server_definition  # noqa: F401
+from pytest_easy_server import server_definition  # noqa: F401
 
 
 @pytest.mark.parametrize(
@@ -31,9 +32,9 @@ def test_fixture_sample(server_definition, num):
     Sample test using the server_definition fixture.
 
     Parameters:
-      server_definition (ServerDefinition): A server definition
+      server_definition (easy_server.ServerDefinition): A server definition
     """
-    assert isinstance(server_definition, ServerDefinition)
+    assert isinstance(server_definition, easy_server.ServerDefinition)
 
     # This test uses the default server definition file, so we expect the
     # default servers defined in that file:

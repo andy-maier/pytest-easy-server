@@ -17,36 +17,9 @@ Change log
 ==========
 
 
-Version 0.6.0.dev1
+Version 0.5.0.dev1
 ------------------
 
 Released: not yet
-
-**Incompatible changes:**
-
-* Renamed 'details' property in server definition file to 'user_defined'
-  (issue #35)
-
-**Deprecations:**
-
-**Bug fixes:**
-
-**Enhancements:**
-
-* Docs: Improved clarity of documentation (issues #33, #35)
-
-**Cleanup:**
-
-**Known issues:**
-
-* See `list of open issues`_.
-
-.. _`list of open issues`: https://github.com/andy-maier/pytest-tars/issues
-
-
-Version 0.5.0
--------------
-
-Released: 2021-03-19
 
 Initial release.

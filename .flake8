@@ -1,4 +1,4 @@
-# Flake8 config file for pytest-tars project.
+# Flake8 config file for pytest-easy-server project.
 
 [flake8]
 max_line_length = 80
