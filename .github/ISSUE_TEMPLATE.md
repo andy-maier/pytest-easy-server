@@ -6,6 +6,6 @@
 
 ### Execution environment
 
-* pytest-tars version:
+* pytest-easy-server version:
 * Python version:
 * Operating System (type+version):

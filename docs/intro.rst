@@ -22,10 +22,10 @@ Introduction
 Overview
 --------
 
-The pytest-tars package ("tars" = testing against real servers) is a `Pytest`_
+The pytest-easy-server package ("tars" = testing against real servers) is a `Pytest`_
 plugin that provides support for defining information about how to access
 servers (including a flexible user-defined part) in a *server definition file*
-and a `Pytest fixture`_ named :func:`~pytest_tars.server_definition` so that a
+and a `Pytest fixture`_ named :func:`~pytest_easy_server.server_definition` so that a
 Pytest testcase using that fixture can test against a server or group of servers
 defined in that file.
 
@@ -69,13 +69,13 @@ example have encrypted versions of the secrets in the user-defined section, or
 move the secrets to a vault. Section :ref:`Protecting secrets` explains that in
 more detail.
 
-The `Pytest fixture`_ :func:`~pytest_tars.server_definition` is used in your
+The `Pytest fixture`_ :func:`~pytest_easy_server.server_definition` is used in your
 tests as follows (assuming the server definition file defines user-defined
 properties ``host``, ``username``, and ``password``):
 
 .. code-block:: python
 
-    from pytest_tars import server_definition
+    from pytest_easy_server import server_definition
 
     def test_sample(server_definition):
         """
@@ -91,12 +91,12 @@ properties ``host``, ``username``, and ``password``):
 
 The ``server_definition`` parameter of the test function is the use of the
 Pytest fixture. This fixture parameter resolves to a
-:class:`~pytest_tars.ServerDefinition` object that represents a server
+:class:`~pytest_easy_server.ServerDefinition` object that represents a server
 definition from the file for test of a single server.  Pytest will invoke the
 test function for all servers that are to be tested.
 
 You can also build your own Pytest fixtures on top of the
-:func:`~pytest_tars.server_definition` fixture. An example for that is a
+:func:`~pytest_easy_server.server_definition` fixture. An example for that is a
 fixture representing an open session with the server so that your test functions
 can use the open session directly instead of having to create it every time.
 That moves repeated boiler plate code from your test functions into your
@@ -108,12 +108,16 @@ pytest command:
 
 .. code-block:: text
 
-    --tars-file=FILE      Use the specified server definition file.
-                          Default: tars.yaml in current directory.
+    --es-server-file=FILE   Use the specified server definition file.
+                            Default: server.yml in current directory.
 
-    --tars-server=NICKNAME
-                          Use the server or server group with this nickname to test against.
-                          Default: default server or server group specified in the file.
+    --es-vault-file=FILE    Use the specified vault file.
+                            Default: vault.yml in current directory.
+
+    --es-nickname=NICKNAME  Use the server or server group with this
+                            nickname to test against.
+                            Default: default server or server group
+                            specified in the server definition file.
 
 
 .. _`Supported environments`:
@@ -121,7 +125,7 @@ pytest command:
 Supported environments
 ----------------------
 
-pytest-tars is supported in these environments:
+pytest-easy-server is supported in these environments:
 
 * Operating Systems: Linux, Windows (native, and with UNIX-like environments),
   macOS/OS-X
@@ -144,19 +148,19 @@ Installation
     - wheel
     - pip
 
-* Install the pytest-tars package and its prerequisite
+* Install the pytest-easy-server package and its prerequisite
   Python packages into the active Python environment:
 
   .. code-block:: bash
 
-      $ pip install pytest-tars
+      $ pip install pytest-easy-server
 
   When Pytest runs, it will automatically find the plugin and will show
   its version, e.g.:
 
   .. code-block:: text
 
-      plugins: tars-0.5.0
+      plugins: easy-server-0.5.0
 
 .. # Links to documentation:
 

@@ -16,7 +16,48 @@
 Usage
 =====
 
-This section describes the usage of the pytest-tars package.
+
+.. _`Supported environments`:
+
+Supported environments
+----------------------
+
+pytest-easy-server is supported in these environments:
+
+* Operating Systems: Linux, Windows (native, and with UNIX-like environments),
+  macOS/OS-X
+
+* Python: 2.7, 3.4, and higher
+
+
+.. _`Installation`:
+
+Installation
+------------
+
+* Prerequisites:
+
+  - The Python environment into which you want to install must be the current
+    Python environment, and must have at least the following Python packages
+    installed:
+
+    - setuptools
+    - wheel
+    - pip
+
+* Install the pytest-easy-server package and its prerequisite
+  Python packages into the active Python environment:
+
+  .. code-block:: bash
+
+      $ pip install pytest-easy-server
+
+  When Pytest runs, it will automatically find the plugin and will show
+  its version, e.g.:
+
+  .. code-block:: text
+
+      plugins: easy-server-0.5.0
 
 
 .. _`Using the server_definition fixture`:
@@ -24,14 +65,14 @@ This section describes the usage of the pytest-tars package.
 Using the server_definition fixture
 -----------------------------------
 
-The main purpose of the pytest-tars package is to provide the Pytest fixture
-:func:`~pytest_tars.server_definition` for use in your Pytest testcases.
+The main purpose of the pytest-easy-server package is to provide the Pytest fixture
+:func:`~pytest_easy_server.server_definition` for use in your Pytest testcases.
 
 That fixture is used in your tests as follows:
 
 .. code-block:: python
 
-    from pytest_tars import server_definition
+    from pytest_easy_server import server_definition
 
     def test_sample(server_definition):
         """
@@ -47,7 +88,7 @@ That fixture is used in your tests as follows:
 
 The ``server_definition`` parameter of the test function is the use of the
 Pytest fixture. This fixture parameter resolves to a
-:class:`~pytest_tars.ServerDefinition` object that represents a server
+:class:`~pytest_easy_server.ServerDefinition` object that represents a server
 definition from the file for test of a single server.  Pytest will invoke the
 test function for all servers that are to be tested.
 
@@ -120,7 +161,7 @@ In the example above, ``myserver1``, ``myserver2``, and ``mygroup1`` are
 nicknames of the respective server or server group definitions. These nicknames
 are used when servers or groups are put into a server group in that file, or
 when they are specified as a default in that file, or when they are used in the
-``--tars-server`` command line option of the pytest command.
+``--es-nickname`` command line option of the pytest command.
 
 These nicknames are case sensitive and their allowable character set are
 alphenumeric characters and the underscore character.
@@ -128,13 +169,13 @@ alphenumeric characters and the underscore character.
 If tests are to be run against multiple servers in a single pytest invocation,
 a corresponding server group needs to be defined in the file, and the server
 group's nickname is specified to be used for testing (via default or the
-``--tars-server`` option).
+``--es-nickname`` option).
 
 The value of the ``servers`` top-level property is an object (=dictionary) that
 has one property for each server that is defined. The property name is the
 server nickname, and the property value is an object with the following
 properties. These propertes are accessible in the test function via same-named
-properties of the :class:`~pytest_tars.ServerDefinition` object passed via the
+properties of the :class:`~pytest_easy_server.ServerDefinition` object passed via the
 fixture:
 
 * ``description`` (string): Short description of the server (required).
@@ -154,7 +195,7 @@ nickname, and the property value is an object with the following properties:
   are the members of the group (required).
 
 The value of the ``default`` top-level property is a string that is the
-nickname of the default server or group to be used if the ``--tars-server``
+nickname of the default server or group to be used if the ``--es-nickname``
 command line option of pytest is not specified.
 
 Server groups may be nested. That is, server groups may be put into other server
@@ -164,7 +205,7 @@ resulting graph of server groups must be a tree).
 A particular server or server group may be put into more than one server group.
 
 When specifying a server group to be used for testing, the resulting set of
-servers that is actually passed to the :func:`~pytest_tars.server_definition`
+servers that is actually passed to the :func:`~pytest_easy_server.server_definition`
 fixture is the flattened list of servers, whereby any duplicate servers are
 eliminated.
 
@@ -177,7 +218,7 @@ pytest will stop with an error if validation issues are found.
 Controlling which servers to test against
 -----------------------------------------
 
-When pytest loads the pytest-tars plugin, its set of command line options
+When pytest loads the pytest-easy-server plugin, its set of command line options
 gets extended by those contributed by the plugin. These options allow
 controlling which server definition file is used and wich server or server
 group is used to test against. These options are optional and have sensible
@@ -185,12 +226,16 @@ defaults:
 
 .. code-block:: text
 
-    --tars-file=FILE      Use the specified server definition file.
-                          Default: tars.yaml in current directory.
+    --es-server-file=FILE   Use the specified server definition file.
+                            Default: server.yml in current directory.
 
-    --tars-server=NICKNAME
-                          Use the server or server group with this nickname to test against.
-                          Default: default server or server group specified in the file.
+    --es-vault-file=FILE    Use the specified vault file.
+                            Default: vault.yml in current directory.
+
+    --es-nickname=NICKNAME  Use the server or server group with this
+                            nickname to test against.
+                            Default: default server or server group
+                            specified in the server definition file.
 
 
 .. _`Protecting secrets`:
@@ -224,10 +269,10 @@ In the example, two servers are specified. Optional elements in the server
 definition file are omitted, for simplicity.
 
 You can find the files shown in this example in the
-`examples/approach2 <https://github.com/andy-maier/pytest-tars/tree/master/examples/approach2>`_
+`examples/approach2 <https://github.com/andy-maier/pytest-easy-server/tree/master/examples/approach2>`_
 directory of the repository.
 
-* Create a server definition file named ``tars.yaml`` that specifies the
+* Create a server definition file named ``server.yml`` that specifies the
   servers with host and username (but no password) in the user-defined part:
 
   .. code-block:: yaml
@@ -244,7 +289,7 @@ directory of the repository.
             host: "10.11.12.14"
             username: myusername2
 
-* Create an Ansible vault file named ``vault.yaml`` that specifies the passwords
+* Create an Ansible vault file named ``vault.yml`` that specifies the passwords
   for each server, using the server nicknames as keys:
 
   .. code-block:: yaml
@@ -257,7 +302,7 @@ directory of the repository.
 
   .. code-block:: bash
 
-      $ ansible-vault encrypt vault.yaml
+      $ ansible-vault encrypt vault.yml
       New Vault password: ......
       Confirm New Vault password: ......
       Encryption successful
@@ -275,7 +320,7 @@ directory of the repository.
         uses: anthonykgross/ansible-vault-cli-github-action@v1
         with:
           vault_key: ${{ secrets.vault_password }}
-          command: "ansible-vault decrypt vault.yaml"
+          command: "ansible-vault decrypt vault.yml"
 
 * Write a Python function that accesses the vault file and returns the password
   for a given nickname, a.g. in a module named ``utils.py``:
@@ -283,7 +328,7 @@ directory of the repository.
   .. code-block:: python
 
       def get_password(nickname):
-          with open('vault.yaml', 'r') as fp:
+          with open('vault.yml', 'r') as fp:
               vault_dict = yaml.safe_load(fp)
           return vault_dict['passwords'][nickname]
 
@@ -292,7 +337,7 @@ directory of the repository.
 
   .. code-block:: python
 
-      from pytest_tars import server_definition
+      from pytest_easy_server import server_definition
       from .utils import get_password
 
       def test_sample(server_definition):
@@ -318,7 +363,7 @@ In a file ``session_fixture.py``:
 .. code-block:: python
 
     import pytest
-    from pytest_tars import server_definition
+    from pytest_easy_server import server_definition
     from .utils import get_password
 
     @pytest.fixture(scope='module')
@@ -339,7 +384,7 @@ In your test functions, you can now use that fixture:
 
 .. code-block:: python
 
-    from pytest_tars import server_definition  # Must still be imported
+    from pytest_easy_server import server_definition  # Must still be imported
     from session_fixture import my_session
 
     def test_sample(my_session):

@@ -11,16 +11,17 @@
 # limitations under the License.
 
 """
-Pytest plugin.
+Pytest plugin for pytest-easy-server project.
 """
 
 from __future__ import absolute_import, print_function
 import os
 import pytest
 
-from ._exceptions import ServerDefinitionFileException
-from ._srvdef import ServerDefinition
-from ._srvdeffile import ServerDefinitionFile
+import easy_server
+
+DEFAULT_SERVER_FILE = 'server.yml'
+DEFAULT_VAULT_FILE = 'vault.yml'
 
 
 def pytest_addoption(parser):
@@ -30,24 +31,35 @@ def pytest_addoption(parser):
     group.addoption() supports the same arguments as argparse.add_argument().
     """
 
-    group = parser.getgroup('pytest-tars')
-    group.description = "pytest-tars - " \
+    group = parser.getgroup('pytest-easy-server')
+    group.description = "pytest-easy-server - " \
         "Pytest plugin for testing against real servers"
 
     group.addoption(
-        '--tars-file',
-        dest='tars_file',
+        '--es-server-file',
+        dest='server_file',
         metavar="FILE",
         action='store',
-        default=ServerDefinitionFile.default_filepath,
+        default=DEFAULT_SERVER_FILE,
         help="""\
 Use the specified server definition file.
-Default: {fp} in current directory.
-""".format(fp=ServerDefinitionFile.default_filepath))
+Default: {fn} in current directory.
+""".format(fn=DEFAULT_SERVER_FILE))
 
     group.addoption(
-        '--tars-server',
-        dest='tars_server',
+        '--es-vault-file',
+        dest='vault_file',
+        metavar="FILE",
+        action='store',
+        default=DEFAULT_VAULT_FILE,
+        help="""\
+Use the specified vault file.
+Default: {fn} in current directory.
+""".format(fn=DEFAULT_VAULT_FILE))
+
+    group.addoption(
+        '--es-nickname',
+        dest='nickname',
         metavar="NICKNAME",
         action='store',
         default=None,
@@ -63,11 +75,11 @@ def fixtureid_server_definition(fixture_value):
 
     Parameters:
 
-      fixture_value (:class:`~pytest_tars.ServerDefinition`):
+      fixture_value (:class:`~easy_server.ServerDefinition`):
         The server definition the test runs against.
     """
     sd = fixture_value
-    assert isinstance(sd, ServerDefinition)
+    assert isinstance(sd, easy_server.ServerDefinition)
     return "server_definition={0}".format(sd.nickname)
 
 
@@ -80,28 +92,31 @@ def pytest_generate_tests(metafunc):
     if 'server_definition' in metafunc.fixturenames:
 
         config = metafunc.config
-        tars_file = os.path.abspath(config.getvalue('tars_file'))
-        tars_server = config.getvalue('tars_server')
+        server_file = os.path.abspath(config.getvalue('server_file'))
+        vault_file = os.path.abspath(config.getvalue('vault_file'))
+        nickname = config.getvalue('nickname')
 
         if config.getvalue('verbose'):
-            print("\npytest-tars: Loading server definition file: {}".
-                  format(tars_file))
+            print("\npytest-easy-server: Using server definition file {sfn} "
+                  "and vault file {vfn}".
+                  format(sfn=server_file, vfn=vault_file))
 
-        # The following construct places the pytest.exit() call outside of the
+        # The following constructs place the pytest.exit() call outside of the
         # exception handling which avoids the well-known exception traceback
         # "During handling of the above exception, ...".
+
         exit_message = None
         try:
-            sdf = ServerDefinitionFile(tars_file)
-        except ServerDefinitionFileException as exc:
+            sdf = easy_server.ServerDefinitionFile(server_file)
+        except easy_server.ServerDefinitionFileException as exc:
             exit_message = str(exc)
         if exit_message:
             pytest.exit(exit_message)
 
         exit_message = None
         try:
-            sd_list = sdf.list_default_servers() if tars_server is None else \
-                sdf.list_servers(tars_server)
+            sd_list = sdf.list_default_servers() if nickname is None else \
+                sdf.list_servers(nickname)
         except KeyError as exc:
             exit_message = str(exc)
         if exit_message:

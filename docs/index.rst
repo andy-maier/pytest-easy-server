@@ -11,15 +11,15 @@
 .. limitations under the License.
 
 
-pytest-tars - Pytest plugin for testing against real servers
-************************************************************
+pytest-easy-server - Pytest plugin for testing against real servers
+*******************************************************************
 
-The pytest-tars package ("tars" = testing against real servers) is a `Pytest`_
-plugin that provides support for defining information about how to access
-servers (including a flexible user-defined part) in a *server definition file*
-and a `Pytest fixture`_ named :func:`~pytest_tars.server_definition` so that a
-Pytest testcase using that fixture can test against a server or group of servers
-defined in that file.
+The **pytest-easy-server** package is a `Pytest`_ plugin that provides a
+`Pytest fixture`_ named :func:`~pytest_easy_server.server_definition` that
+resolves to the set of servers the tests should run against.
+
+The set of servers is defined in a *server definition file* and the secrets
+to access the servers are defined in a *vault file*.
 
 .. toctree::
    :maxdepth: 2

@@ -1,4 +1,4 @@
-# Pip minimum constraints file for of pytest-tars project.
+# Pip minimum constraints file for of pytest-easy-server project.
 #
 # This file specifies constraints that define the minimum versions of any
 # direct and indirect dependent packages for installation and development of
@@ -63,25 +63,44 @@
 #   pip         19.3.1
 #   setuptools  41.5.0
 #   wheel       0.33.5
+# * Python 3.9 support:
+#   pip         21.0
+#   setuptools  51.0.0
+#   wheel       0.36.0
 
 # For the base packages, we use the versions from Ubuntu 18.04 as a general
 # minimum, and then increase it to the first version that introduced support
 # for a particular Python version.
 # On pypy3 (py36), pip 18.0 is needed to support constraints like cffi!=1.11.3,>=1.8
 # pip 10.0.0 introduced the --exclude-editable option.
+# pip before 21.0 cannot install cryptography on py39
 pip==10.0.1; python_version <= '3.5'
 pip==18.0; python_version == '3.6'
 pip==18.1; python_version == '3.7'
-pip==19.3.1; python_version >= '3.8'
+pip==19.3.1; python_version == '3.8'
+pip==21.0; python_version >= '3.9'
 setuptools==39.0.1; python_version <= '3.6'
 setuptools==40.6.0; python_version == '3.7'
-setuptools==41.5.0; python_version >= '3.8'
+setuptools==41.5.0; python_version == '3.8'
+setuptools==51.0.0; python_version >= '3.9'
 wheel==0.30.0; python_version <= '3.6'
 wheel==0.32.0; python_version == '3.7'
-wheel==0.33.5; python_version >= '3.8'
+wheel==0.33.5; python_version == '3.8'
+wheel==0.36.0; python_version >= '3.9'
 
 
 # Direct dependencies for installation (must be consistent with requirements.txt)
+
+easy_server==0.5.0
+
+# pytest
+pytest==4.3.1; python_version <= '3.6'
+pytest==4.4.0; python_version >= '3.7'
+
+
+# Indirect dependencies for installation (must be consistent with requirements.txt, if present)
+
+easy_vault==0.5.0
 
 # PyYAML is also pulled in by dparse and python-coveralls
 PyYAML==5.3.1; python_version == '2.7'
@@ -90,13 +109,6 @@ PyYAML==5.3.1; python_version >= '3.5'
 
 yamlloader==0.5.5
 jsonschema==2.6.0
-
-# pytest
-pytest==4.3.1; python_version <= '3.6'
-pytest==4.4.0; python_version >= '3.7'
-
-
-# Indirect dependencies for installation (must be consistent with requirements.txt, if present)
 
 pyrsistent==0.14.0
 
@@ -135,6 +147,7 @@ sphinxcontrib-fulltoc==1.2.0
 sphinxcontrib-websupport==1.1.2
 Pygments==2.1.3
 sphinx-rtd-theme==0.5.0
+autodocsumm==0.1.13
 
 # PyLint (no imports, invoked via pylint script) - does not support py3:
 pylint==1.6.4; python_version == '2.7'
