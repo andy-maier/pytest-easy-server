@@ -20,8 +20,9 @@ import pytest
 
 import easy_server
 
-DEFAULT_SERVER_FILE = 'server.yml'
-DEFAULT_VAULT_FILE = 'vault.yml'
+DEFAULT_SERVER_FILE = 'es_server.yml'
+
+DOCS_LINK = 'https://pytest-easy-server.readthedocs.io/'
 
 
 def pytest_addoption(parser):
@@ -33,29 +34,19 @@ def pytest_addoption(parser):
 
     group = parser.getgroup('pytest-easy-server')
     group.description = "pytest-easy-server - " \
-        "Pytest plugin for testing against real servers"
+        "Pytest plugin for easy testing against servers, " \
+        "see {}".format(DOCS_LINK)
 
     group.addoption(
-        '--es-server-file',
-        dest='es_server_file',
+        '--es-file',
+        dest='es_file',
         metavar="FILE",
         action='store',
         default=DEFAULT_SERVER_FILE,
         help="""\
-Use the specified server definition file.
+Path name of the easy-server file to be used.
 Default: {fn} in current directory.
 """.format(fn=DEFAULT_SERVER_FILE))
-
-    group.addoption(
-        '--es-vault-file',
-        dest='es_vault_file',
-        metavar="FILE",
-        action='store',
-        default=DEFAULT_VAULT_FILE,
-        help="""\
-Use the specified vault file.
-Default: {fn} in current directory.
-""".format(fn=DEFAULT_VAULT_FILE))
 
     group.addoption(
         '--es-nickname',
@@ -64,42 +55,40 @@ Default: {fn} in current directory.
         action='store',
         default=None,
         help="""\
-Use the server or server group with this nickname to test against.
-Default: default server or server group specified in the file.
+Nickname of the server or server group to test against.
+Default: The default from the easy-server file.
 """)
 
 
-def fixtureid_server_definition(fixture_value):
+def fixtureid_es_server(fixture_value):
     """
-    Return a fixture ID to be used by pytest for fixture `server_definition()`.
+    Return a fixture ID to be used by pytest for fixture `es_server()`.
 
     Parameters:
 
-      fixture_value (:class:`~easy_server.ServerDefinition`):
-        The server definition the test runs against.
+      fixture_value (:class:`~easy_server.Server`):
+        The server the test runs against.
     """
-    sd = fixture_value
-    assert isinstance(sd, easy_server.ServerDefinition)
-    return "server_definition={0}".format(sd.nickname)
+    es_obj = fixture_value
+    assert isinstance(es_obj, easy_server.Server)
+    return "easy_server={0}".format(es_obj.nickname)
 
 
 def pytest_generate_tests(metafunc):
     """
     Pytest plugin function to generate the tests for multiple servers in the
-    server definition file.
+    server file.
     """
 
-    if 'server_definition' in metafunc.fixturenames:
+    if 'es_server' in metafunc.fixturenames:
 
         config = metafunc.config
-        server_file = os.path.abspath(config.getvalue('es_server_file'))
-        vault_file = os.path.abspath(config.getvalue('es_vault_file'))
-        nickname = config.getvalue('es_nickname')
+        es_file = os.path.abspath(config.getvalue('es_file'))
+        es_nickname = config.getvalue('es_nickname')
 
         if config.getvalue('verbose'):
-            print("\npytest-easy-server: Using server definition file {sfn} "
-                  "and vault file {vfn}".
-                  format(sfn=server_file, vfn=vault_file))
+            print("\npytest-easy-server: Using server file {fn}".
+                  format(fn=es_file))
 
         # The following constructs place the pytest.exit() call outside of the
         # exception handling which avoids the well-known exception traceback
@@ -107,21 +96,21 @@ def pytest_generate_tests(metafunc):
 
         exit_message = None
         try:
-            sdf = easy_server.ServerDefinitionFile(server_file)
-        except easy_server.ServerDefinitionFileException as exc:
+            esf_obj = easy_server.ServerFile(es_file)
+        except easy_server.ServerFileException as exc:
             exit_message = str(exc)
         if exit_message:
             pytest.exit(exit_message)
 
         exit_message = None
         try:
-            sd_list = sdf.list_default_servers() if nickname is None else \
-                sdf.list_servers(nickname)
+            es_obj_list = esf_obj.list_default_servers() \
+                if es_nickname is None else esf_obj.list_servers(es_nickname)
         except KeyError as exc:
             exit_message = str(exc)
         if exit_message:
             pytest.exit(exit_message)
 
         metafunc.parametrize(
-            'server_definition', sd_list, indirect=True,
-            ids=fixtureid_server_definition)
+            'es_server', es_obj_list, indirect=True,
+            ids=fixtureid_es_server)

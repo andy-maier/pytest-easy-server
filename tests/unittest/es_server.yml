@@ -1,4 +1,6 @@
-# Example server definition file for the pytest-easy-server project
+# easy-server server file for unit tests
+
+vault_file: es_vault.yml
 
 servers:
 
@@ -6,7 +8,7 @@ servers:
     description: "my dev system 1"
     contact_name: "John Doe"
     access_via: "VPN to dev network"
-    user_defined:                       # User-defined additional properties
+    user_defined:
       stuff: "more stuff"
 
   myserver2:

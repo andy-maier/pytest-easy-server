@@ -25,12 +25,12 @@ Any functions not described in this section are considered internal and may
 change incompatibly without warning.
 
 
-.. _`server_definition fixture`:
+.. _`es_server fixture`:
 
-server_definition fixture
--------------------------
+es_server fixture
+-----------------
 
-.. autofunction:: pytest_easy_server.server_definition
+.. autofunction:: pytest_easy_server.es_server
 
 
 .. _`Package version`:

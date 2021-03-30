@@ -1,4 +1,6 @@
-# Example server definition file for the pytest-easy-server project
+# Example server file for the pytest-easy-server project
+
+vault_file: es_vault.yml
 
 servers:
 
