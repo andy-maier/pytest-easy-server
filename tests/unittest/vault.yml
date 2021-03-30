@@ -1,4 +1,4 @@
-# Example vault file
+# Example vault file for the pytest-easy-server project
 
 secrets:
 

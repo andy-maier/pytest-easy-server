@@ -16,7 +16,13 @@
 API Reference
 =============
 
-This section describes the API of the pytest-easy-server package.
+This section describes the API of the **pytest-easy-server** package.
+The API is kept stable using the compatibility rules defined for
+`semantic versioning <https://semver.org/>`_. An exception to this rule
+are fixes for security issues.
+
+Any functions not described in this section are considered internal and may
+change incompatibly without warning.
 
 
 .. _`server_definition fixture`:
@@ -32,19 +38,4 @@ server_definition fixture
 Package version
 ---------------
 
-The package version can be accessed by programs using the
-``pytest_easy_server.__version__`` variable [#]_:
-
-.. autodata:: pytest_easy_server._version.__version__
-
-This documentation may have been built from a development level of the
-package. You can recognize a development version of this package by the
-presence of a ".devD" suffix in the version string. Development versions are
-pre-versions of the next assumed version that is not yet released. For example,
-version 0.1.2.dev25 is development pre-version #25 of the next version to be
-released after 0.1.1. Version 1.1.2 is an `assumed` next version, because the
-`actually released` next version might be 0.2.0 or even 1.0.0.
-
-.. [#] For tooling reasons, that variable is shown as
-   ``pytest_easy_server._version.__version__`` in this documentation, but
-   it should be accessed as ``pytest_easy_server.__version__``.
+.. autodata:: pytest_easy_server.__version__

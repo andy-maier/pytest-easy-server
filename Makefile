@@ -558,11 +558,11 @@ safety_$(python_pymn_version).done: develop_reqs_$(python_pymn_version).done Mak
 test: develop
 ifeq ($(python_mn_version),3.4)
 	@echo "Makefile: Running unit tests (without coverage)"
-	pytest --color=yes $(pytest_warning_opts) $(pytest_opts) $(test_dir)/unittest -s
+	pytest --color=yes $(pytest_warning_opts) $(pytest_opts) $(test_dir)/unittest -s --es-server-file $(test_dir)/unittest/server.yml --es-vault-file $(test_dir)/unittest/vault.yml
 	@echo "Makefile: Done running unit tests (without coverage)"
 else
 	@echo "Makefile: Running unit tests (with coverage)"
-	coverage run --source=$(package_name) --rcfile=.coveragerc -m pytest --color=yes $(pytest_warning_opts) $(pytest_opts) $(test_dir)/unittest -s
+	coverage run --source=$(package_name) --rcfile=.coveragerc -m pytest --color=yes $(pytest_warning_opts) $(pytest_opts) $(test_dir)/unittest -s --es-server-file $(test_dir)/unittest/server.yml --es-vault-file $(test_dir)/unittest/vault.yml
 	coverage report --rcfile=.coveragerc
 	@echo "Makefile: Done running unit tests (with coverage)"
 endif

@@ -22,10 +22,10 @@ Usage
 Supported environments
 ----------------------
 
-pytest-easy-server is supported in these environments:
+The **pytest-easy-server** package is supported in these environments:
 
-* Operating Systems: Linux, Windows (native, and with UNIX-like environments),
-  macOS/OS-X
+* Operating Systems: Linux, macOS / OS-X, native Windows, Linux subsystem in
+  Windows, UNIX-like environments in Windows.
 
 * Python: 2.7, 3.4, and higher
 
@@ -35,29 +35,36 @@ pytest-easy-server is supported in these environments:
 Installation
 ------------
 
-* Prerequisites:
+The following command installs the **pytest-easy-server** package and its
+prerequisite packages into the active Python environment:
 
-  - The Python environment into which you want to install must be the current
-    Python environment, and must have at least the following Python packages
-    installed:
+.. code-block:: bash
 
-    - setuptools
-    - wheel
-    - pip
+    $ pip install pytest-easy-server
 
-* Install the pytest-easy-server package and its prerequisite
-  Python packages into the active Python environment:
+When Pytest runs, it will automatically find the plugin and will show
+its version, e.g.:
 
-  .. code-block:: bash
+.. code-block:: text
 
-      $ pip install pytest-easy-server
+    plugins: easy-server-0.5.0
 
-  When Pytest runs, it will automatically find the plugin and will show
-  its version, e.g.:
 
-  .. code-block:: text
+.. _`Server definition file and vault file`:
 
-      plugins: easy-server-0.5.0
+Server definition file and vault file
+-------------------------------------
+
+The server definition file define the servers, server groups and a default
+server or group. It is described in the "easy-server" documentation in section
+`Server definition files <https://easy-server.readthedocs.io/en/stable/usage.html#server-definition-files>`_.
+
+The vault file defines the secrets needed to access the servers and can stay
+encrypted in the file system while being used. It is described in the
+"easy-server" documentation in section
+`Vault files <https://easy-server.readthedocs.io/en/stable/usage.html#vault-files>`_.
+
+The servers and groups are identified with user-defined nicknames.
 
 
 .. _`Using the server_definition fixture`:
@@ -65,10 +72,16 @@ Installation
 Using the server_definition fixture
 -----------------------------------
 
-The main purpose of the pytest-easy-server package is to provide the Pytest fixture
-:func:`~pytest_easy_server.server_definition` for use in your Pytest testcases.
+If your pytest test function uses the :func:`~pytest_easy_server.server_definition`
+fixture, the test function will be invoked for the server specified in the
+``--es-nickname`` command line option, or the set of servers if the specified
+nickname is that of a server group.
 
-That fixture is used in your tests as follows:
+From a perspective of the test function that is invoked, the fixture resolves
+to a single server definition.
+
+The following example shows a test function using this fixture and how it gets
+to the details for accessing the server:
 
 .. code-block:: python
 
@@ -81,136 +94,80 @@ That fixture is used in your tests as follows:
         Parameters:
           server_definition (ServerDefinition): Server to be used for the test
         """
-        server_host = server_definition.user_defined['host']
-        server_username = server_definition.user_defined['username']
-        server_password = server_definition.user_defined['password']
-        # log on to the host and perform some test
 
-The ``server_definition`` parameter of the test function is the use of the
-Pytest fixture. This fixture parameter resolves to a
-:class:`~pytest_easy_server.ServerDefinition` object that represents a server
-definition from the file for test of a single server.  Pytest will invoke the
-test function for all servers that are to be tested.
+        # Standard properties from the server definition file:
+        nickname = server_definition.nickname
+        description = server_definition.description
 
-This test function relies on certain elements in the user-defined part of
-the server definition in your server definition file, such as the hostname
-or IP address of the server, and credentials to log on.
+        # User-defined additional properties from the server definition file:
+        stuff = server_definition.user_defined['stuff']
 
-The structure of these user-defined elements is completely up to you: You
-simply define these elements in your server definition file, and use them in
-your test functions.
+        # User-defined secrets from the vault file:
+        host = server_definition.secrets['host']
+        username = server_definition.secrets['username']
+        password = server_definition.secrets['password']
 
-An example server definition file that corresponds to the test function shown
-above would be:
+        # Log on to the host and perform some test
+        . . .
 
-.. code-block:: yaml
+The example shows how to access the standard and user-defined properties
+from the server definition file for demonstration purposes. The data structure
+of the user-defined properties in the server definition file and of the secrets
+in the vault file is completely up to you, so you could decide to have the host
+and userid in user-defined properties in the server definition file, and have
+only the password in the vault file.
 
-    servers:
-      myserver1:                          # nickname of the server
-        description: "my dev system 1"
-        contact_name: "John Doe"
-        access_via: "VPN to dev network"
-        user_defined:                     # user-defined part, completely flexible
-          host: "10.11.12.13"
-          username: myusername
-          password: mypassword
+The ``server_definition`` parameter of the test function is a
+:class:`easy_server:easy_server.ServerDefinition` object that represents a
+server definition from the file for test of a single server.
 
-
-.. _`Format of server definition file`:
-
-Format of server definition file
---------------------------------
-
-The server definition file is in YAML format. Here is a working example:
+An example server definition file that provides the user-defined properties
+used in the test function shown above would be:
 
 .. code-block:: yaml
 
     servers:
 
-      myserver1:                          # nickname of the server
+      myserver1:                            # Nickname of the server
         description: "my dev system 1"
         contact_name: "John Doe"
         access_via: "VPN to dev network"
-        user_defined:                     # user-defined part, completely flexible
-          host: "10.11.12.13"
-          username: myusername
-          password: mypassword
-          stuff:
-            - morestuff1
+        user_defined:                       # User-defined additional properties
+          stuff: "more stuff"
 
-      myserver2:                          # nickname of the server
+      myserver2:
         description: "my dev system 2"
         contact_name: "John Doe"
-        access_via: "Company Intranet"
-        user_defined:                     # user-defined part, completely flexible
-          host: "9.10.11.12"
-          username: myusername
-          password: mypassword
+        access_via: "intranet"
+        user_defined:
+          stuff: "more stuff"
 
     server_groups:
 
-      mygroup1:                           # nickname of the server group
+      mygroup1:
         description: "my dev systems"
-        members:                          # list of server or group nicknames
+        members:
           - myserver1
           - myserver2
 
-    default: mygroup1                     # nickname of default server or group
+    default: mygroup1
 
-In the example above, ``myserver1``, ``myserver2``, and ``mygroup1`` are
-nicknames of the respective server or server group definitions. These nicknames
-are used when servers or groups are put into a server group in that file, or
-when they are specified as a default in that file, or when they are used in the
-``--es-nickname`` command line option of the pytest command.
+And an example vault file that corresponds to the test function shown above
+would be:
 
-These nicknames are case sensitive and their allowable character set are
-alphenumeric characters and the underscore character.
+.. code-block:: yaml
 
-If tests are to be run against multiple servers in a single pytest invocation,
-a corresponding server group needs to be defined in the file, and the server
-group's nickname is specified to be used for testing (via default or the
-``--es-nickname`` option).
+    secrets:
 
-The value of the ``servers`` top-level property is an object (=dictionary) that
-has one property for each server that is defined. The property name is the
-server nickname, and the property value is an object with the following
-properties. These propertes are accessible in the test function via same-named
-properties of the :class:`~pytest_easy_server.ServerDefinition` object passed via the
-fixture:
+      myserver1:
+        host: "10.11.12.13"                 # User-defined properties
+        username: myuser1
+        password: mypass1
 
-* ``description`` (string): Short description of the server (required).
-* ``contact_name`` (string): Name of technical contact for the server (optional,
-  defaults to `None`).
-* ``access_via`` (string): Short reminder on the network/firewall/proxy/vpn
-  used to access the server (optional, defaults to `None`).
-* ``user_defined`` (object): Details of the server, such as IP address. This object
-  can have an arbitrary user-defined structure (required).
-
-The value of the ``server_groups`` top-level property is an object that has one
-property for each server group that is defined. The property name is the group
-nickname, and the property value is an object with the following properties:
-
-* ``description`` (string): Short description of the server group (required).
-* ``members`` (list): List of server nicknames or other group nicknames that
-  are the members of the group (required).
-
-The value of the ``default`` top-level property is a string that is the
-nickname of the default server or group to be used if the ``--es-nickname``
-command line option of pytest is not specified.
-
-Server groups may be nested. That is, server groups may be put into other server
-groups at arbitrary nesting depth. There must not be any cycle (i.e. the
-resulting graph of server groups must be a tree).
-
-A particular server or server group may be put into more than one server group.
-
-When specifying a server group to be used for testing, the resulting set of
-servers that is actually passed to the :func:`~pytest_easy_server.server_definition`
-fixture is the flattened list of servers, whereby any duplicate servers are
-eliminated.
-
-The format of the server definition file is validated when pytest runs, and
-pytest will stop with an error if validation issues are found.
+      myserver2:
+        host: "9.10.11.12"                  # User-defined properties
+        username: myuser2
+        password: mypass2
 
 
 .. _`Controlling which servers to test against`:
@@ -243,108 +200,33 @@ defaults:
 Protecting secrets
 ------------------
 
-If the server definition file is stored in a repository, it should not contain
-any passwords or other secrets in clear text. There are multiple ways how this
-can be achieved:
+There are two kinds of secrets here:
 
-* Approach 1: Encrypt the server secrets and keep their encrypted form in the
-  user-defined part of the server definition in the file. This requires a key
-  for decrypting the server secrets. Use the secret management facilities of
-  the CI/CD system that runs the tests for storing the decryption key.
+* The secrets in the vault file.
+* The vault password.
 
-* Approach 2: Put the server secrets into a vault, and protect the vault
-  with a CI/CD secret. The vault may be an encrypted file in your repository
-  (such as an Ansible vault), or a vault service (such as Hashicorp Vault).
-  Use the secret management facilities of the CI/CD system that runs the tests
-  for storing the access data for the vault.
+The secrets in the vault file are protected if the vault file is encrypted in
+the file system. The functionality also works if the vault file is not
+encrypted, but the normal case should be that you keep it encrypted. If you
+store the vault file in a repository, make sure it is encrypted.
 
-Example
-^^^^^^^
+**TODO: Add functionality to warn or error out if the vault file is not encrypted.**
 
-The following example shows approach 2 using GitHub Actions as a CI/CD system
-that runs your tests, and an Ansible vault file that is put into your
-repository.
+The vault password is protected in the following ways:
 
-In the example, two servers are specified. Optional elements in the server
-definition file are omitted, for simplicity.
+* For local use on your system, you are prompted for the vault password upon
+  first use of the vault. The easy-vault package then stores the vault password
+  in the keyring facility of your local system, to avoid future such prompts.
 
-You can find the files shown in this example in the
-`examples/approach2 <https://github.com/andy-maier/pytest-easy-server/tree/master/examples/approach2>`_
-directory of the repository.
+* For use in a CI/CD system, you can define a secret in the CI/CD system that
+  holds the vault password. Most CI/CD systems support storing secrets in
+  a secure manner. The password secret is then put into an environment variable
+  named "ES_VAULT_PASSWORD" where the pytest plugin picks it up from.
 
-* Create a server definition file named ``server.yml`` that specifies the
-  servers with host and username (but no password) in the user-defined part:
-
-  .. code-block:: yaml
-
-      servers:
-        myserver1:
-          description: "my dev system 1"
-          user_defined:
-            host: "10.11.12.13"
-            username: myusername1
-        myserver2:
-          description: "my dev system 2"
-          user_defined:
-            host: "10.11.12.14"
-            username: myusername2
-
-* Create an Ansible vault file named ``vault.yml`` that specifies the passwords
-  for each server, using the server nicknames as keys:
-
-  .. code-block:: yaml
-
-      passwords:
-        myserver1: mypass1
-        myserver2: mypass2
-
-* Encrypt the Ansible vault file before it is put into the repository:
-
-  .. code-block:: bash
-
-      $ ansible-vault encrypt vault.yml
-      New Vault password: ......
-      Confirm New Vault password: ......
-      Encryption successful
-
-* Create a secret in GitHub Actions for your repo, with name ``vault_password``
-  and the vault password you just specified as its value. For details, see
-  `GitHub Actions encrypted secrets <https://docs.github.com/en/actions/reference/encrypted-secrets>`_.
-
-* Put the following step into your GitHub Actions test workflow before the
-  step that runs pytest, to decrypt the vault file:
-
-  .. code-block:: yaml
-
-      - name: Decrypt the vault
-        uses: anthonykgross/ansible-vault-cli-github-action@v1
-        with:
-          vault_key: ${{ secrets.vault_password }}
-          command: "ansible-vault decrypt vault.yml"
-
-* Write a Python function that accesses the vault file and returns the password
-  for a given nickname, a.g. in a module named ``utils.py``:
-
-  .. code-block:: python
-
-      def get_password(nickname):
-          with open('vault.yml', 'r') as fp:
-              vault_dict = yaml.safe_load(fp)
-          return vault_dict['passwords'][nickname]
-
-* In each of your test functions, access the server host, username and password
-  as follows:
-
-  .. code-block:: python
-
-      from pytest_easy_server import server_definition
-      from .utils import get_password
-
-      def test_sample(server_definition):
-          server_host = server_definition.user_defined['host']
-          server_username = server_definition.user_defined['username']
-          server_password = get_password(server_definition.nickname)
-          # log on to the host and perform some test
+You should not use the approach with the environment variable on your local
+system at least not when you set the variable in a script, because then the
+script has the clear text vault password. Always use the prompting approach
+on your local system.
 
 
 .. _`Derived Pytest fixtures`:
@@ -354,9 +236,10 @@ Derived Pytest fixtures
 
 If using the server definition in your test functions includes the same boiler
 plate code for opening a session with the server, this can be put into a
-second fixture. For example, the following fixture opens and closes a
-session with a server using a fictitious class ``MySession``, and the
-approach 2 for storing secrets described in the previous section:
+second derived fixture.
+
+The following fixture is an example for that. It opens and closes a
+session with a server using a fictitious class ``MySession``:
 
 In a file ``session_fixture.py``:
 
@@ -364,7 +247,6 @@ In a file ``session_fixture.py``:
 
     import pytest
     from pytest_easy_server import server_definition
-    from .utils import get_password
 
     @pytest.fixture(scope='module')
     def my_session(request, server_definition):
@@ -373,9 +255,9 @@ In a file ``session_fixture.py``:
         testing against a server.
         """
         session = MySession(
-            host = server_definition.user_defined['host']
-            username = server_definition.user_defined['username']
-            password = get_password(server_definition.nickname)
+            host = server_definition.secrets['host']
+            username = server_definition.secrets['username']
+            password = server_definition.secrets['password']
         )
         yield session
         session.close()
