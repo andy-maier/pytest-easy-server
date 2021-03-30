@@ -1,4 +1,4 @@
-# Example vault file for the pytest-easy-server project
+# easy-server vault file for unit tests (remains unencrypted)
 
 secrets:
 

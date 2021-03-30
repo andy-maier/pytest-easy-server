@@ -23,31 +23,25 @@ pytest-easy-server - Pytest plugin for easy testing against servers
 Overview
 --------
 
-The **pytest-easy-server** package is a
-`Pytest <https://docs.pytest.org/en/stable/>`_ plugin that provides a
-:func:`~pytest_easy_server.server_definition` fixture that resolves to the set
-of servers the tests should run against.
+The **pytest-easy-server** package is a `Pytest`_ plugin that provides a
+`Pytest fixture`_ fixture `es_server`_ that resolves
+to the set of servers the tests should run against.
 
-The set of servers is defined in a *server definition file* and the secrets
-to access the servers are defined in a *vault file* in the formats defined
-by the
-`easy-server package <https://easy-server.readthedocs.io/en/stable/>`_.
+The set of servers is defined in a *server file* and the secrets to access the
+servers are defined in a *vault file* that is referenced by the server file,
+in the formats defined by the `easy-server package`_.
 
 The files to use and the server or group nickname to select for the test
 can be specified in pytest options added by the plugin:
 
 .. code-block:: text
 
-    --es-server-file=FILE   Use the specified server definition file.
-                            Default: server.yml in current directory.
-
-    --es-vault-file=FILE    Use the specified vault file.
-                            Default: vault.yml in current directory.
-
-    --es-nickname=NICKNAME  Use the server or server group with this
-                            nickname to test against.
-                            Default: default server or server group
-                            specified in the server definition file.
+    --es-file=FILE
+                            Path name of the easy-server file to be used.
+                            Default: es_server.yml in current directory.
+    --es-nickname=NICKNAME
+                            Nickname of the server or server group to test against.
+                            Default: The default from the server file.
 
 
 .. _`Documentation and change log`:
@@ -70,10 +64,7 @@ The pytest-easy-server project is provided under the
 
 .. _`Pytest`: https://docs.pytest.org/en/stable/
 .. _`Pytest fixture`: https://docs.pytest.org/en/stable/fixture.html
-.. _`Format of server definition file`: https://pytest-easy-server.readthedocs.io/en/latest/usage.html#format-of-server-definition-file
-.. _`Protecting secrets`: https://pytest-easy-server.readthedocs.io/en/latest/usage.html#protecting-secrets
-.. _`Derived Pytest fixtures`: https://pytest-easy-server.readthedocs.io/en/latest/usage.html#derived-pytest-fixtures
-.. _`server_definition`: https://pytest-easy-server.readthedocs.io/en/latest/api.html#server-definition-fixture
-.. _`ServerDefinition`: https://pytest-easy-server.readthedocs.io/en/latest/api.html#serverdefinition-class
-.. _`Documentation`: https://pytest-easy-server.readthedocs.io/en/latest/
-.. _`Change log`: https://pytest-easy-server.readthedocs.io/en/latest/changes.html
+.. _`easy-server package`: https://easy-server.readthedocs.io/en/stable/
+.. _`es_server`: https://pytest-easy-server.readthedocs.io/en/stable/api.html#es-server-fixture
+.. _`Documentation`: https://pytest-easy-server.readthedocs.io/en/stable/
+.. _`Change log`: https://pytest-easy-server.readthedocs.io/en/stable/changes.html

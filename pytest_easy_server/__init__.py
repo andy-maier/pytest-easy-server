@@ -18,7 +18,7 @@ pytest-easy-server - Pytest plugin for easy testing against servers
 # Importing just this module is enough.
 
 from __future__ import absolute_import, print_function
-from ._srvdef_fixture import *  # noqa: F403,F401
+from ._easy_server_fixture import *  # noqa: F403,F401
 from . import _version
 
 #: The full version of this package including any development levels, as a

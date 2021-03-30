@@ -11,7 +11,7 @@
 # limitations under the License.
 
 """
-Pytest fixture server_definition.
+Pytest fixture es_server.
 """
 
 from __future__ import absolute_import, print_function
@@ -19,27 +19,25 @@ import pytest
 
 import easy_server
 
-__all__ = ['server_definition']
+__all__ = ['es_server']
 
 
 @pytest.fixture(scope="module")
-def server_definition(request):
+def es_server(request):
     """
-    Pytest fixture representing the set of server definitions for all servers
-    to test against.
+    Pytest fixture representing a server item from an 'easy-server' file as a
+    :class:`easy_server:easy_server.Server` object.
 
-    The fixture resolves to a :class:`easy_server:easy_server.ServerDefinition`
-    object representing a single server definition. Pytest invokes testcases
-    using this fixture for all servers to test against.
+    Pytest invokes testcases using this fixture for all servers to test against.
 
-    The servers are defined in a :ref:`Server definition file and vault file`.
+    The servers are defined in a :ref:`Server file and vault file`.
     The servers to test against are controlled with pytest command line options
     as described in :ref:`Controlling which servers to test against`.
 
     Returns:
-      :class:`easy_server:easy_server.ServerDefinition`:
-      Server definition for each server to test against.
+      :class:`easy_server:easy_server.Server`:
+      Server item for each server to test against.
     """
-    sd = request.param
-    assert isinstance(sd, easy_server.ServerDefinition)
-    return sd
+    es_obj = request.param
+    assert isinstance(es_obj, easy_server.Server)
+    return es_obj
