@@ -180,7 +180,7 @@ setuptools.setup(
     cmdclass={
         'test': test,
     },
-    description="Pytest plugin for testing against real servers",
+    description="Pytest plugin for easy testing against servers",
     long_description=read_file('README.rst'),
     long_description_content_type='text/x-rst',
     license="Apache Software License 2.0",

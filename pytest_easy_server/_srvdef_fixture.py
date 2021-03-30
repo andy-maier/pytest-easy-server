@@ -28,28 +28,16 @@ def server_definition(request):
     Pytest fixture representing the set of server definitions for all servers
     to test against.
 
-    The fixture resolves to a :class:`~pytest_easy_server.ServerDefinition`
+    The fixture resolves to a :class:`easy_server:easy_server.ServerDefinition`
     object representing a single server definition. Pytest invokes testcases
     using this fixture for all servers to test against.
 
-    The servers to test against can be controlled with pytest command line
-    options:
-
-    .. code-block:: text
-
-        --es-server-file=FILE   Use the specified server definition file.
-                                Default: server.yml in current directory.
-
-        --es-vault-file=FILE    Use the specified vault file.
-                                Default: vault.yml in current directory.
-
-        --es-nickname=NICKNAME  Use the server or server group with this
-                                nickname to test against.
-                                Default: default server or server group
-                                specified in the server definition file.
+    The servers are defined in a :ref:`Server definition file and vault file`.
+    The servers to test against are controlled with pytest command line options
+    as described in :ref:`Controlling which servers to test against`.
 
     Returns:
-      :class:`~easy_server.ServerDefinition`:
+      :class:`easy_server:easy_server.ServerDefinition`:
       Server definition for each server to test against.
     """
     sd = request.param

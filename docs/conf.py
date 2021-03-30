@@ -87,6 +87,7 @@ extensions = [
     # but since it already provides a full TOC in the navigation pane, the
     # sphinxcontrib.fulltoc extension is not needed.
     'sphinx_rtd_theme',
+    'autodocsumm',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -113,7 +114,7 @@ project = u'pytest-easy-server'
 author = u"Andreas Maier"
 
 # The short description of the package.
-_short_description = u"Pytest plugin for testing against real servers"
+_short_description = u"Pytest plugin for easy testing against servers"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -495,6 +496,8 @@ intersphinx_mapping = {
   'py': ('https://docs.python.org/2/', None), # agnostic to Python version
   'py2': ('https://docs.python.org/2', None), # specific to Python 2
   'py3': ('https://docs.python.org/3', None), # specific to Python 3
+  'easy_vault': ('https://easy-vault.readthedocs.io/en/stable/', None),
+  'easy_server': ('https://easy-server.readthedocs.io/en/stable/', None),
 }
 
 intersphinx_cache_limit = 5
@@ -539,166 +542,4 @@ intersphinx_cache_limit = 5
 # results in the link caption "this issue".
 
 extlinks = {
-
 }
-
-# -- Support for autoautosummary ----------------------------------------------
-#
-# Idea taken from https://stackoverflow.com/a/30783465/1424462
-#
-
-class AutoAutoSummary(Autosummary):
-    """
-    Sphinx extension that automatically generates a table of public methods or
-    attributes of a class, using the AutoSummary extension.
-    (i.e. each row in the table shows the method or attribute name with a
-    link to the full description, and a one-line brief description).
-
-    Usage in RST source::
-
-        .. autoclass:: path.to.class
-           :<autoclass-options>:
-
-           .. rubric:: Methods
-
-           .. autoautosummary:: path.to.class
-              :methods:
-
-           .. rubric:: Attributes
-
-           .. autoautosummary:: path.to.class
-              :attributes:
-
-           .. rubric:: Details
-
-    """
-
-    option_spec = {
-        'methods': directives.unchanged,
-        'attributes': directives.unchanged
-    }
-    option_spec.update(Autosummary.option_spec)
-
-    required_arguments = 1  # Fully qualified class name
-
-    def __init__(self, *args, **kwargs):
-        self._logger = logging.getLogger(__name__)  # requires Sphinx 1.6.1
-        self._log_prefix = "conf.py/AutoAutoSummary"
-        self._excluded_classes = ['BaseException']
-        super(AutoAutoSummary, self).__init__(*args, **kwargs)
-
-    def _get_members(self, class_obj, member_type, include_in_public=None):
-        """
-        Return class members of the specified type.
-
-        class_obj: Class object.
-
-        member_type: Member type ('method' or 'attribute').
-
-        include_in_public: set/list/tuple with member names that should be
-          included in public members in addition to the public names (those
-          starting without underscore).
-
-        Returns:
-          tuple(public_members, all_members): Names of the class members of
-            the specified member type (public / all).
-        """
-        try:
-            app = self.state.document.settings.env.app
-        except AttributeError:
-            app = None
-        if not include_in_public:
-            include_in_public = []
-        all_members = []
-        for member_name in dir(class_obj):
-            try:
-                documenter = get_documenter(
-                    app,
-                    safe_getattr(class_obj, member_name),
-                    class_obj)
-            except AttributeError:
-                continue
-            if documenter.objtype == member_type:
-                all_members.append(member_name)
-        public_members = [x for x in all_members
-                  if x in include_in_public or not x.startswith('_')]
-        return public_members, all_members
-
-    def _get_def_class(self, class_obj, member_name):
-        """
-        Return the class object in MRO order that defines a member.
-
-        class_obj: Class object that exposes (but not necessarily defines) the
-          member. I.e. starting point of the search.
-
-        member_name: Name of the member (method or attribute).
-
-        Returns:
-          Class object that defines the member.
-        """
-        member_obj = getattr(class_obj, member_name)
-        for def_class_obj in inspect.getmro(class_obj):
-            if member_name in def_class_obj.__dict__:
-                if def_class_obj.__name__ in self._excluded_classes:
-                    return class_obj  # Fall back to input class
-                return def_class_obj
-        self._logger.warning(
-            "%s: Definition class not found for member %s.%s, "
-            "defaulting to class %s",
-            self._log_prefix, class_obj.__name__, member_name,
-            class_obj.__name__)
-        return class_obj  # Input class is better than nothing
-
-    def run(self):
-
-        try:
-            full_class_name = str(self.arguments[0])
-            module_name, class_name = full_class_name.rsplit('.', 1)
-            module_obj = __import__(module_name, globals(), locals(),
-                                    [class_name])
-            class_obj = getattr(module_obj, class_name)
-            if 'methods' in self.options:
-                _, methods = self._get_members(
-                    class_obj, 'method', ['__init__'])
-                self.content = []
-                for method in methods:
-                    if method.startswith('_'):
-                        # Skip private methods
-                        continue
-                    def_class = self._get_def_class(class_obj, method)
-                    def_module_name = def_class.__module__
-                    if def_module_name.startswith('pytest_easy_server'):
-                        def_module_name = def_module_name.split('.')[0]
-                    content_str = "~%s.%s.%s" % (
-                        def_module_name,
-                        def_class.__name__,
-                        method)
-                    self.content.append(content_str)
-            elif 'attributes' in self.options:
-                _, attributes = self._get_members(class_obj, 'attribute')
-                self.content = []
-                for attrib in attributes:
-                    if attrib.startswith('_'):
-                        # Skip private attributes
-                        continue
-                    def_class = self._get_def_class(class_obj, attrib)
-                    def_module_name = def_class.__module__
-                    if def_module_name.startswith('pytest_easy_server'):
-                        def_module_name = def_module_name.split('.')[0]
-                    content_str = "~%s.%s.%s" % (
-                        def_module_name,
-                        def_class.__name__,
-                        attrib)
-                    self.content.append(content_str)
-
-        except Exception as exc:
-            self._logger.error(
-                "%s: Internal error: %s: %s",
-                self._log_prefix, exc.__class__.__name__, exc)
-
-        finally:
-            return super(AutoAutoSummary, self).run()
-
-
-def setup(app):
-    app.add_directive('autoautosummary', AutoAutoSummary)

@@ -37,7 +37,7 @@ def pytest_addoption(parser):
 
     group.addoption(
         '--es-server-file',
-        dest='server_file',
+        dest='es_server_file',
         metavar="FILE",
         action='store',
         default=DEFAULT_SERVER_FILE,
@@ -48,7 +48,7 @@ Default: {fn} in current directory.
 
     group.addoption(
         '--es-vault-file',
-        dest='vault_file',
+        dest='es_vault_file',
         metavar="FILE",
         action='store',
         default=DEFAULT_VAULT_FILE,
@@ -59,7 +59,7 @@ Default: {fn} in current directory.
 
     group.addoption(
         '--es-nickname',
-        dest='nickname',
+        dest='es_nickname',
         metavar="NICKNAME",
         action='store',
         default=None,
@@ -92,9 +92,9 @@ def pytest_generate_tests(metafunc):
     if 'server_definition' in metafunc.fixturenames:
 
         config = metafunc.config
-        server_file = os.path.abspath(config.getvalue('server_file'))
-        vault_file = os.path.abspath(config.getvalue('vault_file'))
-        nickname = config.getvalue('nickname')
+        server_file = os.path.abspath(config.getvalue('es_server_file'))
+        vault_file = os.path.abspath(config.getvalue('es_vault_file'))
+        nickname = config.getvalue('es_nickname')
 
         if config.getvalue('verbose'):
             print("\npytest-easy-server: Using server definition file {sfn} "

@@ -1,4 +1,4 @@
-# Example server definition file
+# Example server definition file for the pytest-easy-server project
 
 servers:
 
@@ -6,11 +6,15 @@ servers:
     description: "my dev system 1"
     contact_name: "John Doe"
     access_via: "VPN to dev network"
+    user_defined:                       # User-defined additional properties
+      stuff: "more stuff"
 
   myserver2:
     description: "my dev system 2"
     contact_name: "John Doe"
     access_via: "intranet"
+    user_defined:
+      stuff: "more stuff"
 
 server_groups:
 
