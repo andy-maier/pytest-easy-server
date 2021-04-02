@@ -20,6 +20,6 @@ Change log
 Version 0.5.0.dev1
 ------------------
 
-Released: not yet
+Released: not yet x
 
 Initial release.
