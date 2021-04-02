@@ -193,9 +193,9 @@ setuptools.setup(
         'Bug Tracker':
         'https://github.com/andy-maier/pytest-easy-server/issues',
         'Documentation':
-        'https://pytest-easy-server.readthedocs.io/en/latest/',
+        'https://pytest-easy-server.readthedocs.io/en/stable/',
         'Change Log':
-        'https://pytest-easy-server.readthedocs.io/en/latest/changes.html',
+        'https://pytest-easy-server.readthedocs.io/en/stable/changes.html',
     },
 
     options={'bdist_wheel': {'universal': True}},
