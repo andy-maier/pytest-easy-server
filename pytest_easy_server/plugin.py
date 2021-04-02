@@ -71,7 +71,7 @@ def fixtureid_es_server(fixture_value):
     """
     es_obj = fixture_value
     assert isinstance(es_obj, easy_server.Server)
-    return "easy_server={0}".format(es_obj.nickname)
+    return "es_server={0}".format(es_obj.nickname)
 
 
 def pytest_generate_tests(metafunc):

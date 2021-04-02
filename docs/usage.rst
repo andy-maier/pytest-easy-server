@@ -92,7 +92,8 @@ to the details for accessing the server:
         Example Pytest test function that tests something.
 
         Parameters:
-          es_server (Server): Server to be used for the test
+          es_server (easy_server.Server): Pytest fixture; the server to be
+            used for the test
         """
 
         # Standard properties from the server file:
@@ -107,11 +108,18 @@ to the details for accessing the server:
         username = es_server.secrets['username']
         password = es_server.secrets['password']
 
-        # Log on to the host and perform some test
-        . . .
+        # Session to server using a fictitious session class
+        session = MySession(host, username, password)
+
+        # Test something
+        result = my_session.perform_function()
+        assert ...
+
+        # Cleanup
+        session.close()
 
 The example shows how to access the standard and user-defined properties
-from the server file for demonstration purposes. The data structure
+from the "easy-server" file for demonstration purposes. The data structure
 of the user-defined properties in the server file and of the secrets
 in the vault file is completely up to you, so you could decide to have the host
 and userid in user-defined properties in the server file, and have
@@ -119,12 +127,15 @@ only the password in the vault file.
 
 The ``es_server`` parameter of the test function is a
 :class:`easy_server:easy_server.Server` object that represents a
-server item from the server file for testing against a single server.
+server item from the server file for testing against a single server. It
+includes the corresponding secrets item from the vault file.
 
 An example server file that provides the user-defined properties
 used in the test function shown above would be:
 
 .. code-block:: yaml
+
+    vault_file: vault.yml
 
     servers:
 
@@ -247,12 +258,16 @@ In a file ``session_fixture.py``:
         Pytest fixture representing the set of MySession objects to use for
         testing against a server.
         """
+        # Session to server using a fictitious session class
         session = MySession(
-            host = es_server.secrets['host']
-            username = es_server.secrets['username']
-            password = es_server.secrets['password']
+            host=es_server.secrets['host']
+            username=es_server.secrets['username']
+            password=es_server.secrets['password']
         )
+
         yield session
+
+        # Cleanup
         session.close()
 
 In your test functions, you can now use that fixture:
@@ -263,4 +278,24 @@ In your test functions, you can now use that fixture:
     from session_fixture import my_session
 
     def test_sample(my_session):
+        """
+        Example Pytest test function that tests something.
+
+        Parameters:
+          my_session (MySession): Pytest fixture; the session to the server
+            to be used for the test
+        """
         result = my_session.perform_function()  # Test something
+
+A side note: Pylint and Flake8 do not recognize that 'es_server' and 'my_session'
+are fixtures that are interpreted by Pytest and thus complain about the unused
+'es_server' and 'my_session' names, and about the 'my_session' parameter that
+hides the global name. The following markup silences these tools:
+
+.. code-block:: python
+
+    # pylint: disable=unused-import
+    from pytest_easy_server import es_server  # noqa: F401
+    from session_fixture import my_session  # noqa: F401
+
+    def test_sample(my_session):  # pylint: disable=redefined-outer-name
