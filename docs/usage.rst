@@ -70,7 +70,7 @@ The servers and groups are identified with user-defined nicknames.
 .. _`Using the es_server fixture`:
 
 Using the es_server fixture
-----------------------------------
+---------------------------
 
 If your pytest test function uses the :func:`~pytest_easy_server.es_server`
 fixture, the test function will be invoked for the server specified in the
@@ -202,12 +202,48 @@ defaults:
                             Default: The default from the server file.
 
 
-.. _`Protecting secrets`:
+.. _`Running pytest as a developer`:
 
-Protecting secrets
-------------------
+Running pytest as a developer
+-----------------------------
 
-There are two kinds of secrets here:
+When running pytest with this plugin on your local system, you are prompted
+(in the command line) for the vault password upon first use of a particular
+vault file. The password is then stored in the keyring service of your local
+system to avoid future such prompts.
+
+The section :ref:`Running pytest in a CI/CD system` describes the use of
+an environment variable to store the password which avoids the password prompt.
+For security reasons, you should not use this approach when you run pytest.
+The one password prompt can be afforded, and subsequent retrieval of the vault
+password from the keyring service avoids further prompts.
+
+
+.. _`Running pytest in a CI/CD system`:
+
+Running pytest in a CI/CD system
+--------------------------------
+
+When running pytest in a CI/CD system, you must set an environment variable
+named "ES_VAULT_PASSWORD" to the vault password.
+
+This can be done in a secure way by defining a corresponding secret in the
+CI/CD system and in our test run configuration (e.g. GitHub Actions workflow)
+setting that environment variable to the CI/CD system secret. State of the
+art CI/CD systems support storing secrets in a secure manner.
+
+The pytest plugin picks up the vault password from the "ES_VAULT_PASSWORD"
+environment variable and that causes it not to prompt for the password and
+also not to store it in the keyring service (of the system used for the test
+run in the CI/CD system).
+
+
+.. _`Security aspects`:
+
+Security aspects
+----------------
+
+There are two kinds of secrets involved:
 
 * The secrets in the vault file.
 * The vault password.
@@ -219,19 +255,29 @@ store the vault file in a repository, make sure it is encrypted.
 
 The vault password is protected in the following ways:
 
-* For local use on your system, you are prompted for the vault password upon
-  first use of the vault. The easy-vault package then stores the vault password
-  in the keyring facility of your local system, to avoid future such prompts.
+* When running pytest with this plugin on your local system, there is no
+  permanent storage of the vault password anywhere except in the keyring
+  service of your local system. There are no commands that take the vault
+  password in their command line. The way the password gets specified is only
+  in a password prompt, and then it is immediately stored in the keyring
+  service and in future pytest runs retrieved from there.
 
-* For use in a CI/CD system, you can define a secret in the CI/CD system that
-  holds the vault password. Most CI/CD systems support storing secrets in
-  a secure manner. The password secret is then put into an environment variable
-  named "ES_VAULT_PASSWORD" where the pytest plugin picks it up from.
+  Your Python test programs of course can get at the secrets from the vault
+  file (that is the whole idea after all). They can also get at the vault
+  password by using the keyring service access functions but they have no need
+  to deal with the vault password. In any case, make sure that the test
+  functions do not print or log the vault secrets.
 
-You should not use the approach with the environment variable on your local
-system at least not when you set the variable in a script, because then the
-script has the clear text vault password. Always use the prompting approach
-on your local system.
+* When running pytest in a CI/CD system, the "ES_VAULT_PASSWORD" environment
+  variable that needs to be set can be set from a secret stored in the CI/CD
+  system. State of the art CI/CD systems go a long way of ensuring that
+  these secrets cannot simply be echoed or otherwise revealed.
+
+The keyring service provides access to the secrets stored there, for the user
+that is authorized to access it. The details on how this is done depend on
+the particular keyring service used and its configuration. For example,
+on macOS the keyring service occasionally require entering the password of
+the macOS user.
 
 
 .. _`Derived Pytest fixtures`:
