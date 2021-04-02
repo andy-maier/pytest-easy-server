@@ -22,7 +22,9 @@ import easy_server
 
 DEFAULT_SERVER_FILE = 'es_server.yml'
 
-DOCS_LINK = 'https://pytest-easy-server.readthedocs.io/'
+PLUGIN_NAME = 'pytest-easy-server'
+PLUGIN_DOCS_LINK = 'https://pytest-easy-server.readthedocs.io/'
+VAULT_PASSWORD_VAR = 'ES_VAULT_PASSWORD'
 
 
 def pytest_addoption(parser):
@@ -32,10 +34,9 @@ def pytest_addoption(parser):
     group.addoption() supports the same arguments as argparse.add_argument().
     """
 
-    group = parser.getgroup('pytest-easy-server')
-    group.description = "pytest-easy-server - " \
-        "Pytest plugin for easy testing against servers, " \
-        "see {}".format(DOCS_LINK)
+    group = parser.getgroup(PLUGIN_NAME)
+    group.description = "{} - Pytest plugin for easy testing against " \
+        "servers, see {}".format(PLUGIN_NAME, PLUGIN_DOCS_LINK)
 
     group.addoption(
         '--es-file',
@@ -87,8 +88,28 @@ def pytest_generate_tests(metafunc):
         es_nickname = config.getvalue('es_nickname')
 
         if config.getvalue('verbose'):
-            print("\npytest-easy-server: Using server file {fn}".
-                  format(fn=es_file))
+            print("\n{p}: Using server file {fn}".
+                  format(p=PLUGIN_NAME, fn=es_file))
+
+        es_vault_password = os.getenv(VAULT_PASSWORD_VAR)
+        if es_vault_password:
+            # Assuming headless CI/CD mode
+            sf_kwargs = dict(
+                password=es_vault_password,
+                use_keyring=False,
+                use_prompting=False)
+            if config.getvalue('verbose'):
+                print("{p}: Using vault password from {v} environment "
+                      "variable.".format(p=PLUGIN_NAME, v=VAULT_PASSWORD_VAR))
+        else:
+            # Assuming interactive mode
+            sf_kwargs = dict(
+                password=None,
+                use_keyring=True,
+                use_prompting=True)
+            if config.getvalue('verbose'):
+                print("{p}: Using vault password from prompt or keyring "
+                      "service.".format(p=PLUGIN_NAME))
 
         # The following constructs place the pytest.exit() call outside of the
         # exception handling which avoids the well-known exception traceback
@@ -96,7 +117,7 @@ def pytest_generate_tests(metafunc):
 
         exit_message = None
         try:
-            esf_obj = easy_server.ServerFile(es_file)
+            esf_obj = easy_server.ServerFile(es_file, **sf_kwargs)
         except easy_server.ServerFileException as exc:
             exit_message = str(exc)
         if exit_message:
