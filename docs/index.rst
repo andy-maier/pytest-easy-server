@@ -18,9 +18,10 @@ The **pytest-easy-server** package is a `Pytest`_ plugin that provides a
 `Pytest fixture`_ fixture :func:`~pytest_easy_server.es_server` that resolves
 to the set of servers the tests should run against.
 
-The set of servers is defined in a *server file* and the secrets to access the
-servers are defined in a *vault file* that is referenced by the server file,
-in the formats defined by the `easy-server package`_.
+The set of servers is defined in a *server file* (aka "easy-server file") and
+the secrets to access the servers are defined in a *vault file* that is
+referenced by the server file, in the formats defined by the
+`easy-server package`_.
 
 The files to use and the server or group nickname to select for the test
 can be specified in pytest options added by the plugin:

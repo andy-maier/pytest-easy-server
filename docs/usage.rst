@@ -130,8 +130,17 @@ The ``es_server`` parameter of the test function is a
 server item from the server file for testing against a single server. It
 includes the corresponding secrets item from the vault file.
 
-An example server file that provides the user-defined properties
-used in the test function shown above would be:
+
+Example pytest runs
+-------------------
+
+The user-defined properties and vault secrets used in the test function shown
+in the previous section are from the examples located in the ``examples``
+directory of the
+`GitHub repo of the project <https://github.com/andy-maier/pytest-easy-server/issues>`_.
+The pytest runs are performed from within that directory.
+
+Example file ``es_server.yml``:
 
 .. code-block:: yaml
 
@@ -163,8 +172,7 @@ used in the test function shown above would be:
 
     default: mygroup1
 
-And an example vault file that corresponds to the test function shown above
-would be:
+Example file ``es_vault.yml``:
 
 .. code-block:: yaml
 
@@ -180,14 +188,73 @@ would be:
         username: myuser2
         password: mypass2
 
+The directory also contains a test module ``test_function.py`` with a test
+function that uses the :func:`~pytest_easy_server.es_server` fixture and prints
+the attributes and secrets for the server it is invoked for.
+
+The following pytest runs use the default server file (``es_server.yml`` in the
+current directory) and the vault password had been prompted for already and is
+now found in the keyring service.
+
+In pytest verbose mode, the **pytest-easy-server** plugin prints messages
+about which server file is used and where the vault password comes from.
+
+In this pytest run, the default nickname is used (the default defined in the
+server file, which is group ``mygroup1`` that contains servers ``myserver1``
+and ``myserver2``):
+
+.. code-block:: text
+
+    $ pytest -s -v .
+    ==================================================== test session starts ====================================================
+    platform darwin -- Python 3.8.7, pytest-6.2.2, py-1.10.0, pluggy-0.13.1 -- /Users/maiera/virtualenvs/pytest-es38/bin/python
+    cachedir: .pytest_cache
+    rootdir: /Users/maiera/PycharmProjects/pytest-easy-server
+    plugins: easy-server-0.5.0.dev1
+    collecting ...
+    pytest-easy-server: Using server file /Users/maiera/PycharmProjects/pytest-easy-server/examples/es_server.yml
+    pytest-easy-server: Using vault password from prompt or keyring service.
+    collected 2 items
+
+    test_function.py::test_sample[es_server=myserver1]
+    MySession: host=10.11.12.13, username=myuser1, password=mypass1
+    PASSED
+    test_function.py::test_sample[es_server=myserver2]
+    MySession: host=9.10.11.12, username=myuser2, password=mypass2
+    PASSED
+
+    ===================================================== 2 passed in 0.02s =====================================================
+
+In this pytest run, the nickname is specified in the pytest command line using
+the ``--es-nickname`` option, to run only on server ``myserver1``:
+
+.. code-block:: text
+
+    $ pytest -s -v . --es-nickname myserver1
+    ==================================================== test session starts ====================================================
+    platform darwin -- Python 3.8.7, pytest-6.2.2, py-1.10.0, pluggy-0.13.1 -- /Users/maiera/virtualenvs/pytest-es38/bin/python
+    cachedir: .pytest_cache
+    rootdir: /Users/maiera/PycharmProjects/pytest-easy-server
+    plugins: easy-server-0.5.0.dev1
+    collecting ...
+    pytest-easy-server: Using server file /Users/maiera/PycharmProjects/pytest-easy-server/examples/es_server.yml
+    pytest-easy-server: Using vault password from prompt or keyring service.
+    collected 1 item
+
+    test_function.py::test_sample[es_server=myserver1]
+    MySession: host=10.11.12.13, username=myuser1, password=mypass1
+    PASSED
+
+    ===================================================== 1 passed in 0.02s =====================================================
+
 
 .. _`Controlling which servers to test against`:
 
 Controlling which servers to test against
 -----------------------------------------
 
-When pytest loads the pytest-easy-server plugin, its set of command line options
-gets extended by those contributed by the plugin. These options allow
+When pytest loads the **pytest-easy-server** plugin, its set of command line
+options gets extended by those contributed by the plugin. These options allow
 controlling which server file is used and wich server or server
 group is used to test against. These options are optional and have sensible
 defaults:
@@ -207,16 +274,16 @@ defaults:
 Running pytest as a developer
 -----------------------------
 
-When running pytest with this plugin on your local system, you are prompted
-(in the command line) for the vault password upon first use of a particular
-vault file. The password is then stored in the keyring service of your local
-system to avoid future such prompts.
+When running pytest with the **pytest-easy-server** plugin on your local system,
+you are prompted (in the command line) for the vault password upon first use of
+a particular vault file. The password is then stored in the keyring service of
+your local system to avoid future such prompts.
 
 The section :ref:`Running pytest in a CI/CD system` describes the use of
 an environment variable to store the password which avoids the password prompt.
-For security reasons, you should not use this approach when you run pytest.
-The one password prompt can be afforded, and subsequent retrieval of the vault
-password from the keyring service avoids further prompts.
+For security reasons, you should not use this approach when you run pytest
+locally. The one password prompt can be afforded, and subsequent retrieval of
+the vault password from the keyring service avoids further prompts.
 
 
 .. _`Running pytest in a CI/CD system`:
@@ -224,18 +291,31 @@ password from the keyring service avoids further prompts.
 Running pytest in a CI/CD system
 --------------------------------
 
-When running pytest in a CI/CD system, you must set an environment variable
-named "ES_VAULT_PASSWORD" to the vault password.
+When running pytest with the **pytest-easy-server** plugin in a CI/CD system,
+you must set an environment variable named "ES_VAULT_PASSWORD" to the vault
+password.
 
 This can be done in a secure way by defining a corresponding secret in the
-CI/CD system and in our test run configuration (e.g. GitHub Actions workflow)
-setting that environment variable to the CI/CD system secret. State of the
-art CI/CD systems support storing secrets in a secure manner.
+CI/CD system in your test run configuration (e.g. GitHub Actions workflow),
+and by setting that environment variable to the CI/CD system secret.
 
-The pytest plugin picks up the vault password from the "ES_VAULT_PASSWORD"
-environment variable and that causes it not to prompt for the password and
-also not to store it in the keyring service (of the system used for the test
-run in the CI/CD system).
+Here is a snippet from a GitHub Actions workflow that does that, using a
+secret that is also named "ES_VAULT_PASSWORD":
+
+.. code-block:: yaml
+
+    - name: Run test
+      env:
+        ES_VAULT_PASSWORD: ${{ secrets.ES_VAULT_PASSWORD }}
+      run: |
+        pytest -s -v test_dir
+
+The **pytest-easy-server** plugin picks up the vault password from the
+"ES_VAULT_PASSWORD" environment variable if set and the presence of that
+variable causes it not to prompt for the password and also not to store it in
+the keyring service (which would be useless since it is on the system that is
+used for the test run in the CI/CD system, and that is typically a new one for
+every run).
 
 
 .. _`Security aspects`:
@@ -255,18 +335,18 @@ store the vault file in a repository, make sure it is encrypted.
 
 The vault password is protected in the following ways:
 
-* When running pytest with this plugin on your local system, there is no
-  permanent storage of the vault password anywhere except in the keyring
-  service of your local system. There are no commands that take the vault
-  password in their command line. The way the password gets specified is only
-  in a password prompt, and then it is immediately stored in the keyring
+* When running pytest with the **pytest-easy-server** plugin on your local
+  system, there is no permanent storage of the vault password anywhere except
+  in the keyring service of your local system. There are no commands that take
+  the vault password in their command line. The way the password gets specified
+  is only in a password prompt, and then it is immediately stored in the keyring
   service and in future pytest runs retrieved from there.
 
   Your Python test programs of course can get at the secrets from the vault
   file (that is the whole idea after all). They can also get at the vault
   password by using the keyring service access functions but they have no need
   to deal with the vault password. In any case, make sure that the test
-  functions do not print or log the vault secrets.
+  functions do not print or log the vault secrets (or the vault password).
 
 * When running pytest in a CI/CD system, the "ES_VAULT_PASSWORD" environment
   variable that needs to be set can be set from a secret stored in the CI/CD
@@ -276,8 +356,7 @@ The vault password is protected in the following ways:
 The keyring service provides access to the secrets stored there, for the user
 that is authorized to access it. The details on how this is done depend on
 the particular keyring service used and its configuration. For example,
-on macOS the keyring service occasionally require entering the password of
-the macOS user.
+on macOS the keyring service periodically requires re-authentication.
 
 
 .. _`Derived Pytest fixtures`:
@@ -285,11 +364,12 @@ the macOS user.
 Derived Pytest fixtures
 -----------------------
 
-If using the es_server fixture in your test functions repeats boiler plate code
-for opening a session with the server, this can be put into a derived fixture.
+If using the :func:`~pytest_easy_server.es_server` fixture in your test
+functions repeats boiler plate code for opening a session with the server,
+this can be put into a derived fixture.
 
-The following fixture is an example for that. It opens and closes a
-session with a server using a fictitious class ``MySession``:
+The following fixture is an example for that. It opens and closes a session
+with a server using a fictitious class ``MySession``:
 
 In a file ``session_fixture.py``:
 
@@ -336,7 +416,7 @@ In your test functions, you can now use that fixture:
 A side note: Pylint and Flake8 do not recognize that 'es_server' and 'my_session'
 are fixtures that are interpreted by Pytest and thus complain about the unused
 'es_server' and 'my_session' names, and about the 'my_session' parameter that
-hides the global name. The following markup silences these tools:
+redefines the global name. The following markup silences these tools:
 
 .. code-block:: python
 
