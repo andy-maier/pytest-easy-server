@@ -30,6 +30,8 @@ Released: not yet
 
 **Enhancements:**
 
+* Increased development status to Beta. (issue #34)
+
 **Cleanup:**
 
 **Known issues:**
