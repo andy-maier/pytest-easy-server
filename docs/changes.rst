@@ -32,6 +32,12 @@ Released: not yet
 
 * Increased development status to Beta. (issue #34)
 
+* Added a pytest option '--es-encrypted' to the plugin that requires that the
+  vault file (if specified) is encrypted. This is a safeguard against checking
+  in decrypted vault files by mistake. (issue #44)
+
+* Increased the minimum version of easy-server to 0.7.0. (related to issue #44)
+
 **Cleanup:**
 
 **Known issues:**

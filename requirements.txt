@@ -16,7 +16,7 @@
 # Direct dependencies (except pip, setuptools, wheel):
 
 # git+https://github.com/andy-maier/easy-server.git@master#egg=easy-server
-easy-server>=0.6.0
+easy-server>=0.7.0
 
 # pytest
 # pytest 5.0.0 has removed support for Python < 3.5
@@ -28,7 +28,7 @@ pytest>=4.4.0; python_version >= '3.7'
 
 # Indirect dependencies are not specified in this file, except when needed:
 
-easy_vault>=0.6.1
+easy-vault>=0.7.0
 
 # PyYAML 5.3 removed support for Python 3.4
 # PyYAML 5.3 fixed narrow build error on Python 2.7
