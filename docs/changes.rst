@@ -17,16 +17,10 @@ Change log
 ==========
 
 
-Version 0.7.0.dev1
-------------------
+Version 0.7.0
+-------------
 
-Released: not yet
-
-**Incompatible changes:**
-
-**Deprecations:**
-
-**Bug fixes:**
+Released: 2021-04-05
 
 **Enhancements:**
 
@@ -37,14 +31,6 @@ Released: not yet
   in decrypted vault files by mistake. (issue #44)
 
 * Increased the minimum version of easy-server to 0.7.0. (related to issue #44)
-
-**Cleanup:**
-
-**Known issues:**
-
-* See `list of open issues`_.
-
-.. _`list of open issues`: https://github.com/andy-maier/pytest-easy-server/issues
 
 
 Version 0.6.0
