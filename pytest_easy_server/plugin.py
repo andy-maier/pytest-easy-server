@@ -60,6 +60,16 @@ Nickname of the server or server group to test against.
 Default: The default from the easy-server file.
 """)
 
+    group.addoption(
+        '--es-encrypted',
+        dest='es_encrypted',
+        action='store_true',
+        default=False,
+        help="""\
+Require that the vault file (if specified) is encrypted and error out otherwise.
+Default: Tolerate unencrypted vault file
+""")
+
 
 def fixtureid_es_server(fixture_value):
     """
@@ -122,6 +132,12 @@ def pytest_generate_tests(metafunc):
             exit_message = str(exc)
         if exit_message:
             pytest.exit(exit_message)
+
+        if config.getvalue('es_encrypted'):
+            if esf_obj.is_vault_file_encrypted() is False:
+                pytest.exit("Vault file is required to be encrypted but is "
+                            "not encrypted: {vfn}".
+                            format(vfn=esf_obj.vault_file))
 
         exit_message = None
         try:
