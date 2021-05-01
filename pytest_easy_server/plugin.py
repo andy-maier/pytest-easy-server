@@ -80,7 +80,7 @@ Default: No validation.
         default=False,
         help="""\
 Require that the vault file (if specified) is encrypted and error out otherwise.
-Default: Tolerate unencrypted vault file
+Default: Tolerate unencrypted vault file.
 """)
 
 
