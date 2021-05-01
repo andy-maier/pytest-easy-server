@@ -33,6 +33,10 @@ Released: not yet
 * Docs: Added missing description of pytest option '--es-encrypted' introduced
   in version 0.7.0. (issue #61)
 
+* Test: Fixed the issue with installing the 'cryptography' package on Windows
+  by increasing the minimum version of 'pip' to 21.0 on Python 3.6 and higher
+  (issue #54)
+
 **Enhancements:**
 
 * Added support for validating the user-defined extensions in the easy-server
