@@ -23,17 +23,25 @@ the secrets to access the servers are defined in a *vault file* that is
 referenced by the server file, in the formats defined by the
 `easy-server package`_.
 
-The files to use and the server or group nickname to select for the test
-can be specified in pytest options added by the plugin:
+The files to use and the server or group nickname to select for the test, as
+well as a schema file for validating the user-defined structure of certain
+properties in the server and vault files, can be specified in pytest options
+added by the plugin:
 
 .. code-block:: text
 
     --es-file=FILE
                             Path name of the easy-server file to be used.
                             Default: es_server.yml in current directory.
+
     --es-nickname=NICKNAME
                             Nickname of the server or server group to test against.
                             Default: The default from the server file.
+
+    --es-schema-file=FILE
+                            Path name of the schema file to be used for validating the structure of
+                            user-defined properties in the easy-server server and vault files.
+                            Default: No validation.
 
 
 .. toctree::

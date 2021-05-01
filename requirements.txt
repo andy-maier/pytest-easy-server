@@ -16,7 +16,7 @@
 # Direct dependencies (except pip, setuptools, wheel):
 
 # git+https://github.com/andy-maier/easy-server.git@master#egg=easy-server
-easy-server>=0.7.0
+easy-server>=0.8.0
 
 # pytest
 # pytest 5.0.0 has removed support for Python < 3.5

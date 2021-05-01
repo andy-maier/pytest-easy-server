@@ -32,6 +32,11 @@ Released: not yet
 
 **Enhancements:**
 
+* Added support for validating the user-defined extensions in the easy-server
+  server file and vault file by adding a new pytest option '--es-schema-file'
+  that specifies a YAML file defining the JSON schemas for these extensions.
+  (issue #62)
+
 **Cleanup:**
 
 **Known issues:**

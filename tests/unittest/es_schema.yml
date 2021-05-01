@@ -1,0 +1,36 @@
+# easy-server schema file for unit tests
+
+user_defined_schema:
+  # JSON schema for 'servers.{nickname}.user_defined' property in server file:
+  $schema: http://json-schema.org/draft-07/schema#
+  type: object
+  additionalProperties: false
+  properties:
+    stuff:
+      type: [string, "null"]
+      description: |
+        Some stuff for servers, or null for not specifying any stuff.
+        Optional, default: null.
+
+vault_server_schema:
+  # JSON schema for 'secrets.{nickname}' property in vault file:
+  $schema: http://json-schema.org/draft-07/schema#
+  type: object
+  additionalProperties: false
+  required: [host]
+  properties:
+    host:
+      type: string
+      description: |
+        Hostname or IP address of the server.
+        Mandatory.
+    username:
+      type: [string, "null"]
+      description: |
+        User for logging on to the server, or null for not specifying a user.
+        Optional, default: null.
+    password:
+      type: [string, "null"]
+      description: |
+        Password of that user, or null for not specifying a password.
+        Optional, default: null.
