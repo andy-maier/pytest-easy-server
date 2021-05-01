@@ -15,4 +15,4 @@ Version of the pytest-easy-server package.
 """
 
 # For a escription, see __init__.py.
-__version__ = '0.8.0.dev1'
+__version__ = '0.8.0'
