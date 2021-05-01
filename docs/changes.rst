@@ -17,16 +17,10 @@ Change log
 ==========
 
 
-Version 0.8.0.dev1
-------------------
+Version 0.8.0
+-------------
 
-This version contains all fixes up to version 0.7.x.
-
-Released: not yet
-
-**Incompatible changes:**
-
-**Deprecations:**
+Released: 2021-05-01
 
 **Bug fixes:**
 
@@ -43,14 +37,6 @@ Released: not yet
   server file and vault file by adding a new pytest option '--es-schema-file'
   that specifies a YAML file defining the JSON schemas for these extensions.
   (issue #62)
-
-**Cleanup:**
-
-**Known issues:**
-
-* See `list of open issues`_.
-
-.. _`list of open issues`: https://github.com/andy-maier/pytest-easy-server/issues
 
 
 Version 0.7.0
