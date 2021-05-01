@@ -169,6 +169,8 @@ Example file ``es_server.yml``:
         members:
           - myserver1
           - myserver2
+        user_defined:
+          stuff: "more stuff"
 
     default: mygroup1
 
@@ -267,6 +269,90 @@ defaults:
     --es-nickname=NICKNAME
                             Nickname of the server or server group to test against.
                             Default: The default from the server file.
+
+
+.. _`Validating user-defined extensions in server and vault files`:
+
+Validating user-defined extensions in server and vault files
+------------------------------------------------------------
+
+The **pytest-easy-server** plugin supports the following properties in the
+server and vault files that have a user-defined structure:
+
+* Property 'servers.{nickname}.user_defined' in server file
+* Property 'secrets.{nickname}' in vault file
+
+The 'server_groups.{nickname}.user_defined' property is ignored, because it
+is not accessible in the :func:`~pytest_easy_server.es_server` fixture.
+
+The **pytest-easy-server** plugin supports optional validation of the
+user-defined structure of these properties by specifying a schema file that
+defines the JSON schemas for validating these user-defined structures:
+
+.. code-block:: text
+
+    --es-schema-file=FILE
+                            Path name of the schema file to be used for validating the structure of
+                            user-defined properties in the easy-server server and vault files.
+                            Default: No validation.
+
+The schema file is in YAML format and specifies the JSON schema for the
+user-defined structure of each of the properties. The JSON schemas
+specified in the YAML file are simply the YAML representations of the JSON
+objects specifying the JSON schemas.
+
+Example schema file ``es_schema.yml`` that validates the user-defined properties
+shown in the example server and vault files in the previous sections:
+
+.. code-block:: yaml
+
+    user_defined_schema:
+      # JSON schema for 'servers.{nickname}.user_defined' property in server file:
+      $schema: http://json-schema.org/draft-07/schema#
+      type: object
+      additionalProperties: false
+      required: []
+      properties:
+        stuff:
+          type: [string, "null"]
+          description: |
+            Some stuff for servers, or null for not specifying any stuff.
+            Optional, default: null.
+
+    vault_server_schema:
+      # JSON schema for 'secrets.{nickname}' property in vault file:
+      $schema: http://json-schema.org/draft-07/schema#
+      type: object
+      additionalProperties: false
+      required: [host]
+      properties:
+        host:
+          type: string
+          description: |
+            Hostname or IP address of the server.
+            Mandatory.
+        username:
+          type: [string, "null"]
+          description: |
+            User for logging on to the server, or null for not specifying a user.
+            Optional, default: null.
+        password:
+          type: [string, "null"]
+          description: |
+            Password of that user, or null for not specifying a password.
+            Optional, default: null.
+
+The schema validation is performed using the
+`jsonschema <https://pypi.org/project/jsonschema/>`_ Python package.
+At this point, that package supports JSON schema versions up to draft-07. The
+JSON schema version to be used for validation is specified in the `$schema`
+property of the JSON schema (see the example above).
+
+For details about JSON schema, see `https://json-schema.org/`_.
+If you want to look up specific JSON schema features, see
+`https://json-schema.org/understanding-json-schema/reference/index.html`_
+or specifically for draft-07, see
+`https://json-schema.org/draft-07/json-schema-validation.html`_.
 
 
 .. _`Running pytest as a developer`:

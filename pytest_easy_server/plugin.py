@@ -16,6 +16,7 @@ Pytest plugin for pytest-easy-server project.
 
 from __future__ import absolute_import, print_function
 import os
+import yaml
 import pytest
 
 import easy_server
@@ -61,6 +62,18 @@ Default: The default from the easy-server file.
 """)
 
     group.addoption(
+        '--es-schema-file',
+        dest='es_schema_file',
+        metavar="FILE",
+        action='store',
+        default=None,
+        help="""\
+Path name of the schema file to be used for validating the structure of
+user-defined properties in the easy-server server and vault files.
+Default: No validation.
+""")
+
+    group.addoption(
         '--es-encrypted',
         dest='es_encrypted',
         action='store_true',
@@ -96,6 +109,7 @@ def pytest_generate_tests(metafunc):
         config = metafunc.config
         es_file = os.path.abspath(config.getvalue('es_file'))
         es_nickname = config.getvalue('es_nickname')
+        es_schema_file = config.getvalue('es_schema_file')
 
         if config.getvalue('verbose'):
             print("\n{p}: Using server file {fn}".
@@ -121,10 +135,41 @@ def pytest_generate_tests(metafunc):
                 print("{p}: Using vault password from prompt or keyring "
                       "service.".format(p=PLUGIN_NAME))
 
+        # If there is a schema file specified, load its schemata for passing
+        # on to validation by ServerFile().
+        if es_schema_file:
+            if config.getvalue('verbose'):
+                print("\n{p}: Using schema file {fn}".
+                      format(p=PLUGIN_NAME, fn=es_schema_file))
+            try:
+                with open(es_schema_file, 'r') as fp:
+                    schema_data = yaml.safe_load(fp)
+            except (OSError, IOError) as exc:
+                pytest.exit("Cannot open schema file: {fn}: {exc}".
+                            format(fn=es_schema_file, exc=exc))
+            except yaml.YAMLError as exc:
+                pytest.exit("Invalid YAML syntax in schema file {fn}: {exc}".
+                            format(fn=es_schema_file, exc=exc))
+            if not isinstance(schema_data, dict):
+                pytest.exit("Schema file {fn} does not specify an object "
+                            "as its top-level element".
+                            format(fn=es_schema_file))
+            if set(schema_data.keys()) != \
+                    {'user_defined_schema', 'vault_server_schema'}:
+                pytest.exit("Schema file {fn} has invalid top-level "
+                            "properties: {p}".
+                            format(fn=es_schema_file, p=schema_data.keys()))
+            sf_kwargs['user_defined_schema'] = \
+                schema_data.get('user_defined_schema', None)
+            sf_kwargs['vault_server_schema'] = \
+                schema_data.get('vault_server_schema', None)
+            # pytest-easy-server does not do anything with the 'user_defined'
+            # property of server group items. They are tolerated, though.
+            sf_kwargs['group_user_defined_schema'] = None
+
         # The following constructs place the pytest.exit() call outside of the
         # exception handling which avoids the well-known exception traceback
         # "During handling of the above exception, ...".
-
         exit_message = None
         try:
             esf_obj = easy_server.ServerFile(es_file, **sf_kwargs)
