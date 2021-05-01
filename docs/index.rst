@@ -43,6 +43,9 @@ added by the plugin:
                             user-defined properties in the easy-server server and vault files.
                             Default: No validation.
 
+    --es-encrypted          Require that the vault file (if specified) is encrypted and error out otherwise.
+                            Default: Tolerate unencrypted vault file.
+
 
 .. toctree::
    :maxdepth: 2

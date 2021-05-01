@@ -30,6 +30,9 @@ Released: not yet
 
 **Bug fixes:**
 
+* Docs: Added missing description of pytest option '--es-encrypted' introduced
+  in version 0.7.0. (issue #61)
+
 **Enhancements:**
 
 * Added support for validating the user-defined extensions in the easy-server

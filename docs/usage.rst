@@ -271,6 +271,22 @@ defaults:
                             Default: The default from the server file.
 
 
+.. _`Requiring that the vault file is encrypted`:
+
+Requiring that the vault file is encrypted
+------------------------------------------
+
+By default, the vault file may be encrypted or unencrypted. If the vault file
+is checked into a repository, it is useful to ensure that it is encrypted,
+to avoid unintentional checkin of an unencrypted vault file. The can be
+ensured by specifying the following pytest option:
+
+.. code-block:: text
+
+    --es-encrypted          Require that the vault file (if specified) is encrypted and error out otherwise.
+                            Default: Tolerate unencrypted vault file.
+
+
 .. _`Validating user-defined extensions in server and vault files`:
 
 Validating user-defined extensions in server and vault files
